@@ -9,6 +9,8 @@ public class SimpleMotorCommand extends Command {
   private final double power;
   private final double duration;
   private double startTime;
+  private Timer timer = new Timer();
+
 
   public SimpleMotorCommand(SimpleMotorSubsystem motorSubsystem, double power, double duration) {
     this.motorSubsystem = motorSubsystem;
@@ -20,6 +22,8 @@ public class SimpleMotorCommand extends Command {
   @Override
   public void initialize() {
     startTime = Timer.getFPGATimestamp();
+    timer.restart();
+
   }
 
   @Override
@@ -29,7 +33,8 @@ public class SimpleMotorCommand extends Command {
 
   @Override
   public boolean isFinished() {
-      return Timer.getFPGATimestamp() > startTime + duration;
+      return Timer.getFPGATimestamp() > startTime + duration ||
+              timer.hasElapsed(duration);
   }
 
   @Override
