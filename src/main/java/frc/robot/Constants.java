@@ -21,5 +21,4 @@ public final class Constants {
   public static final String canBus = "rio";
   public static final int steerMotorID = 2;
   public static final int driveMotorID = 1;
-  public static final String DriverConstans = null;
 }
