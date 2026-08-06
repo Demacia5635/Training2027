@@ -17,7 +17,7 @@ public class SimpleMotorCommand extends Command{
 
 
     // constructor
-    public `SimpleMotorCommand(SimpleMotorSubsystem subsystem, double power, double duration) {
+    public SimpleMotorCommand(SimpleMotorSubsystem subsystem, double power, double duration) {
         this.subsystem = subsystem;
         this.power = power;
         this.duration = duration;
