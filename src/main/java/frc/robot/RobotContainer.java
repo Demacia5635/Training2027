@@ -4,9 +4,7 @@
 
 package frc.robot;
 
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SimpleMotorCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SimpleMotorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -20,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final SimpleMotorSubsystem subsytem = new SimpleMotorSubsystem();
   private CommandXboxController controller = new CommandXboxController(Constants.ControllerConstants.CONTROLLER_ID);
 
@@ -42,7 +39,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-        controller.a().onTrue(new SimpleMotorCommand(subsytem, 0.2, 0, 1));
+        controller.a().onTrue(new SimpleMotorCommand(subsytem, 0.2, 0, 1)); // power is between -1 and 1
         controller.b().onTrue(new SimpleMotorCommand(subsytem, 0, -0.3, 1));
 
 
