@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SimpleMotorCommand;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -58,6 +56,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new SimpleMotorCommand(subsytem, 0.5, 3);  // power is between -1 and 1
+    return new SimpleMotorCommand (subsytem, 0.5, 4);  // power is between -1 and 1
   }
 }

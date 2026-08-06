@@ -7,24 +7,37 @@ import frc.robot.Constants;
 
 
 public class SimpleMotorSubsystem extends SubsystemBase {
-    private final TalonFX motor;
+    private final TalonFX drive; // backwards and forwards
+    private final TalonFX steer; // backwards and forwards
 
 
     public SimpleMotorSubsystem() {
         super();
-        motor = new TalonFX(Constants.OperatorConstants.MOTOR_ID,Constants.OperatorConstants.MOTOR_CANBUS);
+        drive = new TalonFX(Constants.MotorConstants.DRIVE_ID,Constants.MotorConstants.MOTOR_CANBUS);
+        steer = new TalonFX(Constants.MotorConstants.STEER_ID, Constants.MotorConstants.MOTOR_CANBUS);
     }
 
 
 
-    // set motor power
-    public void setPower(double power) {
-        motor.set(power);
+// Set drive motor power
+    public void setDrivePower(double power) {
+        drive.set(power);
+
+    }
+// Set steeer motor power
+    public void setSteerPower(double power) {
+        steer.set(power);
+
     }
 
 
-    // stop the motor
-    public void stop() {
-        setPower(0);
+    
+    // stop the drive motor
+
+    public void driveStop() {
+        setDrivePower(0);
+    }
+    public void steerStop() {
+        setSteerPower(0);
     }
 }
