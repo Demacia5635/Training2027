@@ -19,5 +19,6 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   public static final String canBus = "rio";
-  public static final int motorID = 2;
+  public static final int steerMotorID = 2;
+  public static final int driveMotorID = 1;
 }

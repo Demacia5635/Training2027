@@ -45,12 +45,12 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
   }
-  private void configureDifultCommands(){
-    subsystem.setDefaultCommand(new SimpleMotorCommand(subsystem, 0, 0));
+ // private void configureDifultCommands(){
+   // subsystem.setDefaultCommand(new SimpleMotorCommand(subsystem, 0, 0));
   }
 
    public Command getAutonomousCommand() {
-    return new SimpleMotorCommand(subsystem, 0.3, 10.0);
+    return new SimpleMotorCommand(subsystem, 0.3, 3.0);
    }
     
 }

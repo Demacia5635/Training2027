@@ -10,13 +10,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class SimpleMotorSubsystem extends SubsystemBase {
-  private final TalonFX motor;
+  private final TalonFX steerMotor;
+  private final TalonFX driveMotor;
   public SimpleMotorSubsystem() {
     super();
-    motor = new TalonFX(Constants.motorID,Constants.canBus);
+    steerMotor = new TalonFX(Constants.steerMotorID,Constants.canBus);
+    driveMotor = new TalonFX(Constants.driveMotorID,Constants.canBus);
   }
   public void setPower(double power) {
-    motor.set(power);
+    steerMotor.set(power);
+    driveMotor.set(power);
   }
   public void stop() {
     setPower(0);
