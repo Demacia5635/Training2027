@@ -17,12 +17,12 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     steerMotor = new TalonFX(Constants.steerMotorID,Constants.canBus);
     driveMotor = new TalonFX(Constants.driveMotorID,Constants.canBus);
   }
-  public void setPower(double power) {
-    steerMotor.set(power);
-    driveMotor.set(power);
+  public void setPower(double powerSteer, double powerDrive) {
+    steerMotor.set(powerSteer);
+    driveMotor.set(powerDrive);
   }
   public void stop() {
-    setPower(0);
+    setPower(0,0);
   }
 }
 /** Creates a new ExampleSubsystem. */

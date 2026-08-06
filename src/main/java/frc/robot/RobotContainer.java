@@ -29,7 +29,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    configureDifultCommands();
+    //configureDifultCommands();
     getAutonomousCommand();
   }
 
@@ -47,10 +47,10 @@ public class RobotContainer {
   }
  // private void configureDifultCommands(){
    // subsystem.setDefaultCommand(new SimpleMotorCommand(subsystem, 0, 0));
-  }
+ // }
 
    public Command getAutonomousCommand() {
-    return new SimpleMotorCommand(subsystem, 0.3, 3.0);
+    return new SimpleMotorCommand(subsystem, 0.3, 3.0, -0.5);
    }
     
 }

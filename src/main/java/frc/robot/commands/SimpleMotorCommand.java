@@ -12,14 +12,16 @@ import frc.robot.subsystems.SimpleMotorSubsystem;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SimpleMotorCommand extends Command {
   SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
-  private double power;
+  private double powerSteer;
+  private double powerDrive;
   private double duration;
   private double startTime;
   private Timer timer = new Timer();
 
-  public SimpleMotorCommand(SimpleMotorSubsystem subsystem, double power, double duration) {
+  public SimpleMotorCommand(SimpleMotorSubsystem subsystem, double powerSteer, double duration, double powerDrive) {
     this.subsystem = subsystem;
-    this.power = power;
+    this.powerSteer= powerSteer;
+    this.powerDrive = powerDrive;
     this.duration = duration;
     addRequirements(subsystem);
   }
@@ -28,12 +30,13 @@ public class SimpleMotorCommand extends Command {
   public void initialize() {
     startTime = Timer.getFPGATimestamp();
     timer.restart();
-    System.out.println("Command started at: " + startTime + "seconds for " + duration + " secods with power: " + power);
+    System.out.println("Command started at: " + startTime + "seconds for " + duration + " secods with power: " + powerSteer);
+    System.out.println("Command started at: " + startTime + "seconds for " + duration + " secods with power: " + powerDrive);
   }
-
   @Override
   public void execute() {
-    subsystem.setPower(power);
+    subsystem.setPower(powerSteer,powerDrive);
+    
   }
 
   @Override
