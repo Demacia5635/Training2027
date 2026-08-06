@@ -7,6 +7,9 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.SimpleMotorCommand;
 import frc.robot.subsystems.SimpleMotorSubsystem;
+
+import java.util.ResourceBundle.Control;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -43,14 +46,17 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    controller.a().onTrue(new SimpleMotorCommand(subsystem, -0.2, 2.0, 0.5));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
   }
  // private void configureDifultCommands(){
    // subsystem.setDefaultCommand(new SimpleMotorCommand(subsystem, 0, 0));
  // }
 
-   public Command getAutonomousCommand() {
-    return new SimpleMotorCommand(subsystem, 0.3, 3.0, -0.5);
-   }
+  private CommandXboxController controller = new CommandXboxController(Constants.DriverConstans.DriverID);
+  public Command getAutonomousCommand() {
+    return null;
+  }
+    
     
 }
