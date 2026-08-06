@@ -15,5 +15,7 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int MOTOR_ID = 2;
+    public static final String Canbus = "rio";
   }
 }
