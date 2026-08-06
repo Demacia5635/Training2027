@@ -11,6 +11,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
 
 
     public SimpleMotorSubsystem() {
+        super();
         motor = new TalonFX(Constants.OperatorConstants.MOTOR_ID,Constants.OperatorConstants.MOTOR_CANBUS);
     }
 
