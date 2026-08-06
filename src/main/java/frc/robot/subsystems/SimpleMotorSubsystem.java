@@ -11,11 +11,13 @@ import frc.robot.Constants;
 
 public class SimpleMotorSubsystem extends SubsystemBase {
   private final TalonFX motor;
+  private final TalonFX motor2;
 
   /** Creates a new SimpleMotorSubsystem. */
   public SimpleMotorSubsystem() {
     super();
     motor = new TalonFX(Constants.OperatorConstants.MOTOR_ID, Constants.OperatorConstants.MotorCANbus);
+    motor2 = new TalonFX(Constants.OperatorConstants.MOTOR_ID, Constants.OperatorConstants.MotorCANbus);
   }
 
   public void setPower(double Power) {
