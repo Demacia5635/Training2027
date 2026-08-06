@@ -58,6 +58,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new SimpleMotorCommand(subsytem, 0.5, 3); 
+    return new SimpleMotorCommand(subsytem, 0.5, 3);  // power is between -1 and 1
   }
 }
