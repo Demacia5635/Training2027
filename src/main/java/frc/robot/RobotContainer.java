@@ -5,11 +5,10 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.SimpleMotorCommand;
+import frc.robot.commands.HomeworkMotorCommand;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.SimpleMotorSubsystem;
+import frc.robot.subsystems.HomeworkMotorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -22,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
-  private final SimpleMotorSubsystem motorSubsystem = new SimpleMotorSubsystem();
+  private final HomeworkMotorSubsystem homeworkMotorSubsystem = new HomeworkMotorSubsystem();
 
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -39,7 +38,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand(){
-      return new SimpleMotorCommand(motorSubsystem, 0.5, 10);
+      return new HomeworkMotorCommand(homeworkMotorSubsystem, 0.5, 0.3, 2, 4);
   }
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -57,7 +56,7 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    m_driverController.a().onTrue(new HomeworkMotorCommand(homeworkMotorSubsystem, 0.5, 0.3, 2, 4));
   }
 
   /**

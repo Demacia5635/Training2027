@@ -17,6 +17,13 @@ public final class Constants {
       public final static int motorID = 2;
       public final static String motorCANBUS = "rio";
     }
+
+      public final class HomeworkMotorSubsystemConstants {
+      public final static int motor1ID = 2;
+      public final static String motor1CANBUS = "rio";
+      public final static int motor2ID = 3;
+      public final static String motor2CANBUS = "rio";
+    }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
