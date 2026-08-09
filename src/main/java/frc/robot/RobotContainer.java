@@ -6,14 +6,21 @@ package frc.robot;
 
 import frc.robot.commands.SimpleMotorCommand;
 import frc.robot.subsystems.SimpleMotorSubsystem;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
@@ -22,30 +29,80 @@ public class RobotContainer {
   private CommandXboxController controller = new CommandXboxController(Constants.ControllerConstants.CONTROLLER_ID);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
     getAutonomousCommand();
+
+    // set the default command using RunCommand
+    // set default command for both drive and steer
+    // bonus: when you move the joystick you move the motor, the left joystick for the drive motor and the right joystick for the steer motor.
+    subsytem.setDefaultCommand(
+        new RunCommand(
+            () -> {
+              // check left joystick and update drive power
+              subsytem.setDrivePower(controller.getLeftY());
+
+              // check right joystick and update steer power
+              subsytem.setSteerPower(controller.getRightY());
+            },
+            subsytem));
+
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
-        controller.a().onTrue(new SimpleMotorCommand(subsytem, 0.2, 0, 1)); // power is between -1 and 1
-        controller.b().onTrue(new SimpleMotorCommand(subsytem, 0, -0.3, 1));
+    // When a is pressed move steer motor
+    controller.a().onTrue(
+        new SimpleMotorCommand(subsytem, 0.2, 0, 1)
+            .alongWith(Commands.print("A pressed"))); // power is between -1 and 1
+
+    // bonus: get left joystick's Y value
+    controller.getLeftY();
+
+    
+    // bonus: get the right joystick's Y value
+    controller.getRightY();
 
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-  }
+    // when b is pressed move drive motor
+    controller.b().onTrue(
+        new SimpleMotorCommand(subsytem, 0, -0.3, 1)
+            .alongWith(Commands.print("B pressed!")));
+
+
+// when the left trigger is pressed vibrate the controller
+controller.leftTrigger().whileTrue(
+        Commands.startEnd(
+            () -> controller.getHID().setRumble(RumbleType.kRightRumble, 1.0), // When pressed
+            () -> controller.getHID().setRumble(RumbleType.kRightRumble, 0.0)  // When released
+        )
+    );
+// when the right trigger is pressed vibrate the controller
+
+    controller.rightTrigger().whileTrue(
+        Commands.startEnd(
+            () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 1.0), // When pressed
+            () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 0.0)  // When released
+        )
+    );
+}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -54,7 +111,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    // return new SimpleMotorCommand(subsytem, 0.3, 0.1, 5);  // power is between -1 and 1
+    // return new SimpleMotorCommand(subsytem, 0.3, 0.1, 5); // power is between -1
+    // and 1
     return null;
   }
 }
