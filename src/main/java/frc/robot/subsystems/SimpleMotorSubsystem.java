@@ -12,52 +12,56 @@ import frc.robot.Constants;
 public class SimpleMotorSubsystem extends SubsystemBase {
   private final TalonFX steerMotor;
   private final TalonFX driveMotor;
+
   public SimpleMotorSubsystem() {
     super();
-    steerMotor = new TalonFX(Constants.steerMotorID,Constants.canBus);
-    driveMotor = new TalonFX(Constants.driveMotorID,Constants.canBus);
+    steerMotor = new TalonFX(Constants.steerMotorID, Constants.canBus);
+    driveMotor = new TalonFX(Constants.driveMotorID, Constants.canBus);
   }
+
   public void setPower(double powerSteer, double powerDrive) {
     steerMotor.set(powerSteer);
     driveMotor.set(powerDrive);
   }
+
   public void stop() {
-    setPower(0,0);
+    setPower(0, 0);
   }
 }
 /** Creates a new ExampleSubsystem. */
- // public SimpleMotorSubsystem() {}
+// public SimpleMotorSubsystem() {}
 
-  /**
-   * Example command factory method.
-   *
- //  * @return a command
-   */
-  //public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-   /// return runOnce(
-    //    () -> {
-          /* one-time action goes here */
-    //    });
- // }
+/**
+ * Example command factory method.
+ *
+ * // * @return a command
+ */
+// public Command exampleMethodCommand() {
+// Inline construction of command goes here.
+// Subsystem::RunOnce implicitly requires `this` subsystem.
+/// return runOnce(
+// () -> {
+/* one-time action goes here */
+// });
+// }
 
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-  // * @return value of some boolean subsystem state, such as a digital sensor.
-   */
- // public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-   // return false;
- // }
+/**
+ * An example method querying a boolean state of the subsystem (for example, a
+ * digital sensor).
+ *
+ * // * @return value of some boolean subsystem state, such as a digital sensor.
+ */
+// public boolean exampleCondition() {
+// Query some boolean state, such as a digital sensor.
+// return false;
+// }
 
- // @Override
- // public void periodic() {
-    // This method will be called once per scheduler run
- // }
+// @Override
+// public void periodic() {
+// This method will be called once per scheduler run
+// }
 
- // @Override
-//  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-//  } 
+// @Override
+// public void simulationPeriodic() {
+// This method will be called once per scheduler run during simulation
+// }

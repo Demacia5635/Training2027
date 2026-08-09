@@ -20,7 +20,7 @@ public class SimpleMotorCommand extends Command {
 
   public SimpleMotorCommand(SimpleMotorSubsystem subsystem, double powerSteer, double duration, double powerDrive) {
     this.subsystem = subsystem;
-    this.powerSteer= powerSteer;
+    this.powerSteer = powerSteer;
     this.powerDrive = powerDrive;
     this.duration = duration;
     addRequirements(subsystem);
@@ -30,13 +30,16 @@ public class SimpleMotorCommand extends Command {
   public void initialize() {
     startTime = Timer.getFPGATimestamp();
     timer.restart();
-    System.out.println("Command started at: " + startTime + "seconds for " + duration + " secods with power: " + powerSteer);
-    System.out.println("Command started at: " + startTime + "seconds for " + duration + " secods with power: " + powerDrive);
+    System.out
+        .println("Command started at: " + startTime + "seconds for " + duration + " secods with power: " + powerSteer);
+    System.out
+        .println("Command started at: " + startTime + "seconds for " + duration + " secods with power: " + powerDrive);
   }
+
   @Override
   public void execute() {
-    subsystem.setPower(powerSteer,powerDrive);
-    
+    subsystem.setPower(powerSteer, powerDrive);
+
   }
 
   @Override
