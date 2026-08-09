@@ -55,7 +55,7 @@ public class RobotContainer {
 
   private CommandXboxController controller = new CommandXboxController(Constants.OperatorConstants.kDriverControllerPort);
   public Command getAutonomousCommand() {
-    return null;
+    return new SimpleMotorCommand(subsystem, -0.2, 2.0, 0.5);
   }
     
     
