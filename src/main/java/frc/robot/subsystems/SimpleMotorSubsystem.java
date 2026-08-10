@@ -11,16 +11,19 @@ import com.ctre.phoenix6.hardware.TalonFX;
 public class SimpleMotorSubsystem extends SubsystemBase {
 
    // המנועים שלנו
-  private final TalonFX motor;
+  private final TalonFX STEERMOTOR;
+  private final TalonFX DRIVEMOTOR;
 
 // Constructor
   public SimpleMotorSubsystem() {
     super();
-    motor = new TalonFX(Constants.OperatorConstants.MOTOR_ID, Constants.OperatorConstants.Canbus);
+    STEERMOTOR = new TalonFX(Constants.OperatorConstants.STEERMOTOR_ID, Constants.OperatorConstants.Canbus);
+    DRIVEMOTOR = new TalonFX(Constants.OperatorConstants.DRIVEMOTOR_ID, Constants.OperatorConstants.Canbus);
+    
   }
 // Simple power -1 to 1
   public void setPower(double power) {
-   motor.set(power);
+   STEERMOTOR.set(power);
   }
 // stop
   public void stop() {
@@ -40,9 +43,9 @@ public class SimpleMotorSubsystem extends SubsystemBase {
 
 
 
-  
+
   double getMotorPosition() {
-    return motor.getPosition().getValueAsDouble();
+    return STEERMOTOR.getPosition().getValueAsDouble();
   }
   @Override
   public void periodic() {
