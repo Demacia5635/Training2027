@@ -11,7 +11,7 @@ private final double Steerpower;
 private final double Drivepower;
 private SimpleMotorSubsystem subsystem;
 private final double duration;
-private Timer timer;
+private Timer timer = new Timer();
 private double startTime=0;
 public SimpleMotorCommand( SimpleMotorSubsystem subsystem, double Steerpower, double Drivepower, double duration) {
     this.Steerpower = Steerpower;
