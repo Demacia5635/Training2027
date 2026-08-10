@@ -43,10 +43,10 @@ public class RobotContainer {
         new RunCommand(
             () -> {
               // check left joystick and update drive power
-              subsytem.setDrivePower(controller.getLeftY());
+              subsytem.setDrivePower(leftYDeadBand());
 
               // check right joystick and update steer power
-              subsytem.setSteerPower(controller.getRightY());
+              subsytem.setSteerPower(rightYDeadBand());
             },
             subsytem));
 
