@@ -7,13 +7,15 @@ import frc.robot.subsystems.SimpleMotorSubsystem;
 public class SimpleMotorCommand extends Command {
     private final Timer timer = new Timer();
     private final SimpleMotorSubsystem subsystem;
-    private final double power;
+    private final double drivePower;
+    private final double steerPower;
     private final double duration;
     private double startTime = 0;
 
-    public SimpleMotorCommand(SimpleMotorSubsystem subsystem, double power, double duration) {
+    public SimpleMotorCommand(SimpleMotorSubsystem subsystem, double drivePower, double steerPower, double duration) {
         this.subsystem = subsystem;
-        this.power = power;
+        this.drivePower = drivePower;
+        this.steerPower = steerPower;
         this.duration = duration;
         addRequirements(subsystem);
     }
@@ -23,14 +25,13 @@ public class SimpleMotorCommand extends Command {
         startTime = Timer.getFPGATimestamp();
         timer.restart();
         System.out.println(
-                "command started at " + startTime + " seconds for duration " + duration + " with power " + power);
+                "command started at " + startTime + " seconds for duration " + duration + " with power " + drivePower + " for drive and " + steerPower + " for steer");
     }
 
     @Override
     public void execute() {
-        subsystem.setDrivePower(power);
-        subsystem.setSteerPower(power);
-        
+        subsystem.setDrivePower(drivePower);
+        subsystem.setSteerPower(steerPower);
     }
 
     @Override

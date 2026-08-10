@@ -15,11 +15,11 @@ private final TalonFX steerMotor;
     steerMotor = new TalonFX(Constants.myfirstsubsystemConstants.motoridSteer, Constants.myfirstsubsystemConstants.motorcanbus);
   }
 
-  public void setDrivePower(double power) {
-    driveMotor.set(power);
+  public void setDrivePower(double drivePower) {
+    driveMotor.set(drivePower);
   }
-  public void setSteerPower(double power) {
-    steerMotor.set(power);
+  public void setSteerPower(double steerPower) {
+    steerMotor.set(steerPower);
   }
   public void stop() {
     setSteerPower(0);
