@@ -28,7 +28,9 @@ public class SimpleMotorCommand extends Command {
 
     @Override
     public void execute() {
-        subsystem.setpower(power);
+        subsystem.setDrivePower(power);
+        subsystem.setSteerPower(power);
+        
     }
 
     @Override
