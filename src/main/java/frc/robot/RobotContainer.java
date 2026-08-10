@@ -6,34 +6,41 @@ package frc.robot;
 
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.GoToTargetAngleCommand;
 import frc.robot.commands.SimpleMotorCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SimpleMotorSubsystem;
 
 import java.lang.ModuleLayer.Controller;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
-  // המערכות שלנו
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
   private CommandXboxController controller = new CommandXboxController(Constants.driverConstants.driverControllerPort);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
-    
+
+    SmartDashboard.putNumber("3rd cmd Target", 0.0);
+
+    SmartDashboard.putData("ThirdCommand", new GoToTargetAngleCommand(subsystem));
+
     configureBindings();
     // configureDefaultCommands();
   }
 
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    //new Trigger(m_exampleSubsystem::exampleCondition)
-        //.onTrue(new ExampleCommand(m_exampleSubsystem));
-    controller.a().onTrue(new SimpleMotorCommand(subsystem, 1,  0.5, 5.0));
+    // new Trigger(m_exampleSubsystem::exampleCondition)
+    // .onTrue(new ExampleCommand(m_exampleSubsystem));
+    controller.a().onTrue(new SimpleMotorCommand(subsystem, 1, 0.5, 5.0));
   }
 
   private void configureDefaultCommands() {

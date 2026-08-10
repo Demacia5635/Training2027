@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SimpleMotorSubsystem;
 
@@ -39,7 +40,7 @@ public class SimpleMotorCommand extends Command {
         subsystem.stop();
         System.out.println("command ended at " + Timer.getFPGATimestamp() + " seconds");
     }
-
+    
     @Override
     public boolean isFinished() {
         return Timer.getFPGATimestamp() - startTime >= duration;
