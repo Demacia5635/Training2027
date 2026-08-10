@@ -25,7 +25,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final SimpleMotorSubsystem simpleMotorSubsystem = new SimpleMotorSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  
+  private CommandXboxController controller = new CommandXboxController(Constants.OperatorConstants.DriverID);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -42,6 +42,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+     controller.a().onTrue(new SimpleMotorCommand(simpleMotorSubsystem, 0.5, 0.7, 3.0));
+
     // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
     //     .onTrue(new ExampleCommand(m_exampleSubsystem));
@@ -59,6 +61,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     // return Autos.exampleAuto(m_exampleSubsystem);
-    return new SimpleMotorCommand(simpleMotorSubsystem, 0.5, 3.0);
+    return new SimpleMotorCommand(simpleMotorSubsystem, 0.5,0.7, 3.0);
   }
 }
