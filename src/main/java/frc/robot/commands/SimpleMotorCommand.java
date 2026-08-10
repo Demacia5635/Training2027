@@ -1,7 +1,8 @@
-package frc.robot;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.SimpleMotorSubsystem;
 
 public class SimpleMotorCommand extends Command {
 

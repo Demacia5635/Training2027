@@ -1,5 +1,8 @@
-package frc.robot;
+package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.OperatorConstants;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 
 public class SimpleMotorSubsystem extends SubsystemBase {
