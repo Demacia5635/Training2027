@@ -40,7 +40,7 @@ public class SimpleMotorCommand extends Command {
     }
 
     @Override
-    public boolean isFinished() {
+    public boolean isFinished() { 
         return timer.hasElapsed(duration);
     }
 

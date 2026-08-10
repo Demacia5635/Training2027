@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.OperatorConstants;
+
+import java.io.ObjectInputValidation;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -23,6 +26,32 @@ public class SimpleMotorSubsystem extends SubsystemBase {
   public void stop() {
     setPower(0);
   }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  double getMotorPosition() {
+    return motor.getPosition().getValueAsDouble();
+  }
+  @Override
+  public void periodic() {
+     SmartDashboard.putNumber("Motor Position", getMotorPosition());
+     double toRadiants = getMotorPosition() * (2 * Math.PI);
+     SmartDashboard.putNumber("Motor Position (Degrees)", Math.toDegrees(toRadiants));
+    }
+
+  }
+
 
 
