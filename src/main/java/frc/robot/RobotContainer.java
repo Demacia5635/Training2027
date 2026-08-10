@@ -33,11 +33,11 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     //new Trigger(m_exampleSubsystem::exampleCondition)
         //.onTrue(new ExampleCommand(m_exampleSubsystem));
-    controller.a().onTrue(new SimpleMotorCommand(subsystem, 0.5, 5.0));
+    controller.a().onTrue(new SimpleMotorCommand(subsystem, 1,  0.5, 5.0));
   }
 
   private void configureDefaultCommands() {
-    subsystem.setDefaultCommand(new SimpleMotorCommand(subsystem, 0, 0));
+    subsystem.setDefaultCommand(new SimpleMotorCommand(subsystem, 0, 0, 0));
   }
 
   /**
@@ -46,7 +46,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SimpleMotorCommand(subsystem, 0.3, 10.0);
+    return new SimpleMotorCommand(subsystem, 1, 0.1, 5.0);
   }
 
 }
