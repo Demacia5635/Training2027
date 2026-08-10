@@ -37,6 +37,10 @@ public class SimpleMotorSubsystem extends SubsystemBase {
         return motor1.getPosition().getValueAsDouble();
     }
 
+    public double getMotor2Pos() {
+        return motor2.getPosition().getValueAsDouble();
+    }
+
     public void stop() {
         motor1.set(0);
         motor2.set(0);
@@ -46,5 +50,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Left Motor Speed", getMotor1Pos());
+        SmartDashboard.putNumber("Right Motor Speed", getMotor2Pos());
     }
+    
 }
