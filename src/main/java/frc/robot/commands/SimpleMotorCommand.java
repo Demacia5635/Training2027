@@ -30,6 +30,7 @@ public class SimpleMotorCommand extends Command {
     @Override
     public void execute(){
         motorSubsystem.setPower(power);
+        
     }
 
     @Override

@@ -23,6 +23,11 @@ public final class Constants {
       public final static String DRIVER_CANBUS = "rio";
       public final static int STEER_ID = 2;
       public final static String STEER_CANBUS = "rio";
+      public final static double STEER_GEAR_RATIO = 6.12;
+      public final static double DRIVE_GEAR_RATIO = 0.25;
+      public final static double DRIVE_CIRCUMFERENCE = 0.3191;
+      public final static double motorPower = 0.3;
+
     }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;

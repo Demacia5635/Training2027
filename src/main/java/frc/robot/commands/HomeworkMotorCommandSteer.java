@@ -3,10 +3,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.HomeworkMotorSubsystemConstants;
 import frc.robot.subsystems.HomeworkMotorSubsystem;
 
-public class HomeworkMotorCommand extends Command {
+public class HomeworkMotorCommandSteer extends Command {
     private final HomeworkMotorSubsystem MOTOR_SUBSYSTEM;
     private double wantedPosition;
-   public HomeworkMotorCommand(HomeworkMotorSubsystem motorSubsystem, double wantedPosition) {
+   public HomeworkMotorCommandSteer(HomeworkMotorSubsystem motorSubsystem, double wantedPosition) {
     this.MOTOR_SUBSYSTEM = motorSubsystem;
     this.wantedPosition = wantedPosition;
     addRequirements(motorSubsystem);
@@ -19,17 +19,17 @@ public class HomeworkMotorCommand extends Command {
 
    @Override
    public void execute(){
-      MOTOR_SUBSYSTEM.driveSetPower(MOTOR_SUBSYSTEM.getDrivePos() > (2*Math.PI * wantedPosition / HomeworkMotorSubsystemConstants.DRIVE_CIRCUMFERENCE) ? HomeworkMotorSubsystemConstants.motorPower : -(HomeworkMotorSubsystemConstants.motorPower));
+      MOTOR_SUBSYSTEM.steerSetPower(MOTOR_SUBSYSTEM.getSteerPos() > wantedPosition ? HomeworkMotorSubsystemConstants.motorPower : -(HomeworkMotorSubsystemConstants.motorPower));
       }
    
 
    @Override
    public boolean isFinished(){
-     return Math.abs(MOTOR_SUBSYSTEM.getDrivePos() - (2*Math.PI * wantedPosition / HomeworkMotorSubsystemConstants.DRIVE_CIRCUMFERENCE) ) <= 3;
+     return Math.abs(MOTOR_SUBSYSTEM.getSteerPos() - wantedPosition) <= 3;
    }
 
    @Override
    public void end(boolean interrupted){
-    MOTOR_SUBSYSTEM.driveStop();
+    MOTOR_SUBSYSTEM.steerStop();
    }
 }

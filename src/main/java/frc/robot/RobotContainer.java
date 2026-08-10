@@ -7,9 +7,12 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.HomeworkMotorCommand;
+import frc.robot.commands.HomeworkMotorCommandSteer;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.HomeworkMotorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -38,7 +41,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand(){
-      return new HomeworkMotorCommand(homeworkMotorSubsystem, 0.5, 0.3, 2, 4);
+      return new HomeworkMotorCommand(homeworkMotorSubsystem, 90).andThen(new HomeworkMotorCommand(homeworkMotorSubsystem, 135).alongWith(new HomeworkMotorCommandSteer(homeworkMotorSubsystem, 1))).andThen(new HomeworkMotorCommandSteer(homeworkMotorSubsystem, 0).alongWith(new HomeworkMotorCommand(homeworkMotorSubsystem, -1)));
   }
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -49,6 +52,8 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
+  
+  
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
@@ -56,7 +61,6 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.a().onTrue(new HomeworkMotorCommand(homeworkMotorSubsystem, 0.5, 0.3, 2, 4));
   }
 
   /**
