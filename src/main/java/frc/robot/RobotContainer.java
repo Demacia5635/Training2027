@@ -6,7 +6,6 @@ package frc.robot;
 
 import frc.robot.commands.SimpleMotorCommand;
 import frc.robot.subsystems.SimpleMotorSubsystem;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -67,18 +66,31 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
+
+  public double leftYDeadBand() {
+    if (Math.abs(controller.getLeftY()) < 0.1) {return 0;}
+    else {return controller.getLeftY();}
+  }
+
+  public double rightYDeadBand() {
+    if (Math.abs(controller.getRightY()) < 0.1) {return 0;}
+    else {return controller.getRightY();}
+  }
   private void configureBindings() {
     // When a is pressed move steer motor
     controller.a().onTrue(
         new SimpleMotorCommand(subsytem, 0.2, 0, 1)
             .alongWith(Commands.print("A pressed"))); // power is between -1 and 1
-
-    // bonus: get left joystick's Y value
-    controller.getLeftY();
-
     
-    // bonus: get the right joystick's Y value
-    controller.getRightY();
+
+
+
+    // call the function
+    leftYDeadBand();
+
+    // call the function
+    rightYDeadBand();
+
 
 
     // when b is pressed move drive motor
