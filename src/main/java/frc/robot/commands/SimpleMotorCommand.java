@@ -10,7 +10,7 @@ public class SimpleMotorCommand extends Command{
 private final double power;
 private SimpleMotorSubsystem subsystem;
 private final double duration;
-private Timer timer;
+private Timer timer = new Timer();
 private double startTime=0;
 public SimpleMotorCommand( SimpleMotorSubsystem subsystem, double power, double duration) {
     this.power = power;
