@@ -7,13 +7,17 @@ import frc.robot.Constants.myfirstsubsystemConstants;
 
 public class SimpleMotorSubsystem extends SubsystemBase{
 
-private final TalonFX motor;
+private final TalonFX driveMotor;
+private final TalonFX steerMotor;
   public SimpleMotorSubsystem() {
     super();
-    motor = new TalonFX(Constants.myfirstsubsystemConstants.motorId, Constants.myfirstsubsystemConstants.motorcanbus);
+    driveMotor = new TalonFX(Constants.myfirstsubsystemConstants.motoridDrive, Constants.myfirstsubsystemConstants.motorcanbus);
+    steerMotor = new TalonFX(Constants.myfirstsubsystemConstants.motoridSteer, Constants.myfirstsubsystemConstants.motorcanbus);
   }
+
+
   public void setpower(double power) {
-    motor.set(power);
+    driveMotor.set(power);
   }
   public void stop() {
     setpower(0);
