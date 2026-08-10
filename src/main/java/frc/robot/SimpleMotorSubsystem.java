@@ -1,8 +1,8 @@
 package frc.robot;
-
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-public class SimpleMotorSubsystem {
+public class SimpleMotorSubsystem extends SubsystemBase {
 
    // המנועים שלנו
   private final TalonFX motor;
