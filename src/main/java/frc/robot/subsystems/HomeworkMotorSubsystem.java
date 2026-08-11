@@ -6,6 +6,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.HomeworkMotorSubsystemConstants;
 
 
 public class HomeworkMotorSubsystem extends SubsystemBase {
@@ -29,11 +30,11 @@ public class HomeworkMotorSubsystem extends SubsystemBase {
     }
 
     public double getSteerPos() {
-        return 2*Math.PI * (steerMotor.getPosition().getValueAsDouble());
+        return 2*Math.PI * (HomeworkMotorSubsystemConstants.STEER_GEAR_RATIO * (steerMotor.getPosition().getValueAsDouble()));
     }
 
     public double getDrivePos() {
-        return 2*Math.PI * (driveMotor.getPosition().getValueAsDouble());
+        return (driveMotor.getPosition().getValueAsDouble()) * HomeworkMotorSubsystemConstants.DRIVE_CIRCUMFERENCE * HomeworkMotorSubsystemConstants.DRIVE_GEAR_RATIO;
     }
 
     public double getSteerSpeed() {

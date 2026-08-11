@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.HomeworkMotorSubsystemConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.HomeworkMotorCommand;
@@ -41,7 +42,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand(){
-      return new HomeworkMotorCommand(homeworkMotorSubsystem, 90).andThen(new HomeworkMotorCommand(homeworkMotorSubsystem, 135).alongWith(new HomeworkMotorCommandSteer(homeworkMotorSubsystem, 1))).andThen(new HomeworkMotorCommandSteer(homeworkMotorSubsystem, 0).alongWith(new HomeworkMotorCommand(homeworkMotorSubsystem, -1)));
+      return new HomeworkMotorCommand(homeworkMotorSubsystem, 90, 0, true, false).andThen(new HomeworkMotorCommand(homeworkMotorSubsystem, 135, 1, true, true)).andThen(new HomeworkMotorCommand(homeworkMotorSubsystem, 0, -1, true, true));
   }
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
