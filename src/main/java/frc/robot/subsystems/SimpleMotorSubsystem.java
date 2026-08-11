@@ -9,56 +9,64 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SimpleMotorSubsystem extends SubsystemBase {
 
-    private final TalonFX motor1; // DRIVE
-    private final TalonFX motor2; // STEER
+    // Motor 1 = DRIVE
+    private final TalonFX driveMotor;
+
+    // Motor 2 = STEER
+    private final TalonFX steerMotor;
+
 
     public SimpleMotorSubsystem() {
 
         super();
 
-        motor1 = new TalonFX(
+        driveMotor = new TalonFX(
             Constants.SimpleMotorConstants.Motor1ID,
             Constants.SimpleMotorConstants.MotorCANbus
         );
 
-        motor2 = new TalonFX(
+        steerMotor = new TalonFX(
             Constants.SimpleMotorConstants.Motor2ID,
             Constants.SimpleMotorConstants.MotorCANbus
         );
     }
 
 
+
     public void setDrivePower(double power) {
-        motor1.set(power);
+        driveMotor.set(power);
     }
 
     public double getDrivePosition() {
-        return motor1.getPosition().getValueAsDouble();
+        return driveMotor.getPosition().getValueAsDouble();
     }
 
     public double getDriveVelocity() {
-        return motor1.getVelocity().getValueAsDouble();
+        return driveMotor.getVelocity().getValueAsDouble();
+    }
+
+    public void stopDrive() {
+        driveMotor.set(0);
     }
 
     public void setSteerPower(double power) {
-        motor2.set(power);
+        steerMotor.set(power);
     }
 
     public double getSteerPosition() {
-        return motor2.getPosition().getValueAsDouble();
+        return steerMotor.getPosition().getValueAsDouble();
     }
 
     public double getSteerVelocity() {
-        return motor2.getVelocity().getValueAsDouble();
+        return steerMotor.getVelocity().getValueAsDouble();
     }
 
-
-    public void stopDrive() {
-        motor1.set(0);
+    public double getSteerAngle() {
+        return getSteerPosition() * 360.0;
     }
 
     public void stopSteer() {
-        motor2.set(0);
+        steerMotor.set(0);
     }
 
     public void stop() {
@@ -79,7 +87,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
             getDriveVelocity()
         );
 
-        // STEER
+
         SmartDashboard.putNumber(
             "Steer Position",
             getSteerPosition()
@@ -88,6 +96,11 @@ public class SimpleMotorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber(
             "Steer Velocity",
             getSteerVelocity()
+        );
+
+        SmartDashboard.putNumber(
+            "Steer Angle",
+            getSteerAngle()
         );
     }
 }
