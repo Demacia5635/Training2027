@@ -51,8 +51,11 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("position", getSteerAngle());
     double targetAngle = SmartDashboard.getNumber("3rd cmd Target", 0.0);
     SmartDashboard.putNumber("3rd Cmd error", targetAngle - getSteerAngle());
-
-  }
+    SmartDashboard.putNumber("Steer Position", getSteerAngle());
+    SmartDashboard.putNumber("Steer Velocity", steerMotor.getVelocity().getValueAsDouble());
+    SmartDashboard.putNumber("Drive Position", driveMotor.getPosition().getValueAsDouble());
+    SmartDashboard.putNumber("Drive Velocity", driveMotor.getVelocity().getValueAsDouble());
+}
 
   public void setSteerPower(double power) {
     steerMotor.set(power);
@@ -61,5 +64,13 @@ public class SimpleMotorSubsystem extends SubsystemBase {
   public void stop() {
     setSteerPower(0);
     setDrivePower(0);
+  }
+
+  public void setDrivePosition(double targetRotations) {
+    driveMotor.setControl(new PositionVoltage(targetRotations));
+  }
+
+  public double getDrivePosition() {
+    return driveMotor.getPosition().getValueAsDouble();
   }
 }

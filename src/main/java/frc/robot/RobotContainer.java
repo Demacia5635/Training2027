@@ -8,6 +8,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.GoToTargetAngleCommand;
 import frc.robot.commands.SimpleMotorCommand;
+import frc.robot.commands.moduleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SimpleMotorSubsystem;
 
@@ -27,6 +28,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    SmartDashboard.putData("Module Sequence Command", new moduleCommand(subsystem));
 
     SmartDashboard.putNumber("3rd cmd Target", 0.0);
 
