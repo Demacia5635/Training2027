@@ -10,69 +10,93 @@ public class HomeworkMotorCommand extends Command {
     private double wantedDrivePosition;
     private boolean changeDrive;
     private boolean changeSteer;
-   public HomeworkMotorCommand(HomeworkMotorSubsystem motorSubsystem, double wantedSteerPosition, double wantedDrivePosition, boolean changeSteer, boolean changeDrive) {
-    this.MOTOR_SUBSYSTEM = motorSubsystem;
-    this.wantedSteerPosition = wantedSteerPosition;
-    this.wantedDrivePosition = wantedDrivePosition;
-    this.changeDrive = changeDrive;
-    this.changeSteer = changeSteer;
-    addRequirements(motorSubsystem);
-   }
 
-
-   @Override
-   public void initialize(){
-   }
-
-   @Override
-   public void execute(){
-   if (changeDrive) {
-        double currentDrive = MOTOR_SUBSYSTEM.getDrivePos();
-        double targetDrive = wantedDrivePosition;
-        double driveError = targetDrive - currentDrive;
-
-        if (Math.abs(driveError) <= 0.05) {
-            MOTOR_SUBSYSTEM.driveStop();
-        } else {
-            MOTOR_SUBSYSTEM.driveSetPower(driveError > 0 ? HomeworkMotorSubsystemConstants.motorPower : -HomeworkMotorSubsystemConstants.motorPower);
-        }
+    public HomeworkMotorCommand(HomeworkMotorSubsystem motorSubsystem, double wantedSteerPosition,
+            double wantedDrivePosition, boolean changeSteer, boolean changeDrive) {
+        this.MOTOR_SUBSYSTEM = motorSubsystem;
+        this.wantedSteerPosition = wantedSteerPosition;
+        this.wantedDrivePosition = wantedDrivePosition;
+        this.changeDrive = changeDrive;
+        this.changeSteer = changeSteer;
+        addRequirements(motorSubsystem);
     }
 
-    if (changeSteer) {
-        double currentSteer = MOTOR_SUBSYSTEM.getSteerPosAsDegrees();
-        double steerError = wantedSteerPosition - ((180 / Math.PI) * currentSteer);
-
-        if (Math.abs(steerError) <= 2.0) {
-            MOTOR_SUBSYSTEM.steerStop();
-        } else {
-            MOTOR_SUBSYSTEM.steerSetPower(steerError > 0 ? HomeworkMotorSubsystemConstants.motorPower : -HomeworkMotorSubsystemConstants.motorPower);
-        }
+    @Override
+    public void initialize() {
+        System.out.println("initialized");
     }
-}
-   @Override
-   public boolean isFinished(){
-      boolean driveFinished = !changeDrive;
-      boolean steerFinished = !changeSteer;
 
-            if(changeDrive){
-               double currentDrive = MOTOR_SUBSYSTEM.getDrivePos();
-               double targetDrive = (2 * Math.PI * wantedDrivePosition) / HomeworkMotorSubsystemConstants.DRIVE_CIRCUMFERENCE;
-               driveFinished = Math.abs(targetDrive - currentDrive) <= 0.05;
+    @Override
+    public void execute() {
+        if (changeDrive) {
+            double currentDrive = MOTOR_SUBSYSTEM.getDrivePos();
+            double targetDrive = wantedDrivePosition;
+            double driveError = targetDrive - currentDrive;
+
+            if (Math.abs(driveError) <= HomeworkMotorSubsystemConstants.driveTolerance) {
+                MOTOR_SUBSYSTEM.driveStop();
+                System.out.println("Drive finished");
+            } else {
+                MOTOR_SUBSYSTEM.driveSetPower(
+                        (driveError > 0 ? Math.min(0.1 * driveError + 0.014763611212129784, HomeworkMotorSubsystemConstants.motorPower)
+                                : Math.max(0.1 * driveError - 0.014763611212129784, -HomeworkMotorSubsystemConstants.motorPower)));
+                System.out.println("Drive error: " + driveError + ", Drive power: "
+                        + (driveError > 0 ? Math.min(0.1 * driveError + 0.014763611212129784, HomeworkMotorSubsystemConstants.motorPower)
+                                : Math.max(0.1 * driveError - 0.014763611212129784, -HomeworkMotorSubsystemConstants.motorPower)));
             }
+        }
 
-            if (changeSteer) {
-                double currentSteer = MOTOR_SUBSYSTEM.getSteerPosAsDegrees();
-                steerFinished = Math.abs(wantedSteerPosition - currentSteer) <= 2.0;
+        if (changeSteer) {
+            double currentSteer = MOTOR_SUBSYSTEM.getSteerPos();
+            double steerError = wantedSteerPosition - (currentSteer);
+
+            if (Math.abs(steerError) <= HomeworkMotorSubsystemConstants.steerTolerance) {
+                MOTOR_SUBSYSTEM.steerStop();
+                System.out.println("Steer finished");
+            } else {
+                MOTOR_SUBSYSTEM.steerSetPower((steerError > 0
+                        ? Math.min(0.01 * steerError + 0.010959841558622941,
+                                HomeworkMotorSubsystemConstants.motorPower)
+                        : Math.max(0.01 * steerError - 0.010959841558622941,
+                                -HomeworkMotorSubsystemConstants.motorPower)));
+                System.out.println("Steer error: " + steerError + ", Steer power: "
+                        + (steerError > 0
+                                ? Math.min(0.01 * steerError + 0.010959841558622941,
+                                        HomeworkMotorSubsystemConstants.motorPower)
+                                : Math.max(0.01 * steerError - 0.010959841558622941,
+                                        -HomeworkMotorSubsystemConstants.motorPower)));
+
+            }
+        }
+
     }
 
-         return steerFinished && driveFinished;
+    @Override
+    public boolean isFinished() {
+        boolean driveFinished = true;
+        boolean steerFinished = true;
 
-   }
+        if (changeDrive) {
+            double currentDrive = MOTOR_SUBSYSTEM.getDrivePos();
+            double targetDrive = wantedDrivePosition;
+            driveFinished = Math.abs(targetDrive - currentDrive) <= HomeworkMotorSubsystemConstants.driveTolerance;
+            System.out.println("Drive " + driveFinished);
+        }
 
-   @Override
-   public void end(boolean interrupted){
-    MOTOR_SUBSYSTEM.driveStop();
-    MOTOR_SUBSYSTEM.steerStop();
-   }
+        if (changeSteer) {
+            double currentSteer = MOTOR_SUBSYSTEM.getSteerPos();
+            steerFinished = Math.abs(wantedSteerPosition - currentSteer) <= HomeworkMotorSubsystemConstants.steerTolerance;
+            System.out.println("Steer " + steerFinished);
+        }
+
+        return steerFinished && driveFinished;
+
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        MOTOR_SUBSYSTEM.driveStop();
+        MOTOR_SUBSYSTEM.steerStop();
+        System.out.println("ended");
+    }
 }
-

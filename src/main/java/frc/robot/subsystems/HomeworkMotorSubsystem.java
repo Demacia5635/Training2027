@@ -8,17 +8,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.HomeworkMotorSubsystemConstants;
 
-
 public class HomeworkMotorSubsystem extends SubsystemBase {
-    TalonFX driveMotor = new TalonFX(Constants.HomeworkMotorSubsystemConstants.DRIVER_ID,
-            Constants.HomeworkMotorSubsystemConstants.DRIVER_CANBUS);
+    TalonFX driveMotor = new TalonFX(Constants.HomeworkMotorSubsystemConstants.DRIVE_ID,
+            Constants.HomeworkMotorSubsystemConstants.DRIVE_CANBUS);
     TalonFX steerMotor = new TalonFX(Constants.HomeworkMotorSubsystemConstants.STEER_ID,
             Constants.HomeworkMotorSubsystemConstants.STEER_CANBUS);
 
     public HomeworkMotorSubsystem() {
         super();
-        SmartDashboard.putData(this);
 
+        setDrivePos(0);
+        setSteerPos(0);
+
+        SmartDashboard.putData("Subsystem", this);
     }
 
     public void driveSetPower(double power) {
@@ -30,11 +32,13 @@ public class HomeworkMotorSubsystem extends SubsystemBase {
     }
 
     public double getSteerPos() {
-        return 2*Math.PI * (HomeworkMotorSubsystemConstants.STEER_GEAR_RATIO * (steerMotor.getPosition().getValueAsDouble()));
+        return 2 * Math.PI
+                * ((steerMotor.getPosition().getValueAsDouble()) / HomeworkMotorSubsystemConstants.STEER_GEAR_RATIO);
     }
 
     public double getDrivePos() {
-        return (driveMotor.getPosition().getValueAsDouble()) * HomeworkMotorSubsystemConstants.DRIVE_CIRCUMFERENCE * HomeworkMotorSubsystemConstants.DRIVE_GEAR_RATIO;
+        return (driveMotor.getPosition().getValueAsDouble()) * HomeworkMotorSubsystemConstants.DRIVE_CIRCUMFERENCE
+                / HomeworkMotorSubsystemConstants.DRIVE_GEAR_RATIO;
     }
 
     public double getSteerSpeed() {
@@ -54,16 +58,21 @@ public class HomeworkMotorSubsystem extends SubsystemBase {
     }
 
     public double getSteerPosAsDegrees() {
-        return (180/Math.PI) * getSteerPos();
+        return (180 / Math.PI) * getSteerPos();
     }
 
-    public double getDrivePosAsDegrees() {
-        return (180/Math.PI) * getDrivePos();
+    public void setSteerPos(double pos) {
+        steerMotor.setPosition(pos);
     }
+
+    public void setDrivePos(double pos) {
+        driveMotor.setPosition(pos);
+    }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addDoubleProperty("Steer Position", this::getSteerPosAsDegrees, null);
-        builder.addDoubleProperty("Drive Position", this::getDrivePosAsDegrees, null);
+        builder.addDoubleProperty("Drive Position", this::getDrivePos, null);
         builder.addDoubleProperty("Steer Speed ", this::getSteerSpeed, null);
         builder.addDoubleProperty("Drive Speed ", this::getDriveSpeed, null);
 

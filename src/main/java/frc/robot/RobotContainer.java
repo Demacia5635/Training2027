@@ -11,6 +11,7 @@ import frc.robot.commands.HomeworkMotorCommand;
 import frc.robot.commands.HomeworkMotorCommandSteer;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.HomeworkMotorSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -39,10 +40,11 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     getAutonomousCommand();
+    SmartDashboard.putData("Command Motor", new HomeworkMotorCommand(homeworkMotorSubsystem, 100, 10, true, true));
   }
 
   public Command getAutonomousCommand(){
-      return new HomeworkMotorCommand(homeworkMotorSubsystem, 90, 0, true, false).andThen(new HomeworkMotorCommand(homeworkMotorSubsystem, 135, 1, true, true)).andThen(new HomeworkMotorCommand(homeworkMotorSubsystem, 0, -1, true, true));
+      return new HomeworkMotorCommand(homeworkMotorSubsystem, 0.5 * Math.PI, 0, true, false).andThen(new HomeworkMotorCommand(homeworkMotorSubsystem, 0.75 * Math.PI, 1, true, true)).andThen(new HomeworkMotorCommand(homeworkMotorSubsystem, 0, -1, true, true));
   }
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
