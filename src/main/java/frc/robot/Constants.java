@@ -18,10 +18,8 @@ package frc.robot;
  */
 public final class Constants {
   public static final class myfirstsubsystemConstants {
-    public static final int motoridDrive = 1+-9
-    6
-    +;
-    public static final int motoridSteer = 2;
+    public static final int motoridDrive = 7;
+    public static final int motoridSteer = 8;
     public static final String motorcanbus = "rio";
   }
 public static final class driverConstants {
