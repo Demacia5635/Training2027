@@ -4,12 +4,18 @@
 
 package frc.robot;
 
+import frc.robot.commands.SetDriveDistanceCommand;
+import frc.robot.commands.SetSteerAngleCommand;
 import frc.robot.commands.SimpleMotorCommand;
 import frc.robot.subsystems.SimpleMotorSubsystem;
+
+
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -24,7 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final SimpleMotorSubsystem subsytem = new SimpleMotorSubsystem();
+  private final SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
   private CommandXboxController controller = new CommandXboxController(Constants.ControllerConstants.CONTROLLER_ID);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -38,17 +44,18 @@ public class RobotContainer {
 
     // set the default command using RunCommand
     // set default command for both drive and steer
-    // bonus: when you move the joystick you move the motor, the left joystick for the drive motor and the right joystick for the steer motor.
-    subsytem.setDefaultCommand(
+    // bonus: when you move the joystick you move the motor, the left joystick for
+    // the drive motor and the right joystick for the steer motor.
+    subsystem.setDefaultCommand(
         new RunCommand(
             () -> {
               // check left joystick and update drive power
-              subsytem.setDrivePower(leftYDeadBand());
+              subsystem.setDrivePower(leftYDeadBand());
 
               // check right joystick and update steer power
-              subsytem.setSteerPower(rightYDeadBand());
+              subsystem.setSteerPower(rightYDeadBand());
             },
-            subsytem));
+            subsystem));
 
   }
 
@@ -68,22 +75,26 @@ public class RobotContainer {
    */
 
   public double leftYDeadBand() {
-    if (Math.abs(controller.getLeftY()) < 0.1) {return 0;}
-    else {return controller.getLeftY();}
+    if (Math.abs(controller.getLeftY()) < 0.1) {
+      return 0;
+    } else {
+      return controller.getLeftY();
+    }
   }
 
   public double rightYDeadBand() {
-    if (Math.abs(controller.getRightY()) < 0.1) {return 0;}
-    else {return controller.getRightY();}
+    if (Math.abs(controller.getRightY()) < 0.1) {
+      return 0;
+    } else {
+      return controller.getRightY();
+    }
   }
+
   private void configureBindings() {
     // When a is pressed move steer motor
     controller.a().onTrue(
-        new SimpleMotorCommand(subsytem, 0.2, 0, 1)
+        new SimpleMotorCommand(subsystem, 0.2, 0, 1)
             .alongWith(Commands.print("A pressed"))); // power is between -1 and 1
-    
-
-
 
     // call the function
     leftYDeadBand();
@@ -91,30 +102,25 @@ public class RobotContainer {
     // call the function
     rightYDeadBand();
 
-
-
     // when b is pressed move drive motor
     controller.b().onTrue(
-        new SimpleMotorCommand(subsytem, 0, -0.3, 1)
+        new SimpleMotorCommand(subsystem, 0, -0.3, 1)
             .alongWith(Commands.print("B pressed!")));
 
-
-// when the left trigger is pressed vibrate the controller
-controller.leftTrigger().whileTrue(
+    // when the left trigger is pressed vibrate the controller
+    controller.leftTrigger().whileTrue(
         Commands.startEnd(
             () -> controller.getHID().setRumble(RumbleType.kRightRumble, 1.0), // When pressed
-            () -> controller.getHID().setRumble(RumbleType.kRightRumble, 0.0)  // When released
-        )
-    );
-// when the right trigger is pressed vibrate the controller
+            () -> controller.getHID().setRumble(RumbleType.kRightRumble, 0.0) // When released
+        ));
+    // when the right trigger is pressed vibrate the controller
 
     controller.rightTrigger().whileTrue(
         Commands.startEnd(
             () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 1.0), // When pressed
-            () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 0.0)  // When released
-        )
-    );
-}
+            () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 0.0) // When released
+        ));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -122,9 +128,21 @@ controller.leftTrigger().whileTrue(
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    // return new SimpleMotorCommand(subsytem, 0.3, 0.1, 5); // power is between -1
-    // and 1
-    return null;
+return new SequentialCommandGroup(
+        new SetSteerAngleCommand(subsystem, 90.0),
+
+        new ParallelCommandGroup(
+          
+            new SetSteerAngleCommand(subsystem, 135.0)
+        ).withTimeout(2.0),
+
+        new ParallelCommandGroup(
+            new SetDriveDistanceCommand(subsystem, -1.0),
+            new SetSteerAngleCommand(subsystem, 0.0)
+        ).withTimeout(2.0),
+
+
+        Commands.runOnce(() -> subsystem.stopAll(), subsystem)
+    );
   }
 }
