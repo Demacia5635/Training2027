@@ -13,6 +13,7 @@ import frc.robot.subsystems.SimpleMotorSubsystem;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -46,16 +47,18 @@ public class RobotContainer {
     // set default command for both drive and steer
     // bonus: when you move the joystick you move the motor, the left joystick for
     // the drive motor and the right joystick for the steer motor.
-    subsystem.setDefaultCommand(
-        new RunCommand(
-            () -> {
-              // check left joystick and update drive power
-              subsystem.setDrivePower(leftYDeadBand());
+    // subsystem.setDefaultCommand(
+    //     new RunCommand(
+    //         () -> {
+    //           // check left joystick and update drive power
+    //           subsystem.setDrivePower(leftYDeadBand());
 
-              // check right joystick and update steer power
-              subsystem.setSteerPower(rightYDeadBand());
-            },
-            subsystem));
+    //           // check right joystick and update steer power
+    //           subsystem.setSteerPower(rightYDeadBand());
+    //         },
+    //         subsystem));
+
+    subsystem.setDefaultCommand(new SetSteerAngleCommand(subsystem, 180));
 
   }
 
@@ -128,21 +131,31 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-return new SequentialCommandGroup(
-        new SetSteerAngleCommand(subsystem, 90.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS),
+    return new SetSteerAngleCommand(subsystem, Math.toRadians(0)); // if u want degrees
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+    // return null;
+// return new SequentialCommandGroup(
+//         new SetSteerAngleCommand(subsystem, 90.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS),
 
-        new ParallelCommandGroup(
+//         new ParallelCommandGroup(
           
-            new SetSteerAngleCommand(subsystem, 135.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS)
-        ).withTimeout(2.0),
+//             new SetSteerAngleCommand(subsystem, 135.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS)
+//         ).withTimeout(2.0),
 
-        new ParallelCommandGroup(
-            new SetDriveDistanceCommand(subsystem, -1.0),
-            new SetSteerAngleCommand(subsystem, 0.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS)
-        ).withTimeout(2.0),
+//         new ParallelCommandGroup(
+//             new SetDriveDistanceCommand(subsystem, -1.0),
+//             new SetSteerAngleCommand(subsystem, 0.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS)
+//         ).withTimeout(2.0),
 
 
-        Commands.runOnce(() -> subsystem.stopAll(), subsystem)
-    );
+//         Commands.runOnce(() -> subsystem.stopAll(), subsystem)
+//     );
   }
 }

@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import frc.demacia.utils.motors.TalonFXConfig;
+import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -21,10 +24,40 @@ public final class Constants {
   }
 
   public static class MotorConstants {
+    public static final String STEER_NAME = "Steer";
+    public static final String DRIVE_NAME = "Drive";
+
     public static final int STEER_ID = 2;
     public static final int DRIVE_ID = 1;
 
-    public static final String MOTOR_CANBUS = "rio";
+
+    public static final int STEER_KP = 2; 
+    public static final int STEER_KI = 0; 
+    public static final int STEER_KD = 0;
+    
+    
+    public static final int DRIVE_KP = 1; 
+    public static final int DRIVE_KI = 0; 
+    public static final int DRIVE_KD = 0; 
+
+    public static final double STEER_GEAR_RATIO = 150/7;
+    public static final double DRIVE_GEAR_RATIO = 8.14;
+
+    public static final Canbus MOTOR_CANBUS = Canbus.Rio;
+
+    public static final TalonFXConfig STEER_CONFIG = new TalonFXConfig(STEER_ID, MOTOR_CANBUS, STEER_NAME)
+    .withPID(STEER_KP, STEER_KI, STEER_KD, 0.05, 0, 0, 0, 0, 0)
+    .withRadiansMotor(STEER_GEAR_RATIO)
+    .withInvert(true)
+    .withBrake(false)
+    ;
+
+
+    public static final TalonFXConfig DRIVE_CONFIG = new TalonFXConfig(DRIVE_ID, MOTOR_CANBUS, DRIVE_NAME)
+    .withPID(DRIVE_KP, DRIVE_KI, DRIVE_KD, DRIVE_KI, 0, 0, 0, 0, 0)
+    .withMeterMotor(DRIVE_GEAR_RATIO,4 * Math.PI * 0.254)
+    ;
+
   }
 
   public static class ControllerConstants {

@@ -10,9 +10,9 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.demacia.vision.Camera;
+import frc.demacia.vision.CameraConfig;
 
-import static frc.demacia.vision.utils.VisionConstants.*;
+import static frc.demacia.vision.VisionConstants.*;
 
 import java.util.function.Supplier;
 
@@ -58,7 +58,7 @@ public class Tag extends SubsystemBase {
 
   private double Yaw3d;
   private Rotation2d yaw3dRotation2d;
-  private Camera camera;
+  private CameraConfig camera;
 
   private double confidence = 0;
 
@@ -69,7 +69,7 @@ public class Tag extends SubsystemBase {
    * * @param getRobotAngle Pigeon2 gyroscope for determining robot
    * orientation
    */
-  public Tag(Supplier<Rotation2d> getRobotAngle, Supplier<ChassisSpeeds> speeds, Camera camera) {
+  public Tag(Supplier<Rotation2d> getRobotAngle, Supplier<ChassisSpeeds> speeds, CameraConfig camera) {
     this.getRobotAngle = getRobotAngle;
     this.speeds = speeds;
 
@@ -271,7 +271,7 @@ private void crop() {
     return Yaw3d = Table.getEntry("botpose").getDoubleArray(new double[] { 0, 0, 0, 0, 0, 0 })[5];
   }
 
-  public Camera getCamera() {
+  public CameraConfig getCamera() {
     return camera;
   }
 }

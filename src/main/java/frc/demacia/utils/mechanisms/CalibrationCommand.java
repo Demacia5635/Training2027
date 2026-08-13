@@ -18,8 +18,9 @@ import frc.demacia.utils.motors.MotorInterface;
  * Supports an optional initial delay where a different power is applied.
  * </p>
  */
-public class CalibratinCommand extends Command {
+public class CalibrationCommand extends Command {
   BaseMechanism mechanism;
+  String motorName;
   MotorInterface motor;
   double power;
   BooleanSupplier stopSupplier;
@@ -37,8 +38,9 @@ public class CalibratinCommand extends Command {
    * @param startPower Initial power to apply before calibration starts
    * @param sec Duration in seconds to apply startPower
    */
-  public CalibratinCommand(BaseMechanism mechanism, String motorName, double power, BooleanSupplier stopSupplier, double resetPos, double startPower, double sec) {
+  public CalibrationCommand(BaseMechanism mechanism, String motorName, double power, BooleanSupplier stopSupplier, double resetPos, double startPower, double sec) {
     this.mechanism = mechanism;
+    this.motorName = motorName;
     motor = mechanism.getMotor(motorName);
     this.power = power;
     this.stopSupplier = stopSupplier;
@@ -57,14 +59,14 @@ public class CalibratinCommand extends Command {
    * @param stopSupplier Condition to finish calibration
    * @param resetPos The position value to set the encoder to upon completion
    */
-  public CalibratinCommand(BaseMechanism mechanism, String motorName, double power, BooleanSupplier stopSupplier, double resetPos) {
+  public CalibrationCommand(BaseMechanism mechanism, String motorName, double power, BooleanSupplier stopSupplier, double resetPos) {
     this(mechanism, motorName, power, stopSupplier, resetPos, 0, 0);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.start();
+    timer.restart();
   }
 
   /**
@@ -89,7 +91,7 @@ public class CalibratinCommand extends Command {
     timer.reset();
     motor.stop();
     motor.setEncoderPosition(resetPos);
-    mechanism.setCalibration(true);
+    mechanism.setCalibration(motorName, true);
   }
 
   // Returns true when the command should end.

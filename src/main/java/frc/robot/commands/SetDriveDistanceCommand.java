@@ -37,7 +37,7 @@ public class SetDriveDistanceCommand extends Command {
 
     System.out.println("Drive command finished");
     System.out.println("Postion " + subsystem.getDrivePositionMeters() + " Meters");
-    System.out.println("Velocity " + subsystem.getDriveRPM() + "RPM");
+    System.out.println("Velocity " + subsystem.getDriveVel() + "RPM");
   }
 
   @Override

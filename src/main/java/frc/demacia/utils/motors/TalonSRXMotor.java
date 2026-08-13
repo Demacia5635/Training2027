@@ -1,295 +1,262 @@
 package frc.demacia.utils.motors;
 
-import java.util.function.Supplier;
-
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Timer;
-import frc.demacia.utils.log.LogManager;
+import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.RobotBase;
+import frc.demacia.utils.Data;
+import frc.demacia.utils.log.Log;
 
 /**
  * Wrapper class for the CTRE Talon SRX motor controller using Phoenix 5.
- * <p>
- * Implements the MotorInterface for standard control.
- * <b>Note:</b> Many advanced control methods (Velocity, Motion Magic) are
- * currently
- * unimplemented in this wrapper and will log an error if called.
- * </p>
+ * Now extends BaseMotor to integrate with the uniform motor architecture.
  */
-public class TalonSRXMotor extends TalonSRX implements MotorInterface {
-    TalonSRXConfig config;
-    String name;
+public class TalonSRXMotor extends BaseMotor {
+  TalonSRX motor;
 
-    int slot = 0;
+  private final double TICKS_PER_REV = 4096.0;
 
-    ControlMode controlMode = ControlMode.DISABLE;
-    // Motor Stalling
-    private final Timer stallTimer = new Timer();
-    private boolean conditionActive = false;
-    private boolean IsDone = false;
-    private boolean isStalled = false;
+  private double lastVelocity = 0;
+  private double lastAcceleration = 0;
+  private double lastTime = 0;
 
-    /**
-     * Creates a new Talon SRX motor wrapper.
-     * 
-     * @param config The configuration object
-     */
-    public TalonSRXMotor(TalonSRXConfig config) {
-        super(config.id);
-        this.config = config;
-        name = config.name;
-        configMotor();
-        addLog();
-        setName(name);
-        // SmartDashboard.putData(name, this);
-        LogManager.log(name + " motor initialized");
-    }
+  /**
+   * Creates a new Talon SRX motor wrapper.
+   * 
+   * @param config The configuration object
+   */
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  public TalonSRXMotor(TalonSRXConfig config) {
+    super(config);
 
-    /**
-     * Applies the configuration to the motor using Phoenix 5 API.
-     * Sets limits, ramps, inversion, and neutral mode.
-     */
-    private void configMotor() {
-        configFactoryDefault();
-        configContinuousCurrentLimit((int) config.maxCurrent);
-        configPeakCurrentLimit((int) config.maxCurrent);
-        configPeakCurrentDuration(100);
-        enableCurrentLimit(true);
-        configClosedloopRamp(config.rampUpTime);
-        configOpenloopRamp(config.rampUpTime);
-        setInverted(config.inverted);
-        setNeutralMode(config.brake ? NeutralMode.Brake : NeutralMode.Coast);
-        configPeakOutputForward(config.maxVolt / 12.0);
-        configPeakOutputReverse(config.minVolt / 12.0);
-        configVoltageCompSaturation(config.maxVolt);
-        enableVoltageCompensation(true);
-    }
+    if (RobotBase.isSimulation()) {
+      new Data(() -> {
+        double vel = getCurrentVelocity();
+        double pos = getCurrentPosition();
+    
+        double newPos = pos + vel * 0.02;
 
-    @Override
-    public void setName(String name) {
-        MotorInterface.super.setName(name);
-        this.name = name;
-    }
-
-    /** Configures the logging entries for this motor */
-    private void addLog() {
-        // LogManager.addEntry(name + ": position, Velocity, Acceleration, Voltage,
-        // Current, CloseLoopError, CloseLoopSP",
-        // () -> getCurrentPosition(),
-        // () -> getCurrentVelocity(),
-        // () -> getCurrentAcceleration(),
-        // () -> getCurrentVoltage(),
-        // () -> getCurrentCurrent(),
-        // () -> getCurrentClosedLoopError(),
-        // () -> getCurrentClosedLoopSP()
-        // ).withLogLevel(LogLevel.LOG_ONLY_NOT_IN_COMP)
-        // .withIsMotor().build();
-    }
-
-    @Override
-    public void checkElectronics() {
-        com.ctre.phoenix.motorcontrol.Faults faults = new com.ctre.phoenix.motorcontrol.Faults();
-        getFaults(faults);
-        if (faults.hasAnyFault()) {
-            LogManager.log(name + " have fault num: " + faults.toString(), AlertType.kError);
-        }
-    }
-
-    @Override
-    public void changeSlot(int slot) {
-        if (slot < 0 || slot > 2) {
-            LogManager.log("slot is not between 0 and 2", AlertType.kError);
-            return;
-        }
-        this.slot = slot;
-    }
-
-    @Override
-    public void setNeutralMode(boolean isBrake) {
-        setNeutralMode(isBrake ? NeutralMode.Brake : NeutralMode.Coast);
-    }
-
-    @Override
-    public void setDuty(double power) {
-        set(com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput, power);
-        if (power == 0) {
-            controlMode = ControlMode.DISABLE;
-        } else {
-            controlMode = ControlMode.DUTYCYCLE;
-        }
-    }
-
-    @Override
-    public void setVoltage(double voltage) {
-        set(com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput, voltage / 12.0);
-        controlMode = ControlMode.VOLTAGE;
-    }
-
-    @Override
-    public void setVelocity(double velocity, double feedForward) {
-        LogManager.log("there is no Velocity");
-    }
-
-    @Override
-    public void setVelocity(double velocity) {
-        setVelocity(velocity, 0);
-    }
-
-    @Override
-    public void setVelocityWithAcceleration(double velocity, Supplier<Double> wantedAccelerationSupplier) {
-        setVelocity(velocity, wantedAccelerationSupplier.get() * config.pid[slot].kA());
-    }
-
-    @Override
-    public void setMotion(double position, double feedForward) {
-        LogManager.log("there is no motion");
-    }
-
-    @Override
-    public void setMotion(double position) {
-        setMotion(position, 0);
-    }
-
-    @Override
-    public void setAngle(double angle, double feedForward) {
-        setMotion(getCurrentPosition() + MathUtil.angleModulus(angle - getCurrentAngle()), feedForward);
-        controlMode = ControlMode.ANGLE;
-    }
-
-    @Override
-    public void setAngle(double angle) {
-        setAngle(angle, 0);
-    }
-
-    @Override
-    public void setPositionVoltage(double position, double feedForward) {
-        LogManager.log("there is no PositionVoltage");
-    }
-
-    @Override
-    public void setPositionVoltage(double position) {
-        setPositionVoltage(position, 0);
-    }
-
-    @SuppressWarnings("unused")
-    private double velocityFeedForward(double velocity) {
-        return velocity * velocity * Math.signum(velocity) * config.kv2;
-    }
-
-    @SuppressWarnings("unused")
-    private double positionFeedForward(double position) {
-        return Math.cos(position * config.posToRad) * config.kSin;
-    }
-
-    @Override
-    public int getCurrentControlMode() {
-        return controlMode.ordinal();
-    }
-
-    @Override
-    public double getCurrentClosedLoopSP() {
-        return getClosedLoopTarget(0) / config.motorRatio;
-    }
-
-    @Override
-    public double getCurrentClosedLoopError() {
-        return getClosedLoopError(0) / config.motorRatio;
-    }
-
-    @Override
-    public double getCurrentPosition() {
-        return getSelectedSensorPosition() / config.motorRatio;
-    }
-
-    @Override
-    public double getCurrentAngle() {
-        if (config.isRadiansMotor) {
-            return MathUtil.angleModulus(getCurrentPosition());
-        }
+        double nativePosition = (newPos * getTicksPerUnit());
+        motor.getSimCollection().setQuadratureRawPosition((int) nativePosition);
+      
         return 0;
+      });
     }
+  }
 
-    @Override
-    public double getCurrentVelocity() {
-        return (getSelectedSensorVelocity() * 10.0) / config.motorRatio;
-    }
+  @Override
+  protected void createMotor() {
+    motor = new TalonSRX(config.id);
+  }
 
-    @Override
-    public double getCurrentAcceleration() {
-        return 0; // Phoenix 5 SRX doesn't have direct acceleration
-    }
+  @Override
+  protected void createMotorConfig() {
+    motor.configFactoryDefault();
+  }
 
-    @Override
-    public double getCurrentVoltage() {
-        return getMotorOutputVoltage();
-    }
+  @Override
+  protected void configMaxCurrent(double maxCurrent) {
+    motor.configContinuousCurrentLimit((int) maxCurrent);
+    motor.configPeakCurrentLimit((int) maxCurrent);
+    motor.configPeakCurrentDuration(100);
+    motor.enableCurrentLimit(true);
+  }
 
-    @Override
-    public double getCurrentCurrent() {
-        return getStatorCurrent();
-    }
+  @Override
+  protected void configRampUpTime(double rampUpTime) {
+    motor.configClosedloopRamp(rampUpTime);
+    motor.configOpenloopRamp(rampUpTime);
+  }
 
-    @Override
-    public void setEncoderPosition(double position) {
-        setSelectedSensorPosition(position * config.motorRatio);
-    }
+  @Override
+  protected void configIsInverted(boolean isInverted) {
+    motor.setInverted(isInverted);
+  }
 
-    @Override
-    public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Talon SRX Motor");
-        builder.addDoubleProperty("ControlMode", this::getCurrentControlMode, null);
-        builder.addDoubleProperty("Position", this::getCurrentPosition, null);
-        builder.addDoubleProperty("Velocity", this::getCurrentVelocity, null);
-        builder.addDoubleProperty("Voltage", this::getCurrentVoltage, null);
-        builder.addDoubleProperty("Current", this::getCurrentCurrent, null);
-        builder.addDoubleProperty("CloseLoop Error", this::getCurrentClosedLoopError, null);
-        if (config.isRadiansMotor) {
-            builder.addDoubleProperty("Angle", this::getCurrentAngle, null);
-        }
-    }
+  @Override
+  protected void configNeutralMode(boolean isBrake) {
+    motor.setNeutralMode(isBrake ? NeutralMode.Brake : NeutralMode.Coast);
+  }
 
-    @Override
-    public String getName() {
-        return name;
-    }
+  @Override
+  protected void configMaxVolt(double maxVolt) {
+    motor.configPeakOutputForward(maxVolt / 12.0);
+    motor.configVoltageCompSaturation(maxVolt);
+    motor.enableVoltageCompensation(true);
+  }
 
-    public double gearRatio() {
-        return config.motorRatio;
-    }
+  @Override
+  protected void configMinVolt(double minVolt) {
+    motor.configPeakOutputReverse(minVolt / 12.0);
+  }
 
-    public void updateStallDetection() {
-        if (config.conditionIsTrue == null || config.lowVelocityThreshold == 0)
-            return;
-        double currentVelocity = Math.abs(getCurrentVelocity());
-        double currentCurrent = getCurrentCurrent();
-        if (currentCurrent > config.highCurrentThreshold && currentVelocity < config.lowVelocityThreshold) {
-            if (!conditionActive) {
-                stallTimer.restart();
-                conditionActive = true;
-                IsDone = false;
-                isStalled = true;
-            }
-            if (stallTimer.hasElapsed(config.secondsThreshold) && !IsDone) {
-                config.conditionIsTrue.accept(config);
-                IsDone = true;
-            }
-        } else if (conditionActive) {
-            stallTimer.stop();
-            stallTimer.reset();
-            conditionActive = false;
-            IsDone = false;
-            isStalled = false;
-        }
-    }
-public boolean getStallDetection() {
-  return isStalled;
-}
+  @Override
+  protected void configMotorRatio(double motorRatio) {
 
-    public void stop() {
-        setDuty(0);
+  }
+
+  @Override
+  protected void configPidFf(CloseLoopParam[] pidFfParams) {
+    for (int slot = 0; slot < 3; slot++) {
+      if (pidFfParams.length > slot && pidFfParams[slot] != null) {
+        double maxOutputNative = 1023.0;
+        double voltageScale = config.maxVolt;
+        double ticksPerUnit = getTicksPerUnit();
+
+        double kP_Native = (pidFfParams[slot].kP() * maxOutputNative) / (voltageScale * ticksPerUnit);
+        double kI_Native = (pidFfParams[slot].kI() * maxOutputNative) / (voltageScale * ticksPerUnit);
+        double kD_Native = (pidFfParams[slot].kD() * 10.0 * maxOutputNative) / (voltageScale * ticksPerUnit);
+        double kF_Native = (pidFfParams[slot].kV() * 10.0 * maxOutputNative) / (voltageScale * ticksPerUnit);
+
+        motor.config_kP(slot, kP_Native);
+        motor.config_kI(slot, kI_Native);
+        motor.config_kD(slot, kD_Native);
+        motor.config_kF(slot, kF_Native);
+      }
     }
+  }
+
+  @Override
+  protected void configMotionMagic(double maxVelocity, double maxAcceleration, double maxJerk) {
+    double nativeCruiseVelocity = (maxVelocity * getTicksPerUnit()) / 10.0;
+    double nativeAcceleration = (maxAcceleration * getTicksPerUnit()) / 10.0;
+
+    motor.configMotionCruiseVelocity(nativeCruiseVelocity);
+    motor.configMotionAcceleration(nativeAcceleration);
+  }
+
+  @Override
+  protected void applyConfigs() {
+
+  }
+
+  @Override
+  protected void applyPidFfConfigs(int slot) {
+    configPidFf(config.pidFfParams);
+  }
+
+  @Override
+  protected void applyMotionMagicConfigs() {
+    configMotionMagic(config.maxVelocity, config.maxAcceleration, config.maxJerk);
+  }
+
+  @Override
+  protected void applyNeutralModeConfigs() {
+    motor.setNeutralMode(config.brake ? NeutralMode.Brake : NeutralMode.Coast);
+  }
+
+  @Override
+  protected void setSignals() {
+    positionSignal = new Data<>(() -> motor.getSelectedSensorPosition() / getTicksPerUnit());
+    velocitySignal = new Data<>(() -> (motor.getSelectedSensorVelocity() * 10.0) / getTicksPerUnit());
+    accelerationSignal = new Data<>(() -> {
+      double currentTimestamp = Timer.getFPGATimestamp();
+      double dt = currentTimestamp - lastTime;
+
+      if (dt < 0.001) {
+        return lastAcceleration;
+      }
+
+      double currentVelocity = (motor.getSelectedSensorVelocity() * 10.0) / getTicksPerUnit();
+
+      lastAcceleration = (currentVelocity - lastVelocity) / dt;
+      lastVelocity = currentVelocity;
+      lastTime = currentTimestamp;
+
+      return lastAcceleration;
+    });
+    voltageSignal = new Data<>(() -> motor.getMotorOutputVoltage());
+    currentSignal = new Data<>(() -> motor.getStatorCurrent());
+    closedLoopSPSignal = new Data<>(() -> motor.getClosedLoopTarget(0) / getTicksPerUnit());
+    closedLoopErrorSignal = new Data<>(() -> motor.getClosedLoopError(0) / getTicksPerUnit());
+  }
+
+  @Override
+  protected void changeMotorSlot(int slot) {
+    motor.selectProfileSlot(slot, 0);
+  }
+
+  @Override
+  protected void stopMotor() {
+    motor.set(com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput, 0);
+  }
+
+  @Override
+  protected void setMotorDuty(double power) {
+    motor.set(com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput, power);
+
+    if (RobotBase.isSimulation()) {
+      double nativeVelocity = (power * MAX_SIM_VEL * getTicksPerUnit()) / 10.0;
+      motor.getSimCollection().setQuadratureVelocity((int) nativeVelocity);
+    }
+  }
+
+  @Override
+  protected void setMotorVoltage(double voltage) {
+    motor.set(com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput, voltage / config.maxVolt);
+
+    if (RobotBase.isSimulation()) {
+      double nativeVelocity = (voltage / config.maxVolt * MAX_SIM_VEL * getTicksPerUnit()) / 10.0;
+      motor.getSimCollection().setQuadratureVelocity((int) nativeVelocity);
+    }
+  }
+
+  @Override
+  protected void setMotorVelocity(double velocity, double feedForward) {
+    double nativeVelocity = (velocity * getTicksPerUnit()) / 10.0;
+    motor.set(com.ctre.phoenix.motorcontrol.ControlMode.Velocity, nativeVelocity,
+        DemandType.ArbitraryFeedForward, feedForward / config.maxVolt);
+
+    if (RobotBase.isSimulation()) {
+      motor.getSimCollection().setQuadratureVelocity((int) nativeVelocity);
+    }
+  }
+
+  @Override
+  protected void setMotorPositionVoltage(double position, double feedForward) {
+    double nativePosition = position * getTicksPerUnit();
+    motor.set(com.ctre.phoenix.motorcontrol.ControlMode.Position, nativePosition,
+        DemandType.ArbitraryFeedForward, feedForward / config.maxVolt);
+        
+    if (RobotBase.isSimulation()) {
+      motor.getSimCollection().setQuadratureRawPosition((int) nativePosition);
+    }
+  }
+
+  @Override
+  protected void setMotorMotionMagic(double position, double feedForward) {
+    double nativePosition = position * getTicksPerUnit();
+    motor.set(com.ctre.phoenix.motorcontrol.ControlMode.MotionMagic, nativePosition,
+        DemandType.ArbitraryFeedForward, feedForward / config.maxVolt);
+        
+    if (RobotBase.isSimulation()) {
+      motor.getSimCollection().setQuadratureRawPosition((int) nativePosition);
+    }
+  }
+
+  @Override
+  public void checkElectronics() {
+    Faults faults = new Faults();
+    motor.getFaults(faults);
+    if (faults.hasAnyFault()) {
+      Log.log(getName() + " have fault num: " + faults.toString(), AlertType.kError);
+    }
+  }
+
+  @Override
+  public boolean isConnected() {
+    return motor.getFirmwareVersion() >= 0;
+  }
+
+  @Override
+  public void setEncoderPosition(double position) {
+    motor.setSelectedSensorPosition(position * getTicksPerUnit());
+  }
+
+  private double getTicksPerUnit() {
+    return config.motorRatio * TICKS_PER_REV;
+  }
 }

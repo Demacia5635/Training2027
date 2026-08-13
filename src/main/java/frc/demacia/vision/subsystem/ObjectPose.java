@@ -15,7 +15,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.demacia.vision.Camera;
+import frc.demacia.vision.CameraConfig;
 
 // Subsystem that tracks and calculates the position of a vision target (object) on the field
 public class ObjectPose extends SubsystemBase {
@@ -36,14 +36,14 @@ public class ObjectPose extends SubsystemBase {
   private Supplier<Pose2d> robotCurrentPose;
 
 
-  private Camera camera;
+  private CameraConfig camera;
   private Pose2d objectPose;
 
 /**
    * Constructor - Initializes the object tracker with camera configuration and robot position suppliers.
    * Sets up the NetworkTable connection to receive vision data from the camera.
    */
-  public ObjectPose(Camera camera, Supplier<Rotation2d> getRobotAngle,Supplier<Pose2d> robotCurrentPose) {
+  public ObjectPose(CameraConfig camera, Supplier<Rotation2d> getRobotAngle,Supplier<Pose2d> robotCurrentPose) {
     this.getRobotAngle = getRobotAngle;
     this.robotCurrentPose = robotCurrentPose;
     field = new Field2d();

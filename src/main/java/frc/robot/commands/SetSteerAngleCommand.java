@@ -11,32 +11,33 @@ public class SetSteerAngleCommand extends Command {
 
   // some variables:
   private final SimpleMotorSubsystem subsystem;
-  private final double targetDegrees;
+  private final double targetRadians;
 
-  public SetSteerAngleCommand(SimpleMotorSubsystem subsystem, double targetDegrees) {
+  public SetSteerAngleCommand(SimpleMotorSubsystem subsystem, double targetRadians) {
     this.subsystem = subsystem;
-    this.targetDegrees = targetDegrees;
+    this.targetRadians = targetRadians;
 
+    addRequirements(subsystem);
   }
 
   @Override
   public void initialize() {
-    subsystem.setSteerPositionDegrees(targetDegrees);
   }
 
   @Override
   public void execute() {
+    subsystem.setSteerPositionRadians(targetRadians);
   }
 
   @Override
   public void end(boolean interrupted) {
     System.out.println("Steer command finished");
-    System.out.println("Position " + subsystem.getSteerPositionDegrees() + " Degrees");
-    System.out.println("Velocity " + subsystem.getSteerVelocityDegreesPerSec() + " Degrees per sec");
+    System.out.println("Position " + subsystem.getSteerPositionRadians() + "  Radians");
+    System.out.println("Velocity " + subsystem.getSteerVelocity() + " RPM");
   }
 
   @Override
   public boolean isFinished() {
-    return Math.abs(subsystem.getSteerPositionDegrees() - targetDegrees) < 2.0;
+    return false;
   }
 }

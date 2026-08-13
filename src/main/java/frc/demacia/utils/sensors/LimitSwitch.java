@@ -1,9 +1,13 @@
 package frc.demacia.utils.sensors;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
-import frc.demacia.utils.log.LogManager;
-import frc.demacia.utils.log.LogEntryBuilder.LogLevel;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.demacia.utils.elastic.ElasticGenerator;
+import frc.demacia.utils.log.Log;
+import frc.demacia.utils.log.Log.LogLevel;
 
 /**
  * Digital limit switch sensor wrapper.
@@ -44,7 +48,9 @@ public class LimitSwitch extends DigitalInput implements DigitalSensorInterface{
         setName(name);
         configLimitSwitch();
         addLog();
-		LogManager.log(name + " limit switch initialized");
+        SmartDashboard.putData("sensors/" + config.name, this);
+		Log.log(name + " limit switch initialized");
+        ElasticGenerator.getInstance().registerSensor(this);
     }
 
     private void configLimitSwitch() {
@@ -53,8 +59,11 @@ public class LimitSwitch extends DigitalInput implements DigitalSensorInterface{
 
     @SuppressWarnings("unchecked")
     private void addLog() {
-        LogManager.addEntry(name + ": isTriggered", this::get)
-        .withLogLevel(LogLevel.LOG_ONLY_NOT_IN_COMP).build();
+        Log.putData(name + ": isTriggered", 
+            new Supplier[]{
+                this::get
+            }
+            , LogLevel.LOG_ONLY, "sensors", false);
     }
 
     /**

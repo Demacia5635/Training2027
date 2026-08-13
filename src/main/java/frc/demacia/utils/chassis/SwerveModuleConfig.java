@@ -1,5 +1,6 @@
 package frc.demacia.utils.chassis;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.demacia.utils.motors.BaseMotorConfig;
 import frc.demacia.utils.sensors.CancoderConfig;
 
@@ -20,16 +21,16 @@ import frc.demacia.utils.sensors.CancoderConfig;
  */
 public class SwerveModuleConfig {
 
-    public String name;             // Name of the motor - used for logging
+    public final String name;             // Name of the motor - used for logging
 
-    public BaseMotorConfig<?> steerConfig;
-    public BaseMotorConfig<?> driveConfig;
-    public CancoderConfig cancoderConfig;
-    public double steerOffset;
+    public final BaseMotorConfig<?> steerConfig;
+    public final BaseMotorConfig<?> driveConfig;
+    public final CancoderConfig cancoderConfig;
+    public double steerOffset = 0;
 
-    public double position; 
+    public Translation2d position = Translation2d.kZero;
 
-    public double SteerVelToDriveVel;
+    public double steerVelToDriveVel = 0;
 
         /**
      * Constructor
@@ -57,8 +58,13 @@ public class SwerveModuleConfig {
         return this;
     }
 
+    public SwerveModuleConfig withPosion(Translation2d position) {
+        this.position = position;
+        return this;
+    }
+
     public SwerveModuleConfig withDrivePowerToSteerPower(double drivePowerToSteerPower){
-        this.SteerVelToDriveVel = drivePowerToSteerPower;
+        this.steerVelToDriveVel = drivePowerToSteerPower;
         return this;
     }
 }

@@ -1,10 +1,14 @@
 package frc.demacia.utils.sensors;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import frc.demacia.utils.log.LogManager;
-import frc.demacia.utils.log.LogEntryBuilder.LogLevel;
+import frc.demacia.utils.elastic.ElasticGenerator;
+import frc.demacia.utils.log.Log;
+import frc.demacia.utils.log.Log.LogLevel;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Digital duty-cycle encoder wrapper (e.g., REV Through Bore in digital mode).
@@ -49,7 +53,9 @@ public class DigitalEncoder extends DutyCycleEncoder implements AnalogSensorInte
         setName(name);
         configEncoder();
         addLog();
-        LogManager.log(name + " digital encoder initialized");
+        SmartDashboard.putData("sensors/" + name, this);
+        Log.log(name + " digital encoder initialized");
+        ElasticGenerator.getInstance().registerSensor(this);
     }
     
     private void configEncoder() {
@@ -60,8 +66,11 @@ public class DigitalEncoder extends DutyCycleEncoder implements AnalogSensorInte
 
     @SuppressWarnings("unchecked")
     private void addLog() {
-        LogManager.addEntry(name + ": Position", this::get)
-        .withLogLevel(LogLevel.LOG_ONLY_NOT_IN_COMP).build();
+        Log.putData(name + ": Position", 
+            new Supplier[]{
+                this::get
+            }
+            , LogLevel.LOG_ONLY, "sensors", false);
     }
 
     /**
@@ -78,7 +87,7 @@ public class DigitalEncoder extends DutyCycleEncoder implements AnalogSensorInte
      */
     public void checkElectronics() {
         if (!isConnected()) {
-            LogManager.log(name + " encoder disconnected", AlertType.kWarning);
+            Log.log(name + " encoder disconnected", AlertType.kWarning);
         }
     }
     
@@ -105,6 +114,7 @@ public class DigitalEncoder extends DutyCycleEncoder implements AnalogSensorInte
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("AbsoluteEncoder");
         builder.addDoubleProperty("Position", this::get, null);
+        builder.addDoubleProperty("value", this::get, null);
         builder.addBooleanProperty("Is Connected", this::isConnected, null);
     }
 }

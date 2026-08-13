@@ -1,8 +1,10 @@
 package frc.demacia.utils.sensors;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj.Servo;
-import frc.demacia.utils.log.LogManager;
-import frc.demacia.utils.log.LogEntryBuilder.LogLevel;
+import frc.demacia.utils.log.Log;
+import frc.demacia.utils.log.Log.LogLevel;
 
 public class ServoMotor extends Servo {
 
@@ -13,15 +15,17 @@ public class ServoMotor extends Servo {
         this.config = config;
         name=config.name;
         addLog();
-        LogManager.log(name + " ServoMotor initialized");
+        Log.log(name + " ServoMotor initialized");
     }
 
     @SuppressWarnings("unchecked")
     private void addLog() {
-        LogManager.addEntry(name + ": Position, Angle", 
-            () -> getPosition(),
-            () -> getAngle()
-        ).withLogLevel(LogLevel.LOG_ONLY_NOT_IN_COMP).build();
+        Log.putData(name + ": Position, Angle", 
+            new Supplier[]{
+                this::getPosition,
+                this::getAngle
+            }
+        , LogLevel.LOG_ONLY, "", false);
     }
 
     @Override

@@ -5,6 +5,7 @@
 package frc.demacia.utils.log;
 
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 import edu.wpi.first.networktables.BooleanArrayPublisher;
 import edu.wpi.first.networktables.BooleanPublisher;
@@ -23,8 +24,8 @@ import edu.wpi.first.util.datalog.FloatLogEntry;
 import edu.wpi.first.util.datalog.StringArrayLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import frc.demacia.utils.Data;
-import frc.demacia.utils.DemaciaUtils;
-import frc.demacia.utils.log.LogEntryBuilder.LogLevel;
+import frc.demacia.utils.RobotCommon;
+import frc.demacia.utils.log.Log.LogLevel;
 
 /**
  * Represents a single log entry of a specific type (T).
@@ -53,6 +54,35 @@ public class LogEntry<T> {
     private BiConsumer<Long, Data<T>> logStrategy;
     /** Strategy for updating NetworkTables based on type */
     private BiConsumer<Data<T>, Publisher> ntStrategy;
+
+    private Supplier<T> supplier;
+    private boolean isDouble;
+    private boolean isBoolean;
+    
+    /**
+     * Constructs a new LogEntry.
+     * @param name The name of the entry
+     * @param supplier The supplier object wrapper
+     * @param logLevel The desired log level
+     * @param metaData Additional metadata for the log file
+     */
+    LogEntry(String name, Supplier<T> supplier, LogLevel logLevel, String metaData, boolean isDouble, boolean isBoolean) {
+        this.name = name;
+        this.logLevel = logLevel;
+        this.metaData = metaData;
+        this.supplier = supplier;
+        this.isDouble = isDouble;
+        this.isBoolean = isBoolean;
+    }
+
+    public void reInitialize(String name, Supplier<T> supplier, LogLevel logLevel, String metaData, boolean isDouble, boolean isBoolean){
+        this.name = name;
+        this.logLevel = logLevel;
+        this.metaData = metaData;
+        this.supplier = supplier;
+        this.isDouble = isDouble;
+        this.isBoolean = isBoolean;
+    }
     
     /**
      * Constructs a new LogEntry.
@@ -76,22 +106,61 @@ public class LogEntry<T> {
      * Determines if NT publishing is allowed based on competition status.
      */
     private void initializeLogging() {
-        if (ntPublisher != null) ntPublisher.close();
-        if (entry != null) entry.finish();
-
-        createLogEntry(LogManager.log, name, metaData);
+        createLogEntry(Log.log, name, metaData);
 
         // Check if we should publish to NetworkTables based on LogLevel and Competition state
-        if (logLevel == LogLevel.LOG_AND_NT || (logLevel == LogLevel.LOG_AND_NT_NOT_IN_COMP && !DemaciaUtils.getIsComp())) {
-            createPublisher(LogManager.table, name);
+        if (logLevel == LogLevel.LOG_AND_NT || (logLevel == LogLevel.LOG_AND_NT_NOT_IN_COMP && !RobotCommon.getIsComp())) {
+            createPublisher(Log.table, name);
         } else {
             ntPublisher = null;
             ntStrategy = null;
         }
 
+        long time = data != null ? data.getTime() : 0;
+
+        if (logStrategy != null) {
+            logStrategy.accept(time, data);
+        }
+
         // Initial update to NT if applicable
         if (ntPublisher != null && ntStrategy != null) {
             ntStrategy.accept(data, ntPublisher);
+        }
+    }
+
+    
+
+    /**
+     * Initializes or re-initializes the logging strategies and publishers.
+     * Closes existing publishers if they exist before creating new ones.
+     * Determines if NT publishing is allowed based on competition status.
+     */
+    private void initializeLoggingWithSupllier() {
+        if (isDouble) {
+            entry = new FloatArrayLogEntry(Log.log, name, metaData);
+            logStrategy = (time, d) -> ((FloatArrayLogEntry) entry).append((float[]) supplier.get(), time);
+        } else if (isBoolean) {
+            entry = new BooleanArrayLogEntry(Log.log, name, metaData);
+            logStrategy = (time, d) -> ((BooleanArrayLogEntry) entry).append((boolean[]) supplier.get(), time);
+        } else {
+            entry = new StringArrayLogEntry(Log.log, name, metaData);
+            logStrategy = (time, d) -> ((StringArrayLogEntry) entry).append((String[]) supplier.get(), time);
+        }
+
+        if (logLevel == LogLevel.LOG_AND_NT || (logLevel == LogLevel.LOG_AND_NT_NOT_IN_COMP && !RobotCommon.getIsComp())) {
+            if (isDouble) {
+                ntPublisher = Log.table.getFloatArrayTopic(name).publish();
+                ntStrategy = (d, p) -> ((FloatArrayPublisher) p).set((float[]) supplier.get());
+            } else if (isBoolean) {
+                ntPublisher = Log.table.getBooleanArrayTopic(name).publish();
+                ntStrategy = (d, p) -> ((BooleanArrayPublisher) p).set((boolean[]) supplier.get());
+            } else {
+                ntPublisher = Log.table.getStringArrayTopic(name).publish();
+                ntStrategy = (d, p) -> ((StringArrayPublisher) p).set((String[]) supplier.get());
+            }
+        } else {
+            ntPublisher = null;
+            ntStrategy = null;
         }
     }
 
@@ -103,11 +172,18 @@ public class LogEntry<T> {
      * </p>
      */
     void log() {
-        if (!data.hasChanged()) {
+        if (data != null && !data.hasChanged()) {
             return;
         }
 
-        long time = data.getTime();
+        if (data == null && !Log.table.getFloatArrayTopic(name).exists()) {
+            initializeLoggingWithSupllier();
+            if (ntPublisher != null && ntStrategy != null ) {
+                ntStrategy.accept(null, ntPublisher);
+            }
+        }
+
+        long time = data != null ? data.getTime() : 0;
 
         // Write to file log
         if (logStrategy != null) {
@@ -168,30 +244,16 @@ public class LogEntry<T> {
     private void createLogEntry(DataLog log, String name, String metaData) {
         boolean isFloat = data.isDouble();
         boolean isBoolean = data.isBoolean();
-        boolean isArray = data.isArray();
 
-        if (isArray) {
-            if (isFloat){
-                entry = new FloatArrayLogEntry(log, name, metaData);
-                logStrategy = (time, d) -> ((FloatArrayLogEntry) entry).append(d.getFloatArray(), time);
-            } else if (isBoolean){
-                entry = new BooleanArrayLogEntry(log, name, metaData);
-                logStrategy = (time, d) -> ((BooleanArrayLogEntry) entry).append(d.getBooleanArray(), time);
-            } else{
-                entry = new StringArrayLogEntry(log, name, metaData);
-                logStrategy = (time, d) -> ((StringArrayLogEntry) entry).append(d.getStringArray(), time);
-            }
-        } else {
-            if (isFloat){
-                entry = new FloatLogEntry(log, name, metaData);
-                logStrategy = (time, d) -> ((FloatLogEntry) entry).append(d.getFloat(), time);
-            } else if (isBoolean){
-                entry = new BooleanLogEntry(log, name, metaData);
-                logStrategy = (time, d) -> ((BooleanLogEntry) entry).append(d.getBoolean(), time);
-            } else{
-                entry = new StringLogEntry(log, name, metaData);
-                logStrategy = (time, d) -> ((StringLogEntry) entry).append(d.getString(), time);
-            }
+        if (isFloat){
+            entry = new FloatLogEntry(log, name, metaData);
+            logStrategy = (time, d) -> ((FloatLogEntry) entry).append(d.getFloat(), time);
+        } else if (isBoolean){
+            entry = new BooleanLogEntry(log, name, metaData);
+            logStrategy = (time, d) -> ((BooleanLogEntry) entry).append(d.getBoolean(), time);
+        } else{
+            entry = new StringLogEntry(log, name, metaData);
+            logStrategy = (time, d) -> ((StringLogEntry) entry).append(d.getString(), time);
         }
     }
 
@@ -204,53 +266,16 @@ public class LogEntry<T> {
     private void createPublisher(NetworkTable table, String name) {
         boolean isFloat = data.isDouble();
         boolean isBoolean = data.isBoolean();
-        boolean isArray = data.isArray();
 
-        if (isArray) {
-            if (isFloat){
-                ntPublisher = table.getFloatArrayTopic(name).publish();
-                ntStrategy = (d, p) -> ((FloatArrayPublisher) p).set(d.getFloatArray());
-            } else if (isBoolean){
-                ntPublisher = table.getBooleanArrayTopic(name).publish();
-                ntStrategy = (d, p) -> ((BooleanArrayPublisher) p).set(d.getBooleanArray());
-            } else{
-                ntPublisher = table.getStringArrayTopic(name).publish();
-                ntStrategy = (d, p) -> ((StringArrayPublisher) p).set(d.getStringArray());
-            }
-        } else {
-            if (isFloat){
-                ntPublisher = table.getFloatTopic(name).publish();
-                ntStrategy = (d, p) -> ((FloatPublisher) p).set(d.getFloat());
-            } else if (isBoolean){
-                ntPublisher = table.getBooleanTopic(name).publish();
-                ntStrategy = (d, p) -> ((BooleanPublisher) p).set(d.getBoolean());
-            } else{
-                ntPublisher = table.getStringTopic(name).publish();
-                ntStrategy = (d, p) -> ((StringPublisher) p).set(d.getString());
-            }
+        if (isFloat){
+            ntPublisher = table.getFloatTopic(name).publish();
+            ntStrategy = (d, p) -> ((FloatPublisher) p).set(d.getFloat());
+        } else if (isBoolean){
+            ntPublisher = table.getBooleanTopic(name).publish();
+            ntStrategy = (d, p) -> ((BooleanPublisher) p).set(d.getBoolean());
+        } else{
+            ntPublisher = table.getStringTopic(name).publish();
+            ntStrategy = (d, p) -> ((StringPublisher) p).set(d.getString());
         }
-    }
-
-    /**
-     * Merges another data source into this entry, effectively creating or expanding an array entry.
-     * Re-initializes logging to reflect the combined data.
-     * @param name The name to append
-     * @param data The new data to add
-     * @param metaData The metadata to append
-     */
-    public void addData(String name, Data<T> data, String metaData, boolean isRio){
-        this.name = this.name + " | " + name;
-        this.metaData = this.metaData + " | " + metaData;
-        if (this.data.getSignalArray() != null){
-            this.data.expandWithSignals(data.getSignalArray(), isRio);
-        } else {
-            this.data.expandWithSuppliers(data.getSupplierArray());
-        }
-
-        initializeLogging();
-    }
-
-    public void addData(String name, Data<T> data, String metaData){
-        addData(name, data, metaData, true);
     }
 }

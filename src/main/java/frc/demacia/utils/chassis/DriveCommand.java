@@ -5,18 +5,17 @@
 package frc.demacia.utils.chassis;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.demacia.utils.DemaciaUtils;
+import frc.demacia.utils.RobotCommon;
 import frc.demacia.utils.controller.CommandController;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DriveCommand extends Command {
   private Chassis chassis;
   private CommandController controller;
-  private double direction;
   private ChassisSpeeds speeds;
   private boolean precisionMode;
-
 
   /** Creates a new DriveCommand. */
   public DriveCommand(Chassis chassis, CommandController controller) {
@@ -27,30 +26,35 @@ public class DriveCommand extends Command {
   }
 
   public void invertPrecisionMode() {
-      setPrecisionMode(!precisionMode);
+    setPrecisionMode(!precisionMode);
   }
-  
+
   public void setPrecisionMode(boolean precisionMode) {
-      this.precisionMode = precisionMode;
+    this.precisionMode = precisionMode;
   }
 
   public boolean getPrecisionMode() {
-      return precisionMode;
+    return precisionMode;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    direction = DemaciaUtils.getIsRed() ? 1 : -1;
+    if (RobotState.isAutonomous()){
+      return;
+    }
+
+    double direction = RobotCommon.getIsRed() ? 1 : -1;
     double joyX = controller.getLeftY() * direction;
     double joyY = controller.getLeftX() * direction;
     
     // Calculate r]otation from trigger axes
-    double rot = controller.getLeftTrigger() - controller.getRightTrigger();
+    double rot = controller.getRightTrigger() - controller.getLeftTrigger();
     
     double velX = Math.pow(joyX, 2) * chassis.getMaxDriveVelocity() * Math.signum(joyX);
     double velY = Math.pow(joyY, 2) * chassis.getMaxDriveVelocity() * Math.signum(joyY);
@@ -58,19 +62,19 @@ public class DriveCommand extends Command {
     if(precisionMode){
         velX /= 4;
         velY /= 4;
-        velRot /= 4;
+        // velRot /= 4;
     }
-    
-    speeds = new ChassisSpeeds(velX, velY,velRot);
 
-    if(precisionMode) chassis.setVelocities(speeds);
-    else {
-        chassis.setRobotRelSpeedsWithAccel(speeds);}
+    speeds = new ChassisSpeeds(velX, velY, velRot);
+    speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, chassis.getGyroAngle());
+    chassis.setSpeedsFieldRel(speeds);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    chassis.stop();
+  }
 
   // Returns true when the command should end.
   @Override

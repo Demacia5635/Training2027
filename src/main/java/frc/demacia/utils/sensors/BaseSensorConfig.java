@@ -1,6 +1,6 @@
 package frc.demacia.utils.sensors;
 
-import com.ctre.phoenix6.CANBus;
+import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
 
 /**
  * Abstract base class for sensor configurations.
@@ -22,7 +22,7 @@ public abstract class BaseSensorConfig<T extends BaseSensorConfig<T>> {
     public Class<? extends SensorInterface> sensorType;
     
     public int id;
-    public CANBus canbus;
+    public Canbus canbus;
     public String name;
 
     public int echoChannel;
@@ -56,7 +56,7 @@ public abstract class BaseSensorConfig<T extends BaseSensorConfig<T>> {
      * @param canbus CAN bus instance (Rio or CANivore)
      * @param name Descriptive name for logging
      */
-    public BaseSensorConfig(int id, CANBus canbus, String name){
+    public BaseSensorConfig(int id, Canbus canbus, String name){
         this.id = id;
         this.canbus = canbus;
         this.name = name;

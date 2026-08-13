@@ -2,11 +2,16 @@ package frc.demacia.utils.sensors;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.demacia.utils.log.LogManager;
-import frc.demacia.utils.log.LogEntryBuilder.LogLevel;
+import frc.demacia.utils.elastic.ElasticGenerator;
+import frc.demacia.utils.log.Log;
+import frc.demacia.utils.log.Log.LogLevel;
 
 import com.revrobotics.ColorSensorV3;
+
+import java.util.function.Supplier;
+
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 
@@ -50,8 +55,9 @@ public class ColorSensor extends ColorSensorV3 implements ColorSensorInterface {
         addDefaultColors();
         addLog();
 
-        LogManager.log(name + " color sensor initialized");
-     
+        SmartDashboard.putData("sensors/" + name, this);
+        Log.log(name + " color sensor initialized");
+        ElasticGenerator.getInstance().registerSensor(this);
     }
 
     @Override
@@ -68,14 +74,18 @@ public class ColorSensor extends ColorSensorV3 implements ColorSensorInterface {
 
     @SuppressWarnings("unchecked")
     private void addLog() {
-        LogManager.addEntry(name + ": Color", this::get
-        ).withLogLevel(LogLevel.LOG_ONLY_NOT_IN_COMP).build();
+        Log.putData(name + ": Color, Matched Color", 
+            new Supplier[]{
+                this::get,
+                this::getMatchedColorName
+            }
+            , LogLevel.LOG_ONLY, "sensors", false);
 
-        LogManager.addEntry(name + ": Proximity", this::getProximity)
-            .withLogLevel(LogLevel.LOG_ONLY_NOT_IN_COMP).build();
-
-        LogManager.addEntry(name + ": Matched Color", this::getMatchedColorName)
-            .withLogLevel(LogLevel.LOG_ONLY_NOT_IN_COMP).build();
+        Log.putData(name + ": Proximity", 
+            new Supplier[]{
+                this::getProximity
+            }
+            , LogLevel.LOG_ONLY, "sensors", false);
     }
 
     /**
@@ -88,14 +98,14 @@ public class ColorSensor extends ColorSensorV3 implements ColorSensorInterface {
             int proximity = getProximity();
             
             if (color == null) {
-                LogManager.log(name + " color sensor - failed to read color", AlertType.kError);
+                Log.log(name + " color sensor - failed to read color", AlertType.kError);
             } else if (proximity < 0) {
-                LogManager.log(name + " color sensor - invalid proximity reading", AlertType.kWarning);
+                Log.log(name + " color sensor - invalid proximity reading", AlertType.kWarning);
             } else {
-                LogManager.log(name + " color sensor - electronics OK");
+                Log.log(name + " color sensor - electronics OK");
             }
         } catch (Exception e) {
-            LogManager.log(name + " color sensor - electronics check failed: " + e.getMessage(), AlertType.kError);
+            Log.log(name + " color sensor - electronics check failed: " + e.getMessage(), AlertType.kError);
         }
     }
 
@@ -192,7 +202,9 @@ public class ColorSensor extends ColorSensorV3 implements ColorSensorInterface {
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Color Sensor");
+        builder.addDoubleProperty("value", this::getProximity, null);
         builder.addDoubleProperty("Proximity", this::getProximity, null);
         builder.addStringProperty("Matched Color", this::getMatchedColorName, null);
+        builder.addBooleanProperty("is Connected", this::isConnected, null);
     }
 }

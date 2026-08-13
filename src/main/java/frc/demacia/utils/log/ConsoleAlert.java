@@ -19,7 +19,7 @@ public class ConsoleAlert extends Alert {
    * @param type the type of alert (Info, Warning, Error)
    */
   public ConsoleAlert(String text, AlertType type) {
-    super("Console", text, type);
+    super("console", text, type);
     timer = new Timer();
   }
 

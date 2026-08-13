@@ -2,9 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.demacia.vision;
-
-import static frc.demacia.vision.utils.VisionConstants.TAG_HEIGHT;
+package frc.demacia.vision.subsystem;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,13 +15,16 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.demacia.utils.chassis.Chassis;
-import frc.demacia.utils.log.LogEntryBuilder.LogLevel;
-import frc.demacia.utils.log.LogManager;
-import frc.demacia.vision.utils.VisionConstants;
+import frc.demacia.utils.elastic.ElasticGenerator;
+import frc.demacia.utils.log.Log;
+import frc.demacia.vision.CameraConfig;
+import frc.demacia.vision.VisionConstants;
 
-public class TagPose {
+import static frc.demacia.vision.VisionConstants.*;
+
+public class Camera extends SubsystemBase {
   // NetworkTables communication for each camera
   private NetworkTable Table;
 
@@ -36,7 +37,7 @@ public class TagPose {
   private double camToTagYaw;
   private double camToTagPitch;
   private double id;
-  private Camera camera;
+  private CameraConfig camera;
   private double confidence;
 
   private double dist;
@@ -60,31 +61,36 @@ public class TagPose {
 
   private boolean isUpsidedown = false;
 
-  @SuppressWarnings("unchecked")
-  public TagPose(Camera camera) {
+  public Camera(CameraConfig cameraConfig) {
     confidence = 0;
-    this.camera = camera;
-    Table = NetworkTableInstance.getDefault().getTable(camera.getTableName());
+    this.camera = cameraConfig;
+    Table = NetworkTableInstance.getDefault().getTable(cameraConfig.getTableName());
     latency = 0;
     field = new Field2d();
     pipeEntry = Table.getEntry("pipeline");
     // LogManager.addEntry(camera.getName()+"dist", this::getDistFromCamera).withLogLevel(LogLevel.LOG_AND_NT_NOT_IN_COMP).build();
     // LogManager.addEntry(camera.getName()+"dist ty", this::getDistanceFromTy).withLogLevel(LogLevel.LOG_AND_NT_NOT_IN_COMP).build();
+    Log.putData("tags/" + cameraConfig.getName() + "/" + cameraConfig.getName() + " see tag", () -> isSeeTag());
 
-    SmartDashboard.putData("field-tag " + camera.getName(), field);
-    SmartDashboard.putData("setTo3d " + camera.getName(),
+    SmartDashboard.putData("tags/" + cameraConfig.getName() + "/" + "field-tag " + cameraConfig.getName(), field);
+    SmartDashboard.putData("tags/" + cameraConfig.getName() + "/" + "setTo3d " + cameraConfig.getName(),
         new InstantCommand(() -> setDimension(true)).ignoringDisable(true));
-    SmartDashboard.putData("setTo2d " + camera.getName(),
+    SmartDashboard.putData("tags/" + cameraConfig.getName() + "/" + "setTo2d " + cameraConfig.getName(),
         new InstantCommand(() -> setDimension(false)).ignoringDisable(true));
-    SmartDashboard.putData("chassis/reset gyro by camera " + camera.getName(),
+    SmartDashboard.putData("chassis/reset gyro by camera " + cameraConfig.getName(),
         Commands.sequence(
             new InstantCommand(() -> changePipeline(5)).ignoringDisable(true),
             new InstantCommand(() -> Chassis.getInstance().setYaw(getRobotAngle())).ignoringDisable(true),
             new InstantCommand(() -> changePipeline(0)).ignoringDisable(true)).ignoringDisable(true));
 
+    ElasticGenerator.getInstance().registerTag(this);
   }
 
-  public TagPose(Camera camera, boolean isUpsidedown) {
+  public String getName() {
+    return camera.getName();
+  }
+
+  public Camera(CameraConfig camera, boolean isUpsidedown) {
     this(camera);
     this.isUpsidedown = isUpsidedown;
   }
@@ -101,17 +107,6 @@ public class TagPose {
 
   private void changePipeline(int id) {
     pipeEntry.setDouble(id);
-  }
-
-  public void updateValues() {
-    cropEntry = Table.getEntry("crop");
-    pipeEntry = Table.getEntry("pipeline");
-    camToTagPitch = (isUpsidedown ? -1 : 1) * Table.getEntry("ty").getDouble(0.0);
-    camToTagYaw = (isUpsidedown ? 1 : -1) * Table.getEntry("tx").getDouble(0.0);
-    id = (int) Table.getEntry("tid").getDouble(0.0);
-    // if (camera.getIsOnTurret()) {
-    // }
-
   }
 
   public Pose2d getRobotPose2d() {
@@ -249,7 +244,7 @@ public class TagPose {
     return this.confidence;
   }
 
-  public Camera getCamera() {
+  public CameraConfig getCamera() {
     return camera;
   }
 
@@ -287,4 +282,11 @@ public class TagPose {
         Rotation2d.fromDegrees(camToTagYaw + camera.getYaw()));
   }
 
+  public void periodic() {
+    cropEntry = Table.getEntry("crop");
+    pipeEntry = Table.getEntry("pipeline");
+    camToTagPitch = (isUpsidedown ? -1 : 1) * Table.getEntry("ty").getDouble(0.0);
+    camToTagYaw = (isUpsidedown ? 1 : -1) * Table.getEntry("tx").getDouble(0.0);
+    id = (int) Table.getEntry("tid").getDouble(0.0);
+  }
 }

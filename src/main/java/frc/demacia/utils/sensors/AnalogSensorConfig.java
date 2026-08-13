@@ -1,6 +1,6 @@
 package frc.demacia.utils.sensors;
 
-import com.ctre.phoenix6.CANBus;
+import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
 
 /**
  * Base configuration for analog sensors.
@@ -29,7 +29,7 @@ public abstract class AnalogSensorConfig<T extends AnalogSensorConfig<T>> extend
      * @param canbus CAN bus instance
      * @param name Descriptive name for logging
      */
-    public AnalogSensorConfig(int id, CANBus canbus, String name) {
+    public AnalogSensorConfig(int id, Canbus canbus, String name) {
         super(id, canbus, name);
     }
 
