@@ -6,26 +6,56 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class SimpleMotorSubsystem extends SubsystemBase {
   private final TalonFX steerMotor;
   private final TalonFX driveMotor;
+  private double powerSteer;
+  private double powerDrive;
 
   public SimpleMotorSubsystem() {
     super();
-    steerMotor = new TalonFX(Constants.steerMotorID, Constants.canBus);
-    driveMotor = new TalonFX(Constants.driveMotorID, Constants.canBus);
+    steerMotor = new TalonFX(Constants.STREET_MOTOR_ID, Constants.CANBUS);
+    driveMotor = new TalonFX(Constants.DRIVE_MOTOR_ID, Constants.CANBUS);
   }
 
-  public void setPower(double powerSteer, double powerDrive) {
+  public void setPowerSteer(double powerSteer) {
+    this.powerSteer = powerSteer;
     steerMotor.set(powerSteer);
+  }
+
+  public void setPowerDrive(double powerDrive) {
+    this.powerDrive = powerDrive;
     driveMotor.set(powerDrive);
   }
 
   public void stop() {
-    setPower(0, 0);
+    setPowerSteer(0);
+  }
+
+  public double getAngleDrive() {
+    return (driveMotor.getPosition().getValueAsDouble()) * 2 * Math.PI;
+  }
+
+  public double getAngleSteer() {
+    return (steerMotor.getPosition().getValueAsDouble()) * 2 * Math.PI;
+  }
+
+  public double getAngleSteerDeg() {
+    return getAngleSteer() * 180 / Math.PI;
+  }
+
+  public double getAngleDriveDeg() {
+    return getAngleDrive() * 180 / Math.PI;
+  }
+  @Override
+  public void periodic() {
+    // double angleFromMotor = SmartDashboard.getAngle(), -1);
+    SmartDashboard.putNumber("angle steer", getAngleSteerDeg());
+    SmartDashboard.putNumber("angle drive", getAngleDriveDeg());
   }
 }
 /** Creates a new ExampleSubsystem. */
@@ -52,7 +82,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
  * // * @return value of some boolean subsystem state, such as a digital sensor.
  */
 // public boolean exampleCondition() {
-// Query some boolean state, such as a digital sensor.
+// Query some boolean state, such as a digital sensr.
 // return false;
 // }
 

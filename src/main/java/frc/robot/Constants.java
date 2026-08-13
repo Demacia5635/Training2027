@@ -20,10 +20,11 @@ import com.ctre.phoenix6.CANBus;
  */
 public final class Constants {
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+    public static final int CONTROLLER_PORT = 0;
   }
 
-  public static final String canBus = "rio";
-  public static final int steerMotorID = 2;
-  public static final int driveMotorID = 1;
+  public static final String CANBUS = "rio";
+  public static final int STREET_MOTOR_ID = 2;
+  public static final int DRIVE_MOTOR_ID = 1;
+  public static final double SCOPE = 4 * 0.0254 * Math.PI;
 }

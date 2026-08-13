@@ -38,8 +38,8 @@ public class SimpleMotorCommand extends Command {
 
   @Override
   public void execute() {
-    subsystem.setPower(powerSteer, powerDrive);
-
+    subsystem.setPowerSteer(powerSteer);
+    subsystem.setPowerDrive(powerDrive);
   }
 
   @Override
@@ -50,7 +50,6 @@ public class SimpleMotorCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     subsystem.stop();
-    ;
     System.out.println("Command ended ar: " + Timer.getFPGATimestamp());
   }
 

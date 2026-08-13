@@ -5,12 +5,16 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.DriveToAngle;
 import frc.robot.commands.SimpleMotorCommand;
+import frc.robot.commands.SteerToAngle;
 import frc.robot.subsystems.SimpleMotorSubsystem;
 
+import java.lang.ModuleLayer.Controller;
 import java.util.ResourceBundle.Control;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -29,7 +33,7 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(
-      OperatorConstants.kDriverControllerPort);
+      OperatorConstants.CONTROLLER_PORT);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -37,7 +41,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    // configureDifultCommands();
+  //  configureDifultCommands();
     getAutonomousCommand();
   }
 
@@ -64,10 +68,11 @@ public class RobotContainer {
   // }
 
   private CommandXboxController controller = new CommandXboxController(
-      Constants.OperatorConstants.kDriverControllerPort);
+      Constants.OperatorConstants.CONTROLLER_PORT);
+  double leftY = controller.getLeftY(); // -1 forward!!! -1 to 1 
 
   public Command getAutonomousCommand() {
-    return new SimpleMotorCommand(subsystem, -0.2, 2.0, 0.5);
+    return new SteerToAngle(subsystem, Math.PI / 2, 0.3);
+    // return new DriveToAngle(subsystem, 0);
   }
-
 }
