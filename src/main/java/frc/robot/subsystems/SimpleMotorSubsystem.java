@@ -38,7 +38,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
 
     // setters:
     public void setSteerPositionDegrees(double targetDegrees) {
-        double targetRotations = targetDegrees * Constants.ConvertionConstants.DEGREES_TO_ROTATIONS; // convert degrees to rotations
+        double targetRotations = targetDegrees * Constants.ConvertionConstants.RADIANS_TO_ROTATIONS; // convert degrees to rotations
         steer.setControl(positionVoltage.withPosition(targetRotations));
     }
 
@@ -48,7 +48,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
 
     // getters:
     public double getSteerPositionDegrees() {
-        return steer.getPosition().getValueAsDouble() * Constants.ConvertionConstants.ROTATIONS_TO_DEGREES; // convert rotations to degrees
+        return steer.getPosition().getValueAsDouble() * Constants.ConvertionConstants.ROTATIONS_TO_RADIANS; // convert rotations to degrees
     }
 
     public double getDrivePositionMeters() {
@@ -56,7 +56,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     }
 
     public double getSteerVelocityDegreesPerSec() {
-        return steer.getVelocity().getValueAsDouble() * Constants.ConvertionConstants.DEGREES_TO_ROTATIONS; // convert degrees to rotations
+        return steer.getVelocity().getValueAsDouble() * Constants.ConvertionConstants.RADIANS_TO_ROTATIONS; // convert degrees to rotations
     }
 
     public double getDriveRPM() {

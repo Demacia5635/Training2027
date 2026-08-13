@@ -32,8 +32,11 @@ public final class Constants {
   }
 
   public static class ConvertionConstants {
-    public static final double DEGREES_TO_ROTATIONS = 1.0 / 360.0;
-    public static final double ROTATIONS_TO_DEGREES = 360.0;
+    public static final double RADIANS_TO_ROTATIONS = 1 / (2 * Math.PI);
+    public static final double ROTATIONS_TO_RADIANS = 2 * Math.PI;
+    public static final double DEGREES_TO_RADIANS = Math.PI / 180;
+    public static final double RADIANS_TO_DEGREES = 180 / Math.PI;
+
   }
 
 }

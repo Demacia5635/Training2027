@@ -129,16 +129,16 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
 return new SequentialCommandGroup(
-        new SetSteerAngleCommand(subsystem, 90.0),
+        new SetSteerAngleCommand(subsystem, 90.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS),
 
         new ParallelCommandGroup(
           
-            new SetSteerAngleCommand(subsystem, 135.0)
+            new SetSteerAngleCommand(subsystem, 135.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS)
         ).withTimeout(2.0),
 
         new ParallelCommandGroup(
             new SetDriveDistanceCommand(subsystem, -1.0),
-            new SetSteerAngleCommand(subsystem, 0.0)
+            new SetSteerAngleCommand(subsystem, 0.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS)
         ).withTimeout(2.0),
 
 
