@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import frc.demacia.utils.log.LogManager;
+import frc.demacia.utils.log.Log;
 
 /**
  * Linear interpolation lookup table.
@@ -111,7 +111,7 @@ public class LookUpTable {
      */
     public void add(double... row) {
         if (row.length != size) {
-            LogManager.log("Size of new row (" + row.length + ") does not match row size of: " + size);
+            Log.log("Size of new row (" + row.length + ") does not match row size of: " + size);
             return;
         }
         table.add(row);
@@ -134,7 +134,7 @@ public class LookUpTable {
     public double[] get(double value) {
         
         if (table.isEmpty()) {
-            LogManager.log("Cannot interpolate - table is empty. Use add() to add data first.");
+            Log.log("Cannot interpolate - table is empty. Use add() to add data first.");
             return null;
         }
 

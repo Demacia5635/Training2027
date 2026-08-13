@@ -2,7 +2,6 @@ package frc.demacia.utils;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -24,47 +23,54 @@ public class Data<T> {
     /**
      * Static array of all signals to refresh them all at once (CTRE optimization)
      */
-    private static ArrayList<BaseStatusSignal> rioSignals = new ArrayList<>();
-    private static ArrayList<BaseStatusSignal> canivoreSignals = new ArrayList<>();
+    private static BaseStatusSignal[] rioSignalsArray = new BaseStatusSignal[0];
+    private static BaseStatusSignal[] canivoreSignalsArray = new BaseStatusSignal[0];
     /** List of all Data instances based on Signals */
     private static final ArrayList<Data<?>> signalInstances = new ArrayList<>();
     /** List of all Data instances based on Suppliers */
     private static final ArrayList<Data<?>> supplierInstances = new ArrayList<>();
 
-    private StatusSignal<T>[] signal;
-    private Supplier<T>[] supplier;
-    private int length;
+    private static final ArrayList<Data<?>> groupFloatData = new ArrayList<>();
+    private static String groupFloatDataName = "Float/";
+    private static String groupFloatDataMetaData = "";
+    private static float[] groupFloatDataValues = new float[0];
+    private static boolean isGroupFloatFirst = true;
+    private static final ArrayList<Data<?>> groupBooleanData = new ArrayList<>();
+    private static String groupBooleanDataName = "Boolean/";
+    private static String groupBooleanDataMetaData = "";
+    private static boolean[] groupBooleanDataValues = new boolean[0];
+    private static boolean isGroupBooleanFirst = true;
+    private static final ArrayList<Data<?>> groupStringData = new ArrayList<>();
+    private static String groupStringDataName = "String/";
+    private static String groupStringDataMetaData = "";
+    private static String[] groupStringDataValues = new String[0];
+    private static boolean isGroupStringFirst = true;
+
+    private StatusSignal<T> signal;
+    private Supplier<T> supplier;
 
     private boolean isDouble = false;
     private boolean isBoolean = false;
-    private boolean isArray = false;
 
     private boolean changed = true;
 
     // Cached primitive arrays to avoid auto-boxing and garbage collection
-    private double[] doubleArrayValues;
-    private float[] floatArrayValues;
-    private boolean[] booleanArrayValues;
-    private String[] stringArrayValues;
+    private double doubleValue;
+    private float floatValue;
+    private boolean booleanValue;
+    private String stringValue;
 
     /**
      * Creates a new Data object from Phoenix 6 StatusSignals.
      * 
      * @param signal Variable arguments of StatusSignals
      */
-    public Data(StatusSignal<T>[] signal, boolean isRio) {
+    public Data(StatusSignal<T> signal, boolean isRio) {
         this.signal = signal;
-        length = signal.length;
 
         detectTypeFromSignal();
-        allocateCachedArrays();
-
         registerSignal();
-        if (isRio) {
-            rioSignals.addAll(Arrays.asList(signal));
-        } else {
-            canivoreSignals.addAll(Arrays.asList(signal));
-        }
+        addSignal(signal, isRio);
         refresh();
     }
 
@@ -73,14 +79,10 @@ public class Data<T> {
      * 
      * @param supplier Variable arguments of Suppliers
      */
-    @SuppressWarnings("unchecked")
-    public Data(Supplier<T>... supplier) {
+    public Data(Supplier<T> supplier) {
         this.supplier = supplier;
-        length = supplier.length;
 
         detectTypeFromSupplier();
-        allocateCachedArrays();
-
         registerSupplier();
         refresh();
     }
@@ -90,20 +92,6 @@ public class Data<T> {
         signalInstances.add(this);
     }
 
-    // /**
-    //  * Adds new signals to the static master array.
-    //  * 
-    //  * @param newSignals The signals to add
-    //  */
-    // private void registerSignal(BaseStatusSignal[] newSignals) {
-    //     int oldLength = signals.length;
-    //     int newLength = oldLength + newSignals.length;
-    //     BaseStatusSignal[] combined = new BaseStatusSignal[newLength];
-    //     System.arraycopy(signals, 0, combined, 0, oldLength);
-    //     System.arraycopy(newSignals, 0, combined, oldLength, newSignals.length);
-    //     signals = combined;
-    // }
-
     /** Registers this instance to the static supplier list */
     private void registerSupplier() {
         supplierInstances.add(this);
@@ -111,13 +99,7 @@ public class Data<T> {
 
     /** Detects the data type based on the first signal's value */
     private void detectTypeFromSignal() {
-        if (length == 0)
-            return;
-
-        if (length > 1)
-            isArray = true;
-
-        T value = signal[0].getValue();
+        T value = signal.getValue();
 
         if (value instanceof Number) {
             isDouble = true;
@@ -125,7 +107,7 @@ public class Data<T> {
             isBoolean = true;
         } else {
             try {
-                signal[0].getValueAsDouble();
+                signal.getValueAsDouble();
                 isDouble = true;
             } catch (Exception e) {
                 isDouble = false;
@@ -135,13 +117,7 @@ public class Data<T> {
 
     /** Detects the data type based on the first supplier's value */
     private void detectTypeFromSupplier() {
-        if (length == 0)
-            return;
-
-        if (length > 1)
-            isArray = true;
-
-        T value = supplier[0].get();
+        T value = supplier.get();
 
         if (value instanceof Number) {
             isDouble = true;
@@ -150,25 +126,11 @@ public class Data<T> {
         }
     }
 
-    /** Allocates the primitive arrays based on the detected type and length */
-    private void allocateCachedArrays() {
-        if (length > 0) {
-            if (isDouble) {
-                doubleArrayValues = new double[length];
-                floatArrayValues = new float[length];
-            } else if (isBoolean) {
-                booleanArrayValues = new boolean[length];
-            } else {
-                stringArrayValues = new String[length];
-            }
-        }
-    }
-
     /**
      * Refreshes the local data from the source.
      * If using signals, assumes the master refresh has already been called.
      */
-    public void refresh() {
+    private void refresh() {
         if (signal != null) {
             StatusSignal.refreshAll(signal);
             updateSignalValue();
@@ -177,11 +139,34 @@ public class Data<T> {
         }
     }
 
+    public static void addSignal(StatusSignal<?> signals, boolean isRio) {
+        if (isRio) {
+            BaseStatusSignal[] newArr = new BaseStatusSignal[rioSignalsArray.length + 1];
+            System.arraycopy(rioSignalsArray, 0, newArr, 0, rioSignalsArray.length);
+            newArr[newArr.length - 1] = signals;
+            rioSignalsArray = newArr;
+        }
+        else{
+            BaseStatusSignal[] newArr = new BaseStatusSignal[canivoreSignalsArray.length + 1];
+            System.arraycopy(canivoreSignalsArray, 0, newArr, 0, canivoreSignalsArray.length);
+            newArr[newArr.length - 1] = signals;
+            canivoreSignalsArray = newArr;
+        }
+    }
+
     public static void addSignals(boolean isRio, StatusSignal<?>... signals) {
-        if (isRio) 
-            rioSignals.addAll(Arrays.asList(signals));
-        else
-            canivoreSignals.addAll(Arrays.asList(signals));
+        if (isRio) {
+            BaseStatusSignal[] newArr = new BaseStatusSignal[rioSignalsArray.length + signals.length];
+            System.arraycopy(rioSignalsArray, 0, newArr, 0, rioSignalsArray.length);
+            System.arraycopy(signals, 0, newArr, rioSignalsArray.length, signals.length);
+            rioSignalsArray = newArr;
+        }
+        else{
+            BaseStatusSignal[] newArr = new BaseStatusSignal[canivoreSignalsArray.length + signals.length];
+            System.arraycopy(canivoreSignalsArray, 0, newArr, 0, canivoreSignalsArray.length);
+            System.arraycopy(signals, 0, newArr, canivoreSignalsArray.length, signals.length);
+            canivoreSignalsArray = newArr;
+        }
     }
 
     /**
@@ -191,36 +176,23 @@ public class Data<T> {
     private void updateSignalValue() {
         changed = false;
         if (isDouble) {
-            if (doubleArrayValues == null)
-                return;
-            for (int i = 0; i < length; i++) {
-                if (doubleArrayValues[i] != signal[i].getValueAsDouble()) {
-                    changed = true;
-                    doubleArrayValues[i] = signal[i].getValueAsDouble();
-                }
-                if (floatArrayValues[i] != (float) signal[i].getValueAsDouble()) {
-                    changed = true;
-                    floatArrayValues[i] = (float) signal[i].getValueAsDouble();
-                }
+            if (doubleValue != signal.getValueAsDouble()) {
+                changed = true;
+                doubleValue = signal.getValueAsDouble();
+            }
+            if (floatValue != signal.getValueAsDouble()) {
+                changed = true;
+                floatValue = (float) signal.getValueAsDouble();
             }
         } else if (isBoolean) {
-            if (booleanArrayValues == null)
-                return;
-            for (int i = 0; i < length; i++) {
-                if (booleanArrayValues[i] != (Boolean) signal[i].getValue()) {
-                    changed = true;
-                    booleanArrayValues[i] = (Boolean) signal[i].getValue();
-                }
+            if (booleanValue != (Boolean) signal.getValue()) {
+                changed = true;
+                booleanValue = (Boolean) signal.getValue();
             }
         } else {
-            if (stringArrayValues == null)
-                return;
-            for (int i = 0; i < length; i++) {
-                if (!Objects.equals(stringArrayValues[i],
-                        (signal[i].getValue() == null) ? "null" : signal[i].getValue().toString())) {
-                    changed = true;
-                    stringArrayValues[i] = (signal[i].getValue() == null) ? "null" : signal[i].getValue().toString();
-                }
+            if (!Objects.equals(stringValue, ((signal.getValue() == null) ? "null" : signal.getValue().toString()))) {
+                changed = true;
+                stringValue = (signal.getValue() == null) ? "null" : signal.getValue().toString();;
             }
         }
     }
@@ -232,39 +204,27 @@ public class Data<T> {
     private void refreshSupplier() {
         changed = false;
         if (isDouble) {
-            if (doubleArrayValues == null)
-                return;
-            for (int i = 0; i < length; i++) {
-                double newVal = ((Number) supplier[i].get()).doubleValue();
-                if (doubleArrayValues[i] != newVal) {
-                    changed = true;
-                    doubleArrayValues[i] = newVal;
-                }
-                float newFloatVal = ((Number) supplier[i].get()).floatValue();
-                if (floatArrayValues[i] != newFloatVal) {
-                    changed = true;
-                    floatArrayValues[i] = newFloatVal;
-                }
+            double newVal = ((Number) supplier.get()).doubleValue();
+            if (doubleValue != newVal) {
+                changed = true;
+                doubleValue = newVal;
+            }
+            float newFloatVal = ((Number) supplier.get()).floatValue();
+            if (floatValue != newFloatVal) {
+                changed = true;
+                floatValue = newFloatVal;
             }
         } else if (isBoolean) {
-            if (booleanArrayValues == null)
-                return;
-            for (int i = 0; i < length; i++) {
-                boolean newVal = (Boolean) supplier[i].get();
-                if (booleanArrayValues[i] != newVal) {
-                    changed = true;
-                    booleanArrayValues[i] = newVal;
-                }
+            boolean newVal = (Boolean) supplier.get();
+            if (booleanValue != newVal) {
+                changed = true;
+                booleanValue = newVal;
             }
         } else {
-            if (stringArrayValues == null)
-                return;
-            for (int i = 0; i < length; i++) {
-                String newVal = (supplier[i].get() == null) ? "null" : supplier[i].get().toString();
-                if (!Objects.equals(stringArrayValues[i], newVal)) {
-                    changed = true;
-                    stringArrayValues[i] = newVal;
-                }
+            String newVal = (supplier.get() == null) ? "null" : supplier.get().toString();
+            if (!Objects.equals(stringValue, newVal)) {
+                changed = true;
+                stringValue = newVal;
             }
         }
     }
@@ -279,11 +239,12 @@ public class Data<T> {
      * First refreshes all Phoenix signals, then updates local values.
      */
     public static void refreshAll() {
-        if (rioSignals.size() > 0) {
-            BaseStatusSignal.refreshAll(rioSignals);
+        if (rioSignalsArray.length > 0) {
+            BaseStatusSignal.refreshAll(rioSignalsArray);
         }
-        if (canivoreSignals.size() > 0) {
-            BaseStatusSignal.refreshAll(canivoreSignals);
+        
+        if (canivoreSignalsArray.length > 0) {
+            BaseStatusSignal.refreshAll(canivoreSignalsArray);
         }
 
         for (int i = 0; i < signalInstances.size(); i++) {
@@ -306,134 +267,42 @@ public class Data<T> {
      * @return The value as a double (1.0 for true if boolean)
      */
     public double getDouble() {
-        return length == 0 ? 0
-                : isDouble ? doubleArrayValues[0]
-                        : isBoolean ? booleanArrayValues[0] ? 1.0 : 0.0
-                                : 0;
-    }
-
-    /**
-     * @return The array of values as doubles
-     */
-    public double[] getDoubleArray() {
-        if (length == 0) {
-            return new double[0];
-        } else if (isDouble) {
-            return doubleArrayValues;
-        } else if (isBoolean) {
-            double[] doubles = new double[length];
-            for (int i = 0; i < length; i++) {
-                doubles[i] = booleanArrayValues[i] ? 1.0 : 0.0;
-            }
-            return doubles;
-        } else {
-            return new double[0];
-        }
+        return isDouble ? doubleValue
+                        : isBoolean ? booleanValue ? 1f : 0f
+                                : 0f;
     }
 
     /**
      * @return The value as a float (1f for true if boolean)
      */
     public float getFloat() {
-        return length == 0 ? 0f
-                : isDouble ? floatArrayValues[0]
-                        : isBoolean ? booleanArrayValues[0] ? 1f : 0f
+        return isDouble ? floatValue
+                        : isBoolean ? booleanValue ? 1f : 0f
                                 : 0f;
-    }
-
-    /**
-     * @return The array of values as floats
-     */
-    public float[] getFloatArray() {
-        if (length == 0) {
-            return new float[0];
-        } else if (isDouble) {
-            return floatArrayValues;
-        } else if (isBoolean) {
-            float[] floats = new float[length];
-            for (int i = 0; i < length; i++) {
-                floats[i] = booleanArrayValues[i] ? 1f : 0f;
-            }
-            return floats;
-        } else {
-            return new float[0];
-        }
     }
 
     /**
      * @return The value as a boolean (true for 1 if number)
      */
     public boolean getBoolean() {
-        return length == 0 ? false
-                : isBoolean ? booleanArrayValues[0]
-                        : isDouble ? doubleArrayValues[0] == 1
+        return isBoolean ? booleanValue
+                        : isDouble ? doubleValue == 1
                                 : false;
-    }
-
-    /**
-     * @return The array of values as booleans
-     */
-    public boolean[] getBooleanArray() {
-        if (length == 0) {
-            return new boolean[0];
-        } else if (isBoolean) {
-            return booleanArrayValues;
-        } else if (isDouble) {
-            boolean[] bools = new boolean[length];
-            for (int i = 0; i < length; i++) {
-                bools[i] = (doubleArrayValues[i] == 1);
-            }
-            return bools;
-        } else {
-            return new boolean[0];
-        }
     }
 
     /**
      * @return The value as a string
      */
     public String getString() {
-        return length == 0 ? ""
-                : isDouble ? ((Double) doubleArrayValues[0]).toString()
-                        : isBoolean ? ((Boolean) booleanArrayValues[0]).toString()
-                                : stringArrayValues[0];
-    }
-
-    /**
-     * @return The array of values as strings
-     */
-    public String[] getStringArray() {
-        if (length == 0) {
-            return new String[0];
-        } else if (isDouble) {
-            String[] strs = new String[length];
-            for (int i = 0; i < length; i++) {
-                strs[i] = ((Double) doubleArrayValues[i]).toString();
-            }
-            return strs;
-        } else if (isBoolean) {
-            String[] strs = new String[length];
-            for (int i = 0; i < length; i++) {
-                strs[i] = ((Boolean) booleanArrayValues[i]).toString();
-            }
-            return strs;
-        } else {
-            return stringArrayValues;
-        }
+        return isDouble ? ((Double) doubleValue).toString()
+                        : isBoolean ? ((Boolean) booleanValue).toString()
+                                : stringValue;
     }
 
     /**
      * @return The first StatusSignal if available
      */
     public StatusSignal<T> getSignal() {
-        return (signal != null && signal.length > 0) ? signal[0]
-                : null;
-    }
-
-    /**
-     * @return The StatusSignal array if available
-     */
-    public StatusSignal<T>[] getSignalArray() {
         return (signal != null) ? signal
                 : null;
     }
@@ -442,14 +311,6 @@ public class Data<T> {
      * @return The first Supplier if available
      */
     public Supplier<T> getSupplier() {
-        return (supplier != null && supplier.length > 0) ? supplier[0]
-                : null;
-    }
-
-    /**
-     * @return The Supplier array if available
-     */
-    public Supplier<T>[] getSupplierArray() {
         return (supplier != null) ? supplier
                 : null;
     }
@@ -458,9 +319,9 @@ public class Data<T> {
      * @return The timestamp of the signal (in milliseconds) or 0
      */
     public long getTime() {
-        if (signal != null)
-            return (long) (signal[0].getTimestamp().getTime() * 1000);
-        return 0;
+        return (signal != null) ?
+            (long) (signal.getTimestamp().getTime() * 1000) 
+                : 0;
     }
 
     public boolean isDouble() {
@@ -471,126 +332,112 @@ public class Data<T> {
         return isBoolean;
     }
 
-    public boolean isArray() {
-        return isArray;
+    public static void addToGroupFloat(String name, String metaData, Data<?>... data) {
+        for (Data<?> d : data) {
+            groupFloatData.add(d);
+        }
+
+        if (isGroupFloatFirst) {
+            groupFloatDataName += name;
+            groupFloatDataMetaData += metaData;
+            isGroupFloatFirst = false;
+        } else {
+            groupFloatDataName += " | " + name;
+            groupFloatDataMetaData += " | " + metaData;
+        }
+
+        groupFloatDataValues = new float[groupFloatData.size()];
     }
 
-    // /**
-    //  * Removes this instance from the static management lists.
-    //  * Also rebuilds the static signal array to remove these signals.
-    //  */
-    // public void cleanup() {
-    //     signalInstances.remove(this);
-    //     supplierInstances.remove(this);
+    public static void addToGroupBoolean(String name, String metaData, Data<?>... data) {
+        for (Data<?> d : data) {
+            groupBooleanData.add(d);
+        }
 
-    //     if (signal != null) {
-    //         int count = 0;
-    //         for (BaseStatusSignal s : rioSignals) {
-    //             boolean isMine = false;
-    //             for (StatusSignal<T> mySignal : signal) {
-    //                 if (s == mySignal) {
-    //                     isMine = true;
-    //                     break;
-    //                 }
-    //             }
-    //             if (!isMine)
-    //                 count++;
-    //         }
+        if (isGroupBooleanFirst) {
+            groupBooleanDataName += name;
+            groupBooleanDataMetaData += metaData;
+            isGroupBooleanFirst = false;
+        } else {
+            groupBooleanDataName += " | " + name;
+            groupBooleanDataMetaData += " | " + metaData;
+        }
+        
+        groupBooleanDataValues = new boolean[groupBooleanData.size()];
+    }
 
-    //         BaseStatusSignal[] newSignalsArray = new BaseStatusSignal[count];
-    //         int index = 0;
+    public static void addToGroupString(String name, String metaData, Data<?>... data) {
+        for (Data<?> d : data) {
+            groupStringData.add(d);
+        }
 
-    //         for (BaseStatusSignal s : rioSignals) {
-    //             boolean isMine = false;
-    //             for (StatusSignal<T> mySignal : signal) {
-    //                 if (s == mySignal) {
-    //                     isMine = true;
-    //                     break;
-    //                 }
-    //             }
-    //             if (!isMine) {
-    //                 newSignalsArray[index++] = s;
-    //             }
-    //         }
+        if (isGroupStringFirst) {
+            groupStringDataName += name;
+            groupStringDataMetaData += metaData;
+            isGroupStringFirst = false;
+        } else {
+            groupStringDataName += " | " + name;
+            groupStringDataMetaData += " | " + metaData;
+        }
+        
+        groupStringDataValues = new String[groupStringData.size()];
+    }
 
-    //         rioSignals = newSignalsArray;
-    //     }
+    public static float[] getGroupFloat(){
+        for (int i = 0; i < groupFloatData.size(); i++) {
+            groupFloatDataValues[i] = groupFloatData.get(i).getFloat();
+        }
+        return groupFloatDataValues;
+    }
 
-    //     signal = null;
-    //     supplier = null;
-    //     doubleArrayValues = null;
-    //     floatArrayValues = null;
-    //     booleanArrayValues = null;
-    //     stringArrayValues = null;
-    // }
+    public static boolean[] getGroupBoolean(){
+        for (int i = 0; i < groupBooleanData.size(); i++) {
+            groupBooleanDataValues[i] = groupBooleanData.get(i).getBoolean();
+        }
+        return groupBooleanDataValues;
+    }
+
+    public static String[] getGroupString(){
+        for (int i = 0; i < groupStringData.size(); i++) {
+            groupStringDataValues[i] = groupStringData.get(i).getString();
+        }
+        return groupStringDataValues;
+    }
+
+    public static String getGroupFloatName() {
+        return groupFloatDataName;
+    }
+
+    public static String getGroupBooleanName() {
+        return groupBooleanDataName;
+    }
+
+    public static String getGroupStringName() {
+        return groupStringDataName;
+    }
+
+    public static String getGroupDoubleMetaData() {
+        return groupFloatDataMetaData;
+    }
+
+    public static String getGroupBooleanMetaData() {
+        return groupBooleanDataMetaData;
+    }
+
+    public static String getGroupStringMetaData() {
+        return groupStringDataMetaData;
+    }
 
     /**
      * Clears all static references and signals.
      */
     public static void clearAllSignals() {
-        rioSignals = new ArrayList<>();
-        canivoreSignals = new ArrayList<>();
+        rioSignalsArray = new BaseStatusSignal[0];
+        canivoreSignalsArray = new BaseStatusSignal[0];
         signalInstances.clear();
         supplierInstances.clear();
-    }
-
-    /**
-     * Expands the current Data object by adding more StatusSignals.
-     * 
-     * @param newSignals The new signals to append
-     */
-    @SuppressWarnings("unchecked")
-    public void expandWithSignals(StatusSignal<T>[] newSignals, boolean isRio) {
-        if (newSignals == null || newSignals.length == 0)
-            return;
-
-        int newLength = length + newSignals.length;
-        StatusSignal<T>[] expandedSignals = new StatusSignal[newLength];
-        if (signal != null) {
-            System.arraycopy(signal, 0, expandedSignals, 0, length);
-        }
-        System.arraycopy(newSignals, 0, expandedSignals, length, newSignals.length);
-        signal = expandedSignals;
-
-        length = signal.length;
-
-        if (length > 1)
-            isArray = true;
-
-        detectTypeFromSignal();
-        allocateCachedArrays();
-
-        refresh();
-    }
-
-    public void expandWithSignals(StatusSignal<T>[] newSignals) {expandWithSignals(newSignals, true);}
-
-    /**
-     * Expands the current Data object by adding more Suppliers.
-     * 
-     * @param newSuppliers The new suppliers to append
-     */
-    @SuppressWarnings("unchecked")
-    public void expandWithSuppliers(Supplier<T>[] newSuppliers) {
-
-        if (newSuppliers == null || newSuppliers.length == 0)
-            return;
-        int newLength = length + newSuppliers.length;
-        Supplier<T>[] expandedSuppliers = new Supplier[newLength];
-        if (supplier != null) {
-            System.arraycopy(supplier, 0, expandedSuppliers, 0, length);
-        }
-        System.arraycopy(newSuppliers, 0, expandedSuppliers, length, newSuppliers.length);
-        supplier = expandedSuppliers;
-
-        length = expandedSuppliers.length;
-
-        if (length > 1)
-            isArray = true;
-
-        detectTypeFromSupplier();
-        allocateCachedArrays();
-
-        refresh();
+        groupFloatData.clear();
+        groupBooleanData.clear();
+        groupStringData.clear();
     }
 }

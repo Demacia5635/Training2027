@@ -1,17 +1,19 @@
 package frc.demacia.utils.sensors;
 
-import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.StatusSignal;
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.demacia.utils.Data;
-import frc.demacia.utils.log.LogManager;
-import frc.demacia.utils.log.LogEntryBuilder.LogLevel;
+import frc.demacia.utils.elastic.ElasticGenerator;
+import frc.demacia.utils.log.Log;
+import frc.demacia.utils.log.Log.LogLevel;
 import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
 
 /**
@@ -21,7 +23,6 @@ import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
  * Provides access to CANcoder position, velocity, and acceleration with:
  * </p>
  * <ul>
- * <li>Automatic unit conversion (rotations → radians)</li>
  * <li>Offset calibration support</li>
  * <li>Automatic logging of telemetry</li>
  * <li>Fault monitoring</li>
@@ -59,13 +60,13 @@ public class Cancoder extends CANcoder implements AnalogSensorInterface {
     CancoderConfig config;
     String name;
 
-    StatusSignal<Angle> positionSignal;
-    StatusSignal<Angle> absPositionSignal;
-    StatusSignal<AngularVelocity> velocitySignal;
+    Data<Angle> positionSignal;
+    Data<Angle> absPositionSignal;
+    Data<AngularVelocity> velocitySignal;
 
-    double lastPosition;
-    double lastAbsPosition;
     double lastVelocity;
+    double lastTimestamp;
+    double lastAcceleration;
 
     /**
      * Creates a CANcoder sensor.
@@ -73,14 +74,16 @@ public class Cancoder extends CANcoder implements AnalogSensorInterface {
      * @param config Configuration with CAN ID, bus, and calibration
      */
     public Cancoder(CancoderConfig config) {
-        super(config.id, config.canbus);
+        super(config.id, config.canbus.canbus);
         this.config = config;
         name = config.name;
         setName(name);
         configCancoder();
         setStatusSignals();
         addLog();
-        LogManager.log(name + " cancoder initialized");
+        SmartDashboard.putData("sensors/" + name, this);
+        Log.log(name + " cancoder initialized");
+        ElasticGenerator.getInstance().registerSensor(this);
     }
 
     private void configCancoder() {
@@ -98,13 +101,9 @@ public class Cancoder extends CANcoder implements AnalogSensorInterface {
     }
 
     private void setStatusSignals() {
-        positionSignal = getPosition();
-        absPositionSignal = getAbsolutePosition();
-        velocitySignal = getVelocity();
-
-        lastPosition = positionSignal.getValueAsDouble();
-        lastAbsPosition = absPositionSignal.getValueAsDouble();
-        lastVelocity = velocitySignal.getValueAsDouble();
+        positionSignal = new Data<>(getPosition(), config.canbus.equals(Canbus.Rio));
+        absPositionSignal = new Data<>(getAbsolutePosition(), config.canbus.equals(Canbus.Rio));
+        velocitySignal = new Data<>(getVelocity(), config.canbus.equals(Canbus.Rio));
     }
 
     /**
@@ -121,16 +120,23 @@ public class Cancoder extends CANcoder implements AnalogSensorInterface {
      */
     public void checkElectronics() {
         if (getFaultField().getValue() != 0) {
-            LogManager.log(name + " have a fault: " + getFaultField().getValue());
+            Log.log(name + " have a fault: " + getFaultField().getValue());
         }
     }
 
-    @SuppressWarnings({ "unchecked", "unlikely-arg-type" })
+    @SuppressWarnings({ "unchecked" })
     private void addLog() {
-        Data.addSignals(config.canbus.equals(Canbus.Rio), absPositionSignal);
-        LogManager.addEntry(name + ": abs Position",
-                () -> absPositionSignal.getValueAsDouble() * 2 * Math.PI).withLogLevel(LogLevel.LOG_ONLY_NOT_IN_COMP)
-                .build();
+        Log.putData(name + ": abs Position", 
+            new Supplier[]{
+                this::getCurrentAbsPosition
+            }
+            , LogLevel.LOG_ONLY, "sensors", false);
+            
+        Log.putData(name + ": is Connected", 
+            new Supplier[]{
+                this::isConnected
+            }
+            , LogLevel.LOG_ONLY, "sensors", false);
     }
 
     /**
@@ -143,9 +149,9 @@ public class Cancoder extends CANcoder implements AnalogSensorInterface {
     }
 
     /**
-     * Gets current position (implements AnalogSensorInterface).
+     * Gets current position.
      * 
-     * @return Current relative position in radians
+     * @return Current relative position in Radians
      */
     public double get() {
         return getCurrentPosition();
@@ -154,59 +160,63 @@ public class Cancoder extends CANcoder implements AnalogSensorInterface {
     /**
      * Gets the relative position since power-on.
      * 
-     * <p>
-     * Starts at absolute position on boot, then tracks changes.
-     * Can exceed 2π for continuous rotation tracking.
-     * </p>
-     * 
-     * @return Relative position in radians (can be > 2π)
+     * @return Relative position in Radians
      */
     public double getCurrentPosition() {
-        lastPosition = StatusSignalHelper.getStatusSignalWith2Pi(positionSignal, lastPosition);
-        return lastPosition;
+        return positionSignal.getDouble() * 2 * Math.PI;
     }
 
     /**
      * Gets the absolute position (persists through power cycles).
      * 
      * <p>
-     * This is the primary method for reading CANcoder position.
-     * Value is in radians and includes configured offset.
+     * Value is in Radians and includes configured offset.
+     * This is exactly the value you can copy-paste into the offset config.
      * </p>
      * 
-     * @return Absolute position in radians (0 to 2π)
+     * @return Absolute position in Radians
      */
     public double getCurrentAbsPosition() {
-        lastAbsPosition = StatusSignalHelper.getStatusSignalWith2Pi(absPositionSignal, lastAbsPosition);
-        return lastAbsPosition;
+        return absPositionSignal.getDouble() * 2 * Math.PI;
     }
 
     /**
      * Gets the current velocity.
      * 
-     * @return Velocity in radians per second
+     * @return Velocity in Radians per second (RPS)
      */
     public double getCurrentVelocity() {
-        lastVelocity = StatusSignalHelper.getStatusSignalWith2Pi(velocitySignal, lastVelocity);
-        return lastVelocity;
+        return velocitySignal.getDouble() * 2 * Math.PI;
     }
 
     /**
-     * Gets the current acceleration (calculated from velocity change).
+     * Gets the current acceleration.
      * 
-     * @return Acceleration in radians per second²
+     * @return Acceleration in Radians per second² (RPS²)
      */
     public double getCurrentAcceleration() {
-        velocitySignal.refresh();
-        if (velocitySignal.getStatus() == StatusCode.OK) {
-            return (velocitySignal.getValueAsDouble() * 2 * Math.PI) - lastVelocity;
+        double currentTimestamp = Timer.getFPGATimestamp();
+        double dt = currentTimestamp - lastTimestamp;
+        
+        if (dt < 0.001) {
+            return lastAcceleration;
         }
-        return 0;
+        
+        if (lastTimestamp != 0) {
+            lastAcceleration = (getCurrentVelocity() - lastVelocity) / dt;
+        }
+        
+        lastVelocity = getCurrentVelocity();
+        lastTimestamp = currentTimestamp;
+        
+        return lastAcceleration;
     }
-
+    
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("CANcoder");
+        builder.addBooleanProperty("is Connected", this::isConnected, null);
+        builder.addDoubleProperty("value", this::getCurrentAbsPosition, null);
         builder.addDoubleProperty("Abs Position", this::getCurrentAbsPosition, null);
         builder.addDoubleProperty("Position", this::getCurrentPosition, null);
         builder.addDoubleProperty("Velocity", this::getCurrentVelocity, null);

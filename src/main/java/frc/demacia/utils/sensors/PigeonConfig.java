@@ -37,7 +37,7 @@ public class PigeonConfig extends BaseSensorConfig<PigeonConfig>{
      * @param name Descriptive name for logging
      */
     public PigeonConfig(int id, Canbus canbus, String name) {
-        super(id, canbus.canbus, name);
+        super(id, canbus, name);
         sensorType = Pigeon.class;
     }
 

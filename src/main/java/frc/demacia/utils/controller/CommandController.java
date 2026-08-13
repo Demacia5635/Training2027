@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.demacia.utils.Utilities;
-import frc.demacia.utils.log.LogManager;
+import frc.demacia.utils.log.Log;
 
 /**
  * controller wrapper supporting Xbox and PS5 controllers.
@@ -412,7 +412,7 @@ public class CommandController extends CommandGenericHID{
     public Trigger getPS() {
         switch (controllerType) {
             case kXbox:
-                LogManager.log("Xbox controller does not have PS button", AlertType.kError);
+                Log.log("Xbox controller does not have PS button", AlertType.kError);
                 return null;
             case kPS5:
                 return button(PS5Controller.Button.kPS.value, CommandScheduler.getInstance().getDefaultButtonLoop());
@@ -429,7 +429,7 @@ public class CommandController extends CommandGenericHID{
     public Trigger getTouchPad() {
         switch (controllerType) {
             case kXbox:
-                LogManager.log("Xbox controller does not have touchpad", AlertType.kError);
+                Log.log("Xbox controller does not have touchpad", AlertType.kError);
                 return null;        
             case kPS5:
                 return button(PS5Controller.Button.kTouchpad.value, CommandScheduler.getInstance().getDefaultButtonLoop());

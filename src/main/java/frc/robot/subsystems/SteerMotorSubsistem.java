@@ -8,40 +8,45 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.demacia.utils.motors.TalonFXMotor;
 import frc.robot.Constants;
 
 public class SteerMotorSubsistem extends SubsystemBase {
-  private final TalonFX steerMotor;
-  private final TalonFX driveMotor;
+  private final TalonFXMotor steerMotor;
   private double powerSteer;
-  private double powerDrive;
 
   public SteerMotorSubsistem() {
     super();
-    steerMotor = new TalonFX(Constants.STREET_MOTOR_ID, Constants.CANBUS);
-    driveMotor = new TalonFX(Constants.DRIVE_MOTOR_ID, Constants.CANBUS);
+    steerMotor = new TalonFXMotor(Constants.CONFIG_STEER);
+  }
+
+  public void setPositionSteer(double position) {
+    steerMotor.setPositionVoltage(position);
+  }
+
+  public double getCurrentPositionSteer() {
+    return steerMotor.getCurrentPosition();
+  }
+
+  public void setVelocitySteer(double velocity) {
+    steerMotor.setVelocity(velocity);
+  }
+
+  public double getCurrentVelocitySteer() {
+    return steerMotor.getCurrentVelocity();
   }
 
   public void setPowerSteer(double powerSteer) {
     this.powerSteer = powerSteer;
-    steerMotor.set(powerSteer);
-  }
-
-  public void setPowerDrive(double powerDrive) {
-    this.powerDrive = powerDrive;
-    driveMotor.set(powerDrive);
+    steerMotor.setDuty(powerSteer);
   }
 
   public void stop() {
     setPowerSteer(0);
   }
 
-  public double getMeterDrive() {
-    return (driveMotor.getPosition().getValueAsDouble()) * Constants.SCOPE * Constants.GEAR_RATIO_DRIVE;
-  }
-
   public double getAngleSteer() {
-    return (steerMotor.getPosition().getValueAsDouble()) * 2 * Math.PI / Constants.GEAR_RATIO_STEER;
+    return (steerMotor.getCurrentPosition());
   }
 
   public double getAngleSteerDeg() {
@@ -52,7 +57,8 @@ public class SteerMotorSubsistem extends SubsystemBase {
   public void periodic() {
     // double angleFromMotor = SmartDashboard.getAngle(), -1);
     SmartDashboard.putNumber("angle steer", getAngleSteerDeg());
-    SmartDashboard.putNumber("meter drive", getMeterDrive());
+    SmartDashboard.putNumber("PID position", getCurrentPositionSteer());
+    SmartDashboard.putNumber("PID velocity", getCurrentVelocitySteer());
   }
 }
 /** Creates a new ExampleSubsystem. */

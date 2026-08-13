@@ -1,11 +1,14 @@
 package frc.demacia.utils.sensors;
 import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.function.Supplier;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Ultrasonic;
-import frc.demacia.utils.log.LogManager;
-import frc.demacia.utils.log.LogEntryBuilder.LogLevel;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.demacia.utils.elastic.ElasticGenerator;
+import frc.demacia.utils.log.Log;
+import frc.demacia.utils.log.Log.LogLevel;
 
 /**
  * Ultrasonic distance sensor wrapper (e.g., MaxBotix, HC-SR04).
@@ -65,13 +68,18 @@ public class UltraSonicSensor extends Ultrasonic implements AnalogSensorInterfac
         setName(name);
         setAutomaticMode(true);
         addLog();
-		LogManager.log(name + " UltraSonicSensor initialized");
+        SmartDashboard.putData("sensors/" + config.name, this);
+		Log.log(name + " UltraSonicSensor initialized");
+        ElasticGenerator.getInstance().registerSensor(this);
     }
 
     @SuppressWarnings("unchecked")
     private void addLog() {
-        LogManager.addEntry(name + ": range", this::getRangeMeters)
-        .withLogLevel(LogLevel.LOG_ONLY_NOT_IN_COMP).build();
+        Log.putData(name + ": range", 
+            new Supplier[]{
+                this::getRangeMeters
+            }
+        , LogLevel.LOG_ONLY, "sensors", false);
     }
 
     /**
@@ -90,7 +98,7 @@ public class UltraSonicSensor extends Ultrasonic implements AnalogSensorInterfac
      */
     public void checkElectronics(){
         if (!isRangeValid()) {
-            LogManager.log(name + " is at invalid range");
+            Log.log(name + " is at invalid range");
         }
     }
 
@@ -136,6 +144,7 @@ public class UltraSonicSensor extends Ultrasonic implements AnalogSensorInterfac
      */
     @Override
     public void initSendable(SendableBuilder builder) {
+        builder.addDoubleProperty("value", this::getRangeMeters, null);
         builder.addDoubleProperty("range", this::getRangeMeters, null);
         builder.addDoubleProperty("avg range", this::getAverage, null);
         

@@ -36,7 +36,7 @@ public class CancoderConfig extends BaseSensorConfig<CancoderConfig>{
      * @param name Descriptive name for logging
      */
     public CancoderConfig(int id, Canbus canbus, String name) {
-        super(id, canbus.canbus, name);
+        super(id, canbus, name);
         sensorType = Cancoder.class;
     }
 

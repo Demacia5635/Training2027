@@ -10,13 +10,13 @@ import frc.robot.subsystems.SteerMotorSubsistem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DriveToMeter extends Command {
- DriveMotorSubsistem subsystem1 = new DriveMotorSubsistem();
+  DriveMotorSubsistem subsystem1 = new DriveMotorSubsistem();
   private double currentMeterDrive;
   private double wantedMeterDrive;
   private double power;
 
   /** Creates a new DriveToAngle. */
-  public DriveToMeter(DriveMotorSubsistem subsystem, double wantedMeterDrive , double power) {
+  public DriveToMeter(DriveMotorSubsistem subsystem, double wantedMeterDrive, double power) {
     this.subsystem1 = subsystem1;
     this.wantedMeterDrive = wantedMeterDrive;
     this.power = power;
@@ -33,7 +33,7 @@ public class DriveToMeter extends Command {
   @Override
   public void execute() {
     currentMeterDrive = subsystem1.getMeterDrive();
-    int direction = ((wantedMeterDrive - currentMeterDrive)<0)? -1:1;
+    int direction = ((wantedMeterDrive - currentMeterDrive) < 0) ? -1 : 1;
     subsystem1.setPowerDrive(power * direction);
 
   }

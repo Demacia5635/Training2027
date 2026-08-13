@@ -6,7 +6,7 @@ package frc.demacia.vision;
 
 import edu.wpi.first.math.geometry.Translation3d;
 
-public class Camera {
+public class CameraConfig {
 
     private String name;
     private Translation3d robotToCamPosition;
@@ -16,7 +16,7 @@ public class Camera {
     private boolean isCroping;
     private boolean isObjectCamera = false;
 
-    public Camera(String name, Translation3d robotToCamPosition, double pitch, double yaw, boolean isCroping, boolean isObjectCamera) {
+    public CameraConfig(String name, Translation3d robotToCamPosition, double pitch, double yaw, boolean isCroping, boolean isObjectCamera) {
         this.name = name;
         this.robotToCamPosition = robotToCamPosition;
         this.pitch = pitch;
@@ -25,7 +25,6 @@ public class Camera {
         this.isCroping = isCroping;
         this.isObjectCamera = isObjectCamera;
     }
-
 
     public Translation3d getRobotToCamPosition() {
         return robotToCamPosition != null? robotToCamPosition  : new Translation3d();

@@ -32,7 +32,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final SteerMotorSubsistem subsystemSteer;
-    private final DriveMotorSubsistem subsystemDrive;
+  private final DriveMotorSubsistem subsystemDrive;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(
@@ -65,7 +65,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-   // controller.a().onTrue(new SimpleMotorCommand(subsystem, -0.2, 2.0, 0.5));
+    // controller.a().onTrue(new SimpleMotorCommand(subsystem, -0.2, 2.0, 0.5));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
   }
   // private void configureDifultCommands(){
@@ -77,8 +77,9 @@ public class RobotContainer {
   double leftY = controller.getLeftY(); // -1 forward!!! -1 to 1
 
   public Command getAutonomousCommand() {
-     return new SteerToAngle(subsystemSteer, Math.PI / 2, 0.03)
-    .andThen(new DriveToMeter(subsystemDrive,1.0 ,0.3)
-    .alongWith(new SteerToAngle(subsystemSteer, Math.PI*135.0/180.0 , 0.03 )));
+    // return new SteerToAngle(subsystemSteer, Math.PI / 2, 0.03)
+    // .andThen(new DriveToMeter(subsystemDrive,1.0 ,0.3)
+    // .alongWith(new SteerToAngle(subsystemSteer, Math.PI*135.0/180.0 , 0.03 )));
+    return new SteerToAngle(subsystemSteer, 0, 0, Math.toRadians(180));
   }
 }

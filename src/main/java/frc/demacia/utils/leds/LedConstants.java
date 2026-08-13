@@ -3,7 +3,7 @@ package frc.demacia.utils.leds;
 /**constants for leds */
 public class LedConstants {
   /**the size of every strip for every port */
-  public static final int LENGTH = 43;
+  public static final int LENGTH = 8; // 8 leds block in strip
   /**the port of the leds */
   public static final int PORT = 9;
 
