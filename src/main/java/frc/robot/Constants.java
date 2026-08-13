@@ -34,18 +34,21 @@ public final class Constants {
   public static final double SCOPE = 4 * 0.0254 * Math.PI;
   public static final double GEAR_RATIO_DRIVE = 8.14;
   public static final double GEAR_RATIO_STEER = 150.0 / 7.0;
-  public static final double KP = 1;
-  public static final double KI = 0;
-  public static final double KD = 0;
+  public static final double KP_Drive = 6;
+  public static final double KI_Drive = 0.6;
+  public static final double KD_Drive = 0.3;
+  public static final double KP_STEER = 1;
+  public static final double KI_STEER = 0;
+  public static final double KD_STEER = 0;
   public static final double KS = 0;
   public static final double KV = 0;
   public static final double KA = 0;
   public static final double KG = 0;
   public static final TalonFXConfig CONFIG_STEER = new TalonFXConfig(STEER_MOTOR_ID, CANBUS, STEER_MOTOR_NAME)
-      .withPID(KP, KI, KD, KS, KV, KA, KG,0,0)
+      .withPID(KP_STEER, KI_STEER, KD_STEER, KS, KV, KA, KG,0,0)
       .withRadiansMotor(GEAR_RATIO_STEER);
   public static final TalonFXConfig CONFIG_DRIVE = new TalonFXConfig(DRIVE_MOTOR_ID, CANBUS, DRIVE_MOTOR_NAME)
-      .withPID(0, 0, 0, 0, 0, 0, 0,0,0)
+      .withPID(KP_Drive, KI_Drive, KD_Drive, 0, 0, 0, 0,0,0)
       .withMeterMotor(GEAR_RATIO_DRIVE,SCOPE);
 
 }

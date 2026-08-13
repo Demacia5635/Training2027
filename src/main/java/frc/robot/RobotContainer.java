@@ -80,6 +80,8 @@ public class RobotContainer {
     // return new SteerToAngle(subsystemSteer, Math.PI / 2, 0.03)
     // .andThen(new DriveToMeter(subsystemDrive,1.0 ,0.3)
     // .alongWith(new SteerToAngle(subsystemSteer, Math.PI*135.0/180.0 , 0.03 )));
-    return new SteerToAngle(subsystemSteer, 0, 0, Math.toRadians(180));
+   // return new SteerToAngle(subsystemSteer, 0, 0, 0,2);
+   return new SteerToAngle(subsystemSteer, 0, 0, Math.toRadians(180), 0)
+   .alongWith(new DriveToMeter(subsystemDrive, 0, 0, 1));
   }
 }

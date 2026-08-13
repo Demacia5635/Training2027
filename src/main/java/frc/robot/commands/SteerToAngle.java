@@ -16,13 +16,15 @@ public class SteerToAngle extends Command {
   private double wantedAngleSteer;
   private double power;
   private double position;
+  private double velocity;
 
-  public SteerToAngle(SteerMotorSubsistem subsystem, double wantedAngleSteer, double power, double position) {
+  public SteerToAngle(SteerMotorSubsistem subsystem, double wantedAngleSteer, double power, double position, double velocity) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.subsystem1 = subsystem;
     this.wantedAngleSteer = wantedAngleSteer;
     this.power = power;
     this.position = position;
+    this.velocity = velocity;
     addRequirements(subsystem);
   }
 
@@ -38,6 +40,7 @@ public class SteerToAngle extends Command {
     // int direction = ((wantedAngleSteer - currentAngleSteer) < 0) ? -1 : 1;
     // subsystem1.setPowerSteer(power * direction);
     subsystem1.setPositionSteer(position);
+    
 
     // SmartDashboard.putNumber("currentAngleSteer", currentAngleSteer);
     // SmartDashboard.putNumber("wantedAngleSteer", wantedAngleSteer);

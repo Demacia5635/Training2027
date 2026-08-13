@@ -23,6 +23,12 @@ public class DriveMotorSubsistem extends SubsystemBase {
   public void setPositionDrive(double position) {
     driveMotor.setPositionVoltage(position);
   }
+   public void setVelocityDrive(double velocity) {
+    driveMotor.setVelocity(velocity);
+   }
+   public double getCurrentVelocityDrive() {
+    return driveMotor.getCurrentVelocity();
+  }
 
   public void setPowerSteer(double powerDrive) {
     this.powerDrive = powerDrive;
@@ -46,6 +52,7 @@ public class DriveMotorSubsistem extends SubsystemBase {
   public void periodic() {
     // double angleFromMotor = SmartDashboard.getAngle(), -1);
     SmartDashboard.putNumber("meter drive", getMeterDrive());
+    SmartDashboard.putNumber("PID Drive Velocity", getCurrentVelocityDrive());
   }
 }
 /** Creates a new ExampleSubsystem. */
