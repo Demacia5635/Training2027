@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.HWcommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -27,6 +28,7 @@ import frc.robot.subsystems.SimpleMotorSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SimpleMotorSubsystem simpleMotorSubsystem = new SimpleMotorSubsystem();
+  private final HWcommand hwCommand = new HWcommand(simpleMotorSubsystem);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -61,10 +63,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new TwoMotorCommand (
-        simpleMotorSubsystem,
-        0.3,
-        0.6);
+
   }
 
 }
