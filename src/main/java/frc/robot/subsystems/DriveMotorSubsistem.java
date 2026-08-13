@@ -10,13 +10,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class SimpleMotorSubsystem extends SubsystemBase {
+public class DriveMotorSubsistem extends SubsystemBase {
   private final TalonFX steerMotor;
   private final TalonFX driveMotor;
   private double powerSteer;
   private double powerDrive;
 
-  public SimpleMotorSubsystem() {
+  public DriveMotorSubsistem() {
     super();
     steerMotor = new TalonFX(Constants.STREET_MOTOR_ID, Constants.CANBUS);
     driveMotor = new TalonFX(Constants.DRIVE_MOTOR_ID, Constants.CANBUS);
@@ -36,26 +36,23 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     setPowerSteer(0);
   }
 
-  public double getAngleDrive() {
-    return (driveMotor.getPosition().getValueAsDouble()) * 2 * Math.PI;
+  public double getMeterDrive() {
+    return (driveMotor.getPosition().getValueAsDouble()) * Constants.SCOPE * Constants.GEAR_RATIO_DRIVE;
   }
 
   public double getAngleSteer() {
-    return (steerMotor.getPosition().getValueAsDouble()) * 2 * Math.PI;
+    return (steerMotor.getPosition().getValueAsDouble()) * 2 * Math.PI / Constants.GEAR_RATIO_STEER;
   }
 
   public double getAngleSteerDeg() {
     return getAngleSteer() * 180 / Math.PI;
   }
 
-  public double getAngleDriveDeg() {
-    return getAngleDrive() * 180 / Math.PI;
-  }
   @Override
   public void periodic() {
     // double angleFromMotor = SmartDashboard.getAngle(), -1);
     SmartDashboard.putNumber("angle steer", getAngleSteerDeg());
-    SmartDashboard.putNumber("angle drive", getAngleDriveDeg());
+    SmartDashboard.putNumber("meter drive", getMeterDrive());
   }
 }
 /** Creates a new ExampleSubsystem. */

@@ -5,19 +5,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.SimpleMotorSubsystem;
+import frc.robot.subsystems.DriveMotorSubsistem;
+import frc.robot.subsystems.SteerMotorSubsistem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class DriveToAngle extends Command {
-  SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
-  private double currentAngleDrive;
-  private double wantedAngleDrive;
+public class DriveToMeter extends Command {
+ DriveMotorSubsistem subsystem1 = new DriveMotorSubsistem();
+  private double currentMeterDrive;
+  private double wantedMeterDrive;
   private double power;
 
   /** Creates a new DriveToAngle. */
-  public DriveToAngle(SimpleMotorSubsystem subsystem, double wantedAngleDrive , double power) {
-    this.subsystem = subsystem;
-    this.wantedAngleDrive = wantedAngleDrive;
+  public DriveToMeter(DriveMotorSubsistem subsystem, double wantedMeterDrive , double power) {
+    this.subsystem1 = subsystem1;
+    this.wantedMeterDrive = wantedMeterDrive;
+    this.power = power;
     addRequirements(subsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -30,20 +32,21 @@ public class DriveToAngle extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    int direction = ((wantedAngleDrive - currentAngleDrive)<0)? -1:1;
-    subsystem.setPowerSteer(power * direction);
+    currentMeterDrive = subsystem1.getMeterDrive();
+    int direction = ((wantedMeterDrive - currentMeterDrive)<0)? -1:1;
+    subsystem1.setPowerDrive(power * direction);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    subsystem.stop();
+    subsystem1.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(wantedAngleDrive - currentAngleDrive) < 0.5;
+    return Math.abs(wantedMeterDrive - currentMeterDrive) < 0.5;
   }
 }

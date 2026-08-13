@@ -7,18 +7,18 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.subsystems.SimpleMotorSubsystem;
+import frc.robot.subsystems.SteerMotorSubsistem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SimpleMotorCommand extends Command {
-  SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
+  SteerMotorSubsistem subsystem = new SteerMotorSubsistem();
   private double powerSteer;
   private double powerDrive;
   private double duration;
   private double startTime;
   private Timer timer = new Timer();
 
-  public SimpleMotorCommand(SimpleMotorSubsystem subsystem, double powerSteer, double duration, double powerDrive) {
+  public SimpleMotorCommand(SteerMotorSubsistem subsystem, double powerSteer, double duration, double powerDrive) {
     this.subsystem = subsystem;
     this.powerSteer = powerSteer;
     this.powerDrive = powerDrive;

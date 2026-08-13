@@ -5,10 +5,11 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.DriveToAngle;
+import frc.robot.commands.DriveToMeter;
 import frc.robot.commands.SimpleMotorCommand;
 import frc.robot.commands.SteerToAngle;
-import frc.robot.subsystems.SimpleMotorSubsystem;
+import frc.robot.subsystems.DriveMotorSubsistem;
+import frc.robot.subsystems.SteerMotorSubsistem;
 
 import java.lang.ModuleLayer.Controller;
 import java.util.ResourceBundle.Control;
@@ -29,7 +30,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
+
+  private final SteerMotorSubsistem subsystemSteer;
+    private final DriveMotorSubsistem subsystemDrive;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(
@@ -39,9 +42,11 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    subsystemSteer = new SteerMotorSubsistem();
+    subsystemDrive = new DriveMotorSubsistem();
     // Configure the trigger bindings
     configureBindings();
-  //  configureDifultCommands();
+    // configureDifultCommands();
     getAutonomousCommand();
   }
 
@@ -60,7 +65,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    controller.a().onTrue(new SimpleMotorCommand(subsystem, -0.2, 2.0, 0.5));
+   // controller.a().onTrue(new SimpleMotorCommand(subsystem, -0.2, 2.0, 0.5));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
   }
   // private void configureDifultCommands(){
@@ -69,10 +74,11 @@ public class RobotContainer {
 
   private CommandXboxController controller = new CommandXboxController(
       Constants.OperatorConstants.CONTROLLER_PORT);
-  double leftY = controller.getLeftY(); // -1 forward!!! -1 to 1 
+  double leftY = controller.getLeftY(); // -1 forward!!! -1 to 1
 
   public Command getAutonomousCommand() {
-    return new SteerToAngle(subsystem, Math.PI / 2, 0.3);
-    // return new DriveToAngle(subsystem, 0);
+     return new SteerToAngle(subsystemSteer, Math.PI / 2, 0.03)
+    .andThen(new DriveToMeter(subsystemDrive,1.0 ,0.3)
+    .alongWith(new SteerToAngle(subsystemSteer, Math.PI*135.0/180.0 , 0.03 )));
   }
 }

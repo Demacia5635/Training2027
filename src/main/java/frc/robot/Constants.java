@@ -27,4 +27,6 @@ public final class Constants {
   public static final int STREET_MOTOR_ID = 2;
   public static final int DRIVE_MOTOR_ID = 1;
   public static final double SCOPE = 4 * 0.0254 * Math.PI;
+  public static final double GEAR_RATIO_DRIVE = 6.12;
+  public static final double GEAR_RATIO_STEER = 150.0/7.0*49.0/180.0;
 }
