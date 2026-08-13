@@ -22,4 +22,9 @@ public final class Constants {
         public static final int MotorID = 1;
         public static final String MotorCANbus = "rio";
     }
+    public static class MySecondSubsystemConstants {
+        public static final int Motor2ID = 2;
+        public static final String MotorCANbus = "rio";
+    }
+
 }

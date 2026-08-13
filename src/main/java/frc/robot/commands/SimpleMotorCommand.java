@@ -10,7 +10,7 @@ public class SimpleMotorCommand extends Command {
     private final double power;
     private final double duration;
     private double startTime;
-
+    
     public SimpleMotorCommand(
         SimpleMotorSubsystem subsystem,
         double power,
