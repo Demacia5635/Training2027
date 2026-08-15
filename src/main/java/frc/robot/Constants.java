@@ -26,4 +26,7 @@ public final class Constants {
     public static final String MotorCANbus = "rio";
     public static final CANBus MOTOR_CANBUS = CANBus.roboRIO();
   }
+
+public static final String DriverConstants = null;
+
 }
