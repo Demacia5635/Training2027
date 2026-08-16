@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -23,4 +25,10 @@ public class SimpleMotorSubsystem extends SubsystemBase {
   public void stop() {
     setPower(0, 0);
   }
+  @Override
+public void periodic() {
+  SmartDashboard.putNumber("Motor 1 Speed", motor1.get());
+  SmartDashboard.putNumber("Motor 2 Speed", motor2.get());
+}
+
 }

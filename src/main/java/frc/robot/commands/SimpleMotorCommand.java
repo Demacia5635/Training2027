@@ -26,6 +26,7 @@ public class SimpleMotorCommand extends Command {
     timer.restart();
     System.out.println("Init Command started at: " + startTime +
       "seconds for " + duration + " seconds with power 1: " + power1 + " seconds with power 2: " + power2);
+      
   }
 
   @Override
@@ -39,7 +40,6 @@ public class SimpleMotorCommand extends Command {
   public boolean isFinished() {
     return Timer.getFPGATimestamp() >=
       startTime + duration || timer.hasElapsed(duration);
-    //    return timer.hasElapsed(duration);
   }
 
   @Override
@@ -48,4 +48,5 @@ public class SimpleMotorCommand extends Command {
     System.out.println("Command ended at: " +
       Timer.getFPGATimestamp());
   }
+
 }
