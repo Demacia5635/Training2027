@@ -20,6 +20,11 @@ public class HWcommand extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
+  
+
+
+
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -27,18 +32,29 @@ public class HWcommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    subsystem.setBothMotorsPower(0.8, 0.8);
-    if(wantedSteeringAngle )
+    double currentAngle = subsystem.getAngleDegrees();
+
+    if (currentAngle < wantedSteeringAngle) {
+        subsystem.setSteerPower(0.2);
+    } else if (currentAngle > wantedSteeringAngle) {
+        subsystem.setSteerPower(-0.2);
+    }
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    subsystem.stopSteer();
+
+    System.out.println("Steer Position: " + subsystem.getAngleDegrees());
+    System.out.println("Steer Velocity: " + subsystem.getSteerVelocity());
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(wantedSteeringAngle - subsystem.getAngleDegrees()) < 2;
+    
   }
 }
