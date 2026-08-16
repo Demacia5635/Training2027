@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,33 +13,33 @@ import frc.demacia.utils.motors.TalonFXMotor;
 import frc.robot.Constants;
 
 public class SteerMotorSubsistem extends SubsystemBase {
-  private final TalonFXMotor steerMotor;
+  private final TalonFX steerMotor;
   private double powerSteer;
 
   public SteerMotorSubsistem() {
     super();
-    steerMotor = new TalonFXMotor(Constants.CONFIG_STEER);
+    steerMotor = new TalonFX(Constants.STEER_MOTOR_ID,Constants.CANBUS);
   }
 
-  public void setPositionSteer(double position) {
-    steerMotor.setPositionVoltage(position);
-  }
+  //public void setPositionSteer(double position) {
+  //  steerMotor.setPositionVoltage(position);
+  //}
 
-  public double getCurrentPositionSteer() {
-    return steerMotor.getCurrentPosition();
-  }
+  //public double getCurrentPositionSteer() {
+  //  return steerMotor.getCurrentPosition();
+  //}
 
-  public void setVelocitySteer(double velocity) {
-    steerMotor.setVelocity(velocity);
-  }
+  //public void setVelocitySteer(double velocity) {
+  //  steerMotor.setVelocity(velocity);
+  //}
 
-  public double getCurrentVelocitySteer() {
-    return steerMotor.getCurrentVelocity();
-  }
+  //public double getCurrentVelocitySteer() {
+  //  return steerMotor.getCurrentVelocity();
+  //}
 
   public void setPowerSteer(double powerSteer) {
     this.powerSteer = powerSteer;
-    steerMotor.setDuty(powerSteer);
+    steerMotor.set(powerSteer);
   }
 
   public void stop() {
@@ -46,19 +47,22 @@ public class SteerMotorSubsistem extends SubsystemBase {
   }
 
   public double getAngleSteer() {
-    return (steerMotor.getCurrentPosition());
+    return (steerMotor.getPosition().getValueAsDouble()) / Constants.GEAR_RATIO_STEER;
   }
 
   public double getAngleSteerDeg() {
     return getAngleSteer() * 180 / Math.PI;
   }
-
+  public double getCurrentVelocity() {
+    return (steerMotor.getVelocity().getValueAsDouble());
+  }
   @Override
   public void periodic() {
     // double angleFromMotor = SmartDashboard.getAngle(), -1);
     SmartDashboard.putNumber("angle steer", getAngleSteerDeg());
-    SmartDashboard.putNumber("PID position", getCurrentPositionSteer());
-    SmartDashboard.putNumber("PID velocity", getCurrentVelocitySteer());
+    SmartDashboard.putNumber("steer velocity", getCurrentVelocity());
+    //SmartDashboard.putNumber("PID position", getCurrentPositionSteer());
+    //SmartDashboard.putNumber("PID velocity", getCurrentVelocitySteer());
   }
 }
 /** Creates a new ExampleSubsystem. */

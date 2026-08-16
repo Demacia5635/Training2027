@@ -15,14 +15,12 @@ public class DriveToMeter extends Command {
   private double currentMeterDrive;
   private double wantedMeterDrive;
   private double power;
-  private double velocity;
 
   /** Creates a new DriveToAngle. */
-  public DriveToMeter(DriveMotorSubsistem subsystem, double wantedMeterDrive, double power,double velocity) {
-    this.subsystem1 = subsystem1;
+  public DriveToMeter(DriveMotorSubsistem subsystem, double wantedMeterDrive, double power) {
+    this.subsystem1 = subsystem;
     this.wantedMeterDrive = wantedMeterDrive;
     this.power = power;
-    this.velocity = velocity;
     addRequirements(subsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -35,22 +33,24 @@ public class DriveToMeter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-   // currentMeterDrive = subsystem1.getMeterDrive();
-  //  int direction = ((wantedMeterDrive - currentMeterDrive) < 0) ? -1 : 1;
-   // subsystem1.setPowerDrive(power * direction);
-    subsystem1.setVelocityDrive(velocity);
+    currentMeterDrive = subsystem1.getMeterDrive();
+    int direction = ((wantedMeterDrive - currentMeterDrive) < 0) ? -1 : 1;
+    subsystem1.setPowerDrive(power * direction);
+    //subsystem1.setVelocityDrive(velocity);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     subsystem1.stop();
+    System.out.println("angle steer"+ subsystem1.getMeterDrive());
+    System.out.println("drive velocity" + subsystem1.getCurrentVelocity());
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
-    // Math.abs(wantedMeterDrive - currentMeterDrive) < 0.5;
+    //return false;
+    return Math.abs(wantedMeterDrive - currentMeterDrive) < 0.05;
   }
 }

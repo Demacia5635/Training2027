@@ -77,11 +77,13 @@ public class RobotContainer {
   double leftY = controller.getLeftY(); // -1 forward!!! -1 to 1
 
   public Command getAutonomousCommand() {
-    // return new SteerToAngle(subsystemSteer, Math.PI / 2, 0.03)
-    // .andThen(new DriveToMeter(subsystemDrive,1.0 ,0.3)
-    // .alongWith(new SteerToAngle(subsystemSteer, Math.PI*135.0/180.0 , 0.03 )));
-   // return new SteerToAngle(subsystemSteer, 0, 0, 0,2);
-   return new SteerToAngle(subsystemSteer, 0, 0, Math.toRadians(180), 0)
-   .alongWith(new DriveToMeter(subsystemDrive, 0, 0, 1));
+     return new SteerToAngle(subsystemSteer, Math.PI / 2, 0.03)
+     .andThen(new DriveToMeter(subsystemDrive,1.0 ,0.3)
+     .alongWith(new SteerToAngle(subsystemSteer, Math.PI*135.0/180.0 , 0.03 )))
+     .andThen((new SteerToAngle(subsystemSteer, Math.toRadians(0) , 0.03 ))
+     .alongWith(new DriveToMeter(subsystemDrive,-1.0 ,0.3)));
+    //return new SteerToAngle(subsystemSteer, 0, 0, 0,2);
+  // return new SteerToAngle(subsystemSteer, 0, 0, Math.toRadians(180), 0)
+  // .alongWith(new DriveToMeter(subsystemDrive, 0, 0, 1));
   }
 }

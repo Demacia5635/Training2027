@@ -12,32 +12,32 @@ import frc.demacia.utils.motors.TalonFXMotor;
 import frc.robot.Constants;
 
 public class DriveMotorSubsistem extends SubsystemBase {
-  private final TalonFXMotor driveMotor;
+  private final TalonFX driveMotor;
   private double powerDrive;
 
   public DriveMotorSubsistem() {
     super();
-    driveMotor = new TalonFXMotor(Constants.CONFIG_DRIVE);
+    driveMotor = new TalonFX(Constants.DRIVE_MOTOR_ID,Constants.CANBUS);
   }
 
-  public void setPositionDrive(double position) {
-    driveMotor.setPositionVoltage(position);
-  }
-   public void setVelocityDrive(double velocity) {
-    driveMotor.setVelocity(velocity);
-   }
-   public double getCurrentVelocityDrive() {
-    return driveMotor.getCurrentVelocity();
-  }
+  //public void setPositionDrive(double position) {
+  //  driveMotor.setPositionVoltage(position);
+  //}
+  //public void setVelocityDrive(double velocity) {
+  //  driveMotor.setVelocity(velocity);
+  //}
+  // public double getCurrentVelocityDrive() {
+  //  return driveMotor.getCurrentVelocity();
+  //}
 
   public void setPowerSteer(double powerDrive) {
     this.powerDrive = powerDrive;
-    driveMotor.setDuty(powerDrive);
+    driveMotor.set(powerDrive);
   }
 
   public void setPowerDrive(double powerDrive) {
     this.powerDrive = powerDrive;
-    driveMotor.setDuty(powerDrive);
+    driveMotor.set(powerDrive);
   }
 
   public void stop() {
@@ -45,14 +45,18 @@ public class DriveMotorSubsistem extends SubsystemBase {
   }
 
   public double getMeterDrive() {
-    return (driveMotor.getCurrentPosition());
+    return ((driveMotor.getPosition().getValueAsDouble())/* / Constants.GEAR_RATIO_DRIVE*/) * Constants.SCOPE;
+  }
+  public double getCurrentVelocity() {
+    return (driveMotor.getVelocity().getValueAsDouble());
   }
 
   @Override
   public void periodic() {
     // double angleFromMotor = SmartDashboard.getAngle(), -1);
     SmartDashboard.putNumber("meter drive", getMeterDrive());
-    SmartDashboard.putNumber("PID Drive Velocity", getCurrentVelocityDrive());
+    SmartDashboard.putNumber("drive velocity", getCurrentVelocity());
+    //SmartDashboard.putNumber("PID Drive Velocity", getCurrentVelocityDrive());
   }
 }
 /** Creates a new ExampleSubsystem. */

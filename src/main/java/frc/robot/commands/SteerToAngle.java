@@ -15,16 +15,12 @@ public class SteerToAngle extends Command {
   private double currentAngleSteer;
   private double wantedAngleSteer;
   private double power;
-  private double position;
-  private double velocity;
 
-  public SteerToAngle(SteerMotorSubsistem subsystem, double wantedAngleSteer, double power, double position, double velocity) {
+  public SteerToAngle(SteerMotorSubsistem subsystem, double wantedAngleSteer, double power) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.subsystem1 = subsystem;
     this.wantedAngleSteer = wantedAngleSteer;
     this.power = power;
-    this.position = position;
-    this.velocity = velocity;
     addRequirements(subsystem);
   }
 
@@ -36,10 +32,10 @@ public class SteerToAngle extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // currentAngleSteer = subsystem1.getAngleSteer();
-    // int direction = ((wantedAngleSteer - currentAngleSteer) < 0) ? -1 : 1;
-    // subsystem1.setPowerSteer(power * direction);
-    subsystem1.setPositionSteer(position);
+     currentAngleSteer = subsystem1.getAngleSteer();
+     int direction = ((wantedAngleSteer - currentAngleSteer) < 0) ? -1 : 1;
+     subsystem1.setPowerSteer(power * direction);
+    //subsystem1.setPositionSteer(position);
     
 
     // SmartDashboard.putNumber("currentAngleSteer", currentAngleSteer);
@@ -51,12 +47,14 @@ public class SteerToAngle extends Command {
   @Override
   public void end(boolean interrupted) {
     subsystem1.stop();
+    System.out.println("angle steer"+ subsystem1.getAngleSteerDeg());
+    System.out.println("steer velocity" + subsystem1.getCurrentVelocity());
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // return Math.abs(wantedAngleSteer - currentAngleSteer) < 0.05;
-    return false;
+    return Math.abs(wantedAngleSteer - currentAngleSteer) < 0.05;
+   // return false;
   }
 }
