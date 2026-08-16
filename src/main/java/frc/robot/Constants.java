@@ -45,7 +45,7 @@ public final class Constants {
     public final static int STEERID = 2;
     public final static Canbus STEERCANBUS = Canbus.Rio;
     public final static String STEER_NAME = "steerMotor";
-    public final static double DRIVE_KP = 0.5;
+    public final static double DRIVE_KP = 0.3;
     public final static double DRIVE_KI = 0;
     public final static double DRIVE_KD = 0;
     public final static double DRIVE_KS = 0;
@@ -53,14 +53,15 @@ public final class Constants {
     public final static double DRIVE_KA = 0;
     public final static double DRIVE_KG = 0;
     public final static double STEER_KP = 0.5;
-    public final static double STEEr_KI = 0;
-    public final static double STEER_KD = 0.00;
+    public final static double STEER_KI = 0;
+    public final static double STEER_KD = 0;
     public final static double STEER_KS = 0;
     public final static double STEER_KV = 0;
     public final static double STEER_KA = 0;
     public final static double STEER_KG = 0;
     public final static double DRIVEGEAR_RATIO = 8.14;
-    public final static double STEERGEAR_RATIO = 150/7;
+    public final static double STEERGEAR_RATIO = 150d/7d;
+    public final static double DRIVE_CIRCUMFERENCE = 4 * 0.0254 * Math.PI;
 
 
 
@@ -69,10 +70,10 @@ public final class Constants {
 
     public static final TalonFXConfig CONFIG = new TalonFXConfig (ADRIVE_ID, ADRIVE_CANBUS, ADRIVE_NAME)
     .withPID(DRIVE_KP, DRIVE_KI, DRIVE_KD, DRIVE_KS, DRIVE_KV, DRIVE_KA, DRIVE_KG)
-    .withRadiansMotor(DRIVEGEAR_RATIO);
+    .withMeterMotor(DRIVEGEAR_RATIO, DRIVE_CIRCUMFERENCE);
 
     public static final TalonFXConfig STEER_CONFIG = new TalonFXConfig (STEERID, STEERCANBUS, STEER_NAME)
-    .withPID(STEER_KP, STEEr_KI, STEER_KD, STEER_KS, STEER_KV, STEER_KA, STEER_KG)
+    .withPID(STEER_KP, STEER_KI, STEER_KD, STEER_KS, STEER_KV, STEER_KA, STEER_KG)
     .withRadiansMotor(STEERGEAR_RATIO);
     }
 

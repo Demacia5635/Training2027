@@ -22,16 +22,16 @@ public class PIDMotorSubsystem extends SubsystemBase {
     }
    
    
-    public void setDrivePosition(double pos){
-        driveMotor.setPositionVoltage(pos);
+    public void setDrivePower(double power){
+        driveMotor.setDuty(power);
     }
     
     public void setDriveVelocity(double velocity){
         driveMotor.setVelocity(velocity);
     }
 
- public void setSteerPosition(double pos){
-        steerMotor.setPositionVoltage(pos);
+ public void setSteerPower(double power){
+        steerMotor.setDuty(power);
     }
     
     public void setSteerVelocity(double velocity){
@@ -41,7 +41,7 @@ public class PIDMotorSubsystem extends SubsystemBase {
     public void initSendable(SendableBuilder builder) {
         builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
         builder.addDoubleProperty("Steer velocity", this::getSteerVelocity, null);
-        builder.addDoubleProperty("pos steer", () -> getSteerPosition(), null);
+        builder.addDoubleProperty("pos steer", () -> Math.toDegrees(getSteerPosition()), null);
         builder.addDoubleProperty("pos drive", ()-> getDrivePosition(), null);
     }
     public double getDriveVelocity(){
@@ -49,7 +49,7 @@ public class PIDMotorSubsystem extends SubsystemBase {
     }
 
     public double getDrivePosition(){
-        return Math.toDegrees(driveMotor.getPosition().getValueAsDouble());
+        return driveMotor.getPosition().getValueAsDouble();
     }
 
      public double getSteerVelocity(){
@@ -57,7 +57,7 @@ public class PIDMotorSubsystem extends SubsystemBase {
     }
 
     public double getSteerPosition(){
-        return Math.toDegrees(steerMotor.getPosition().getValueAsDouble());
+        return steerMotor.getPosition().getValueAsDouble();
     
 
     }

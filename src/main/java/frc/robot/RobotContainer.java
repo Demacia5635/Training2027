@@ -6,9 +6,11 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.PIDMotorCommand;
+import frc.robot.commands.PIDMotorCommand2;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.PIDMotorSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -21,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
   private final PIDMotorSubsystem pidMotorSubsystem;
-  private final PIDMotorCommand posCommand;
+  private final PIDMotorCommand2 posCommand;
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
@@ -33,9 +35,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     pidMotorSubsystem = new PIDMotorSubsystem();
-    posCommand = new PIDMotorCommand(pidMotorSubsystem);
-    pidMotorSubsystem.setDefaultCommand(posCommand);
+    posCommand = new PIDMotorCommand2(pidMotorSubsystem);
+    // pidMotorSubsystem.setDefaultCommand(posCommand);
     configureBindings();
+    SmartDashboard.putData("command Scheduler", CommandScheduler.getInstance());
     
     
 
