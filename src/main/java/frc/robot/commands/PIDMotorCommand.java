@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.PIDMotorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -21,6 +22,7 @@ public class PIDMotorCommand extends Command {
   public PIDMotorCommand(PIDMotorSubsystem MOTOR_SUBSYSTEM) {
     this.MOTOR_SUBSYSTEM = MOTOR_SUBSYSTEM;
     SmartDashboard.putData("position command", this);
+    SmartDashboard.putData("start command", new InstantCommand(() -> this.schedule()));
     addRequirements(MOTOR_SUBSYSTEM);
   }
 
@@ -42,9 +44,9 @@ public class PIDMotorCommand extends Command {
   @Override
   public void execute() {
     MOTOR_SUBSYSTEM.setDrivePosition(Math.toRadians(wantedPos));
-     error = MOTOR_SUBSYSTEM.getDrivePosition() - wantedPos;
+     error = wantedPos - MOTOR_SUBSYSTEM.getDrivePosition();
      MOTOR_SUBSYSTEM.setSteerPosition(Math.toRadians(wantedSteerPos));
-     steerError = MOTOR_SUBSYSTEM.getSteerPosition() - wantedSteerPos;
+     steerError = wantedSteerPos - MOTOR_SUBSYSTEM.getSteerPosition();
   }
 
   // Called once the command ends or is interrupted.
