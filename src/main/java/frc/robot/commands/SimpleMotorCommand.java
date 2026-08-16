@@ -12,11 +12,11 @@ public class SimpleMotorCommand extends Command {
   private double startTime = 0;
   private Timer timer = new Timer();
 
-  public SimpleMotorCommand(SimpleMotorSubsystem subsystem, double power1, double power2, double duration) {
+  public SimpleMotorCommand(SimpleMotorSubsystem subsystem, double power1, double power2) {
     this.subsystem = subsystem;
     this.power1 = power1;
     this.power2 = power2;
-    this.duration = duration;
+
     addRequirements(subsystem);
   }
 
