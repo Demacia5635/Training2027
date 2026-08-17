@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
+import frc.demacia.utils.motors.TalonFXMotor;
 import frc.robot.Constants;
+import frc.robot.Constants.SimpleMotorConstants;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -10,20 +12,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class SimpleMotorSubsystem extends SubsystemBase {
 
     // Motor 1 = DRIVE
-    private final TalonFX driveMotor;
+    private final TalonFXMotor driveMotor;
 
     // Motor 2 = STEER
-    private final TalonFX steerMotor;
+    private final TalonFXMotor steerMotor;
 
 
     public SimpleMotorSubsystem() {
 
         super();
 
-        driveMotor = new TalonFX(
-            Constants.SimpleMotorConstants.Motor1ID,
-            Constants.SimpleMotorConstants.MotorCANbus
-        );
+        driveMotor = new TalonFXMotor(SimpleMotorConstants.CONFIG);
 
         steerMotor = new TalonFX(
             Constants.SimpleMotorConstants.Motor2ID,
