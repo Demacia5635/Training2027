@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
+import frc.demacia.utils.sensors.CancoderConfig;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -27,5 +28,19 @@ public final class Constants {
 		public static final TalonFXConfig CONFIG = new TalonFXConfig(
 			1, Canbus.Rio, "SimplePID"
 		).withPID(0.0, 0.0, 0.0, KS, KV, 0.0, 0.0);
+	}
+
+	public static class ModuleSubsystemConstants {
+
+		// Need to set only KS and KV
+		public static final TalonFXConfig STEER_CONFIG = new TalonFXConfig(
+			1, Canbus.Rio, "Steer Motor"
+		).withPID(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+		public static final TalonFXConfig DRIVE_CONFIG = new TalonFXConfig(
+			2, Canbus.Rio, "Drive Motor"
+		).withPID(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+	
+		public static final CancoderConfig CANCODER_CONFIG = new CancoderConfig(3, null, "Cancoder");
 	}
 }
