@@ -63,10 +63,10 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
       // An example command will be run in autonomous
-       return new SequentialCommandGroup(new HWcommand(simpleMotorSubsystem, 90),new TwoMotorCommand(simpleMotorSubsystem, 0.2, 135, 1),new TwoMotorCommand(simpleMotorSubsystem, -0.2, 0, -1)
+      //  return new SequentialCommandGroup(new HWcommand(simpleMotorSubsystem, 90),new TwoMotorCommand(simpleMotorSubsystem, 0.2, 135, 1),new TwoMotorCommand(simpleMotorSubsystem, -0.2, 0, -1)
+      return new HWcommand(simpleMotorSubsystem, 0);
 
-
-        );
+        // );
       
   }
 

@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MyFirstSubsystemConstants;
@@ -15,9 +17,11 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     public SimpleMotorSubsystem() {
          driveMotor = new TalonFX(MyFirstSubsystemConstants.MotorID,MyFirstSubsystemConstants.MotorCANbus);
          steerMotor = new TalonFX(MySecondSubsystemConstants.Motor2ID,MySecondSubsystemConstants.MotorCANbus);
+
          
     }
-      
+
+    
 
     public void setPower(double power) {
         driveMotor.set(power);
@@ -25,6 +29,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     public void setSteerPower(double power) {
     steerMotor.set(power);
 }
+
 
     public void stopMotor() {
         setPower(0);
@@ -61,14 +66,18 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     public double getSteerVelocity() {
     return steerMotor.getVelocity().getValueAsDouble();
     }
+    
        
     @Override
-    public void periodic() {
-    SmartDashboard.putNumber("Steer Angle", getAngleDegrees());
-    SmartDashboard.putNumber("Steer Velocity", getSteerVelocity());
+     public void periodic() {
+     SmartDashboard.putNumber("Steer Angle", getAngleDegrees());
+     SmartDashboard.putNumber("Steer Velocity", getSteerVelocity());
 
-    SmartDashboard.putNumber("Drive Position", getDrivePosition());
-    SmartDashboard.putNumber("Drive Velocity", getDriveVelocity());
+     SmartDashboard.putNumber("Drive Position", getDrivePosition());
+     SmartDashboard.putNumber("Drive Velocity", getDriveVelocity());
+     SmartDashboard.getNumber(getDriveVelocity(), getAngleDegrees());
+
+
     }
 
 
@@ -76,4 +85,6 @@ public class SimpleMotorSubsystem extends SubsystemBase {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'stop'");
     }
+
+    
 }   
