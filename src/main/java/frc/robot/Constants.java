@@ -21,8 +21,8 @@ public final class Constants {
 
   public static final class SubsystemConstants {
     // Motor id
-    public static final int MotorID1 = 2;
-    public static final int MotorID2 = 3;
+    public static final int DRIVE_ID1 = 2;
+    public static final int STEER_ID2 = 3;
     // motor config
     public static final String MotorCANbus = "rio";
     public static final CANBus MOTOR_CANBUS = CANBus.roboRIO();

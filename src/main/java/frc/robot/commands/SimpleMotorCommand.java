@@ -18,6 +18,7 @@ public class SimpleMotorCommand extends Command {
         this.power2 = power2;
         this.duration = duration;
         addRequirements(subsystem);
+        addRequirements(subsystem);
     }
 
     @Override
