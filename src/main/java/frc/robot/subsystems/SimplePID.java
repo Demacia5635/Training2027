@@ -19,14 +19,14 @@ public class SimplePID extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("SimplePID/Voltage", getVolate());
+        SmartDashboard.putNumber("SimplePID/Velocity", getVelocity());
     }
 
-    public double getVolate() {
-        return motor.getCurrentVoltage();
+    public double getVelocity() {
+        return motor.getCurrentVelocity();
     }
 
-    public void setVelocity(double velocity) {
-        motor.setVelocity(velocity);
+    public void setVoltage(double voltage) {
+        motor.setVoltage(voltage);
     }
 }

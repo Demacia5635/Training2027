@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SimplePID;
-import frc.robot.commands.PIDSetVelocityCommand;
+import frc.robot.commands.PIDSetVoltageCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -55,9 +55,9 @@ public class RobotContainer {
 	 * joysticks}.
 	 */
 	private void configureBindings() {
-		SmartDashboard.putNumber("Target velocity", 0.0);
+		SmartDashboard.putNumber("Target voltage", 0.0);
 
-		SmartDashboard.putData("Set velocity", new PIDSetVelocityCommand(m_pidController));
+		SmartDashboard.putData("Set voltage", new PIDSetVoltageCommand(m_pidController));
 	}
 
 	/**
