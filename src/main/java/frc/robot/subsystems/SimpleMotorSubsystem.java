@@ -22,12 +22,9 @@ public class SimpleMotorSubsystem extends SubsystemBase {
 
         super();
 
-        driveMotor = new TalonFXMotor(SimpleMotorConstants.CONFIG);
+        driveMotor = new TalonFXMotor(SimpleMotorConstants.DIRVE_CONFIG);
 
-        steerMotor = new TalonFX(
-            Constants.SimpleMotorConstants.Motor2ID,
-            Constants.SimpleMotorConstants.MotorCANbus
-        );
+        steerMotor = new TalonFXMotor(SimpleMotorConstants.STEER_CONFIG);
     }
 
 
