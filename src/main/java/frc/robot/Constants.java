@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
 
 /**
@@ -20,11 +21,11 @@ public final class Constants {
 	}
 
 	public static class SimplePIDConstants {
-		public static final Canbus CANBUS = Canbus.Rio;
-		public static final int CANBUS_ID = 1;
-		public static final String NAME = "SimplePID";
-		
 		public static final double KS = 0.0;
 		public static final double KV = 0.0;
+
+		public static final TalonFXConfig CONFIG = new TalonFXConfig(
+			1, Canbus.Rio, "SimplePID"
+		).withPID(0.0, 0.0, 0.0, KS, KV, 0.0, 0.0);
 	}
 }

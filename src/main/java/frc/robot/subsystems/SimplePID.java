@@ -1,25 +1,17 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.TalonFXMotor;
-import frc.robot.Constants.SimplePIDConstants;;
+import frc.robot.Constants.SimplePIDConstants;
+
+import edu.wpi.first.util.sendable.SendableBuilder;
 
 public class SimplePID extends SubsystemBase {
     private TalonFXMotor motor;
     
     public SimplePID() {
-        TalonFXConfig CONFIG = new TalonFXConfig(SimplePIDConstants.CANBUS_ID, SimplePIDConstants.CANBUS, SimplePIDConstants.NAME)
-            .withPID(0.0, 0.0, 0.0, SimplePIDConstants.KS, SimplePIDConstants.KV, 0.0, 0.0);
-    
-        motor = new TalonFXMotor(CONFIG);
-    }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("SimplePID/Velocity", getVelocity());
+        motor = new TalonFXMotor(SimplePIDConstants.CONFIG);
     }
 
     public double getVelocity() {
@@ -28,5 +20,12 @@ public class SimplePID extends SubsystemBase {
 
     public void setVoltage(double voltage) {
         motor.setVoltage(voltage);
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType("SimplePID Dashboard");
+        builder.addDoubleProperty("Target Voltage", null, this::setVoltage);
+        builder.addDoubleProperty("Motor Velocity", this::getVelocity, null);
     }
 }
