@@ -6,9 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.PIDMotorCommand2;
+import frc.robot.commands.FDMotorCommand;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.PIDMotorSubsystem;
+import frc.robot.subsystems.FDMotorSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -21,9 +21,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-
-  private final PIDMotorSubsystem pidMotorSubsystem;
-  private final PIDMotorCommand2 posCommand;
+  private final FDMotorSubsystem fdMotorSubsystem;
+  private final FDMotorCommand fdCommand;
+  // private final PIDMotorSubsystem pidMotorSubsystem;
+  // private final PIDMotorCommand posCommand;
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
@@ -34,11 +35,10 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    pidMotorSubsystem = new PIDMotorSubsystem();
-    posCommand = new PIDMotorCommand2(pidMotorSubsystem);
-    // pidMotorSubsystem.setDefaultCommand(posCommand);
-    configureBindings();
-    SmartDashboard.putData("command Scheduler", CommandScheduler.getInstance());
+    fdMotorSubsystem = new FDMotorSubsystem();
+    fdCommand = new FDMotorCommand(fdMotorSubsystem);
+        configureBindings();
+        SmartDashboard.putData(CommandScheduler.getInstance());
     
     
 
