@@ -6,16 +6,12 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveToMeter;
-import frc.robot.commands.SimpleMotorCommand;
 import frc.robot.commands.SteerToAngle;
 import frc.robot.subsystems.DriveMotorSubsistem;
 import frc.robot.subsystems.SteerMotorSubsistem;
 
-import java.lang.ModuleLayer.Controller;
-import java.util.ResourceBundle.Control;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -47,7 +43,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     // configureDifultCommands();
-    getAutonomousCommand();
+     getAutonomousCommand();
   }
 
   /**

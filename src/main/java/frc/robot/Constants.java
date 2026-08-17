@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.CANBus;
 
 import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
@@ -40,15 +39,19 @@ public final class Constants {
   public static final double KP_STEER = 1;
   public static final double KI_STEER = 0;
   public static final double KD_STEER = 0;
-  public static final double KS = 0;
-  public static final double KV = 0;
-  public static final double KA = 0;
-  public static final double KG = 0;
+  public static double KS_DRIVE = 0;
+  public static double KV_DRIVE = 0;
+  public static final double KA_DRIVE = 0;
+  public static final double KG_DRIVE = 0;
+  public static double KS_STEER = 0;
+  public static double KV_STEER = 0;
+  public static final double KA_STEER = 0;
+  public static final double KG_STEER = 0;
   public static final TalonFXConfig CONFIG_STEER = new TalonFXConfig(STEER_MOTOR_ID, CANBUS, STEER_MOTOR_NAME)
-      .withPID(KP_STEER, KI_STEER, KD_STEER, KS, KV, KA, KG,0,0)
+      .withPID(KP_STEER, KI_STEER, KD_STEER, KS_STEER, KV_STEER, KA_STEER, KG_STEER,0,0)
       .withRadiansMotor(GEAR_RATIO_STEER);
   public static final TalonFXConfig CONFIG_DRIVE = new TalonFXConfig(DRIVE_MOTOR_ID, CANBUS, DRIVE_MOTOR_NAME)
-      .withPID(KP_Drive, KI_Drive, KD_Drive, 0, 0, 0, 0,0,0)
+      .withPID(KP_Drive, KI_Drive, KD_Drive, KS_DRIVE, KV_DRIVE, KA_DRIVE, KG_DRIVE,0,0)
       .withMeterMotor(GEAR_RATIO_DRIVE,SCOPE);
 
 }
