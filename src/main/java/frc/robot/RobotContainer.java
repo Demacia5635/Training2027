@@ -58,7 +58,6 @@ public class RobotContainer {
     //         },
     //         subsystem));
 
-    subsystem.setDefaultCommand(new SetSteerAngleCommand(subsystem, 180));
 
   }
 
@@ -131,8 +130,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SetSteerAngleCommand(subsystem, Math.toRadians(0)); // if u want degrees
- 
+    // return new SetSteerAngleCommand(subsystem, Math.toRadians(0)); // if u want degrees
+    return null;
  
  
  

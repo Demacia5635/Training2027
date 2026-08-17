@@ -96,6 +96,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
         super.initSendable(builder);
         builder.addDoubleProperty("Target Angle", ()->getSteerPositionRadians(),(targetAngle)-> setSteerPositionRadians(targetAngle));
         builder.addDoubleProperty("Target velocity", this::getDriveVel, this::setDriveVelocityRPM);
+        builder.addDoubleProperty("", null, null);
 
     }
 
