@@ -14,6 +14,7 @@ import frc.robot.subsystems.FDMotorSubsystem;
 public class FDMotorCommand extends Command {
   public final FDMotorSubsystem subsystem;
   private double driveVolt;
+  private double driveVelocity;
 
   /** Creates a new FDMotorCommand. */
   public FDMotorCommand(FDMotorSubsystem subsystem) {
@@ -26,7 +27,7 @@ public class FDMotorCommand extends Command {
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("Drive volt", () -> driveVolt, (x) -> driveVolt = x);
-    builder.addDoubleProperty("Drive velocity", () -> subsystem.getDriveVelocity(), null);
+    builder.addDoubleProperty("Drive velocity", () -> subsystem.getDriveVelocity(), (x) -> subsystem.setDriveVolt(x));
 
   }
 
@@ -35,11 +36,16 @@ public class FDMotorCommand extends Command {
   public void initialize() {
     System.out.println("initialized");
     driveVolt = 0;
+    driveVelocity = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    subsystem.setDriveVolt(driveVolt);
+    subsystem.setDriveVelocity(driveVelocity);
+
+    
   }
 
   // Called once the command ends or is interrupted.
@@ -54,3 +60,6 @@ public class FDMotorCommand extends Command {
     return false;
   }
 }
+
+// 20.2109375 - 2.37
+// -23.056640625 -2.68

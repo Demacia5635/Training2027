@@ -4,13 +4,12 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.demacia.utils.motors.TalonFXMotor;
 import frc.robot.Constants.FDMotorConstants;
 public class FDMotorSubsystem extends SubsystemBase {
-   TalonFX driveMotor = new TalonFXMotor(FDMotorConstants.DRIVECONFIG);
+   TalonFXMotor driveMotor = new TalonFXMotor(FDMotorConstants.DRIVECONFIG);
     
   public FDMotorSubsystem(){
     super();
@@ -22,6 +21,10 @@ public class FDMotorSubsystem extends SubsystemBase {
 
   public double getDriveVelocity(){
     return driveMotor.getVelocity().getValueAsDouble();
+  }
+
+  public void setDriveVelocity(double velocity){
+    driveMotor.setVelocity(velocity);
   }
 
   @Override
