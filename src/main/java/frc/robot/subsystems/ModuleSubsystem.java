@@ -15,6 +15,7 @@ public class ModuleSubsystem extends SubsystemBase {
         steerMotor = new TalonFXMotor(ModuleSubsystemConstants.STEER_CONFIG);
         driveMotor = new TalonFXMotor(ModuleSubsystemConstants.DRIVE_CONFIG);
         cancoder   = new Cancoder(ModuleSubsystemConstants.CANCODER_CONFIG);
+        SmartDashboard.putData("module subsystem", this);
     }
 
     // velocity, position, power.

@@ -12,6 +12,7 @@ public class SimplePID extends SubsystemBase {
     
     public SimplePID() {
         motor = new TalonFXMotor(SimplePIDConstants.CONFIG);
+        SmartDashboard.putData("pid", this);
     }
 
     public double getVelocity() {
