@@ -4,36 +4,43 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SimpleMotorSubsystem;
 
 public class DriveHWCommand extends Command {
+private final SimpleMotorSubsystem subsystem;
+  private final double targetPoint;
 
-    private final SimpleMotorSubsystem subsystem;
-    private final double targetPoint;
+  public DriveHWCommand(
+      SimpleMotorSubsystem subsystem,
+      double targetPoint) {
+    this.subsystem = subsystem;
+    this.targetPoint = targetPoint;
 
-    public DriveHWCommand(
-        SimpleMotorSubsystem subsystem,
-        double targetPoint
-    ) {
-        this.subsystem = subsystem;
-        this.targetPoint = targetPoint;
+    addRequirements(subsystem);
+  }
+    @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.addDoubleProperty("power", () -> getDriveVelocity(), null);
+    builder.addDoubleProperty("volt", () -> getDriveVolt(), null);
 
-        addRequirements(subsystem);
-    }
-
+  }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import frc.demacia.utils.motors.TalonFXConfig;
+import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -20,11 +23,20 @@ public final class Constants {
 
     public static class MyFirstSubsystemConstants {
         public static final int MotorID = 1;
-        public static final String MotorCANbus = "rio";
+        public static final Canbus MotorCANbus = Canbus.Rio;
     }
     public static class MySecondSubsystemConstants {
-        public static final int Motor2ID = 2;
-        public static final String MotorCANbus = "rio";
+        public static final int driveID = 1;
+        public static final Canbus DRIVE_CANbus = Canbus.Rio;
+        public static final String DriveName = "steermotor";
+
+        public static final int STEER_ID = 2;
+        public static final Canbus STEERCANBUS = Canbus.Rio;
+        public static final String STEERName = "drive motor";
+
+        public static final TalonFXConfig DRIVE_CONFIG = new TalonFXConfig(driveID, DRIVE_CANbus, DriveName);
+        public static final TalonFXConfig STEER_CONFIG = new TalonFXConfig(STEER_ID, STEERCANBUS, STEERName);
+
     }
     
     

@@ -6,20 +6,23 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.demacia.utils.motors.TalonFXMotor;
 import frc.robot.Constants.MyFirstSubsystemConstants;
 import frc.robot.Constants.MySecondSubsystemConstants;
 
 public class SimpleMotorSubsystem extends SubsystemBase {
 
-    private final TalonFX driveMotor;
+    private final TalonFXMotor driveMotor;
     private final TalonFX steerMotor;
-
     public SimpleMotorSubsystem() {
-         driveMotor = new TalonFX(MyFirstSubsystemConstants.MotorID,MyFirstSubsystemConstants.MotorCANbus);
-         steerMotor = new TalonFX(MySecondSubsystemConstants.Motor2ID,MySecondSubsystemConstants.MotorCANbus);
+         driveMotor = new TalonFXMotor(MySecondSubsystemConstants.DRIVE_CONFIG);
+         steerMotor = new TalonFXMotor(MySecondSubsystemConstants.STEER_ID,MySecondSubsystemConstants.DRIVE_CANbus);
 
          
     }
+    
+
+
 
     
 
@@ -28,7 +31,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     }
     public void setSteerPower(double power) {
     steerMotor.set(power);
-}
+    }
 
 
     public void stopMotor() {
@@ -36,11 +39,11 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     }
     public void stopSteer() {
     steerMotor.set(0);
-}
+    }
     public void stopBoth() {
     driveMotor.set(0);
     steerMotor.set(0);
-}
+    }
     public void setBothMotorsPower(double powerSteering, double powerDrive) {
         driveMotor.set(powerDrive);
         steerMotor.set(powerSteering);
@@ -66,19 +69,20 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     public double getSteerVelocity() {
     return steerMotor.getVelocity().getValueAsDouble();
     }
-    
-       
-    @Override
-     public void periodic() {
-     SmartDashboard.putNumber("Steer Angle", getAngleDegrees());
-     SmartDashboard.putNumber("Steer Velocity", getSteerVelocity());
-
-     SmartDashboard.putNumber("Drive Position", getDrivePosition());
-     SmartDashboard.putNumber("Drive Velocity", getDriveVelocity());
-     SmartDashboard.getNumber(getDriveVelocity(), getAngleDegrees());
-
-
+    public void setDriveVolt(double volt){
+        driveMotor.setVoltage(volt);
     }
+    
+    //@Override
+     // public void periodic() {
+      //SmartDashboard.putNumber("Steer Angle", getAngleDegrees());
+     //SmartDashboard.putNumber("Steer Velocity", getSteerVelocity());
+
+     //SmartDashboard.putNumber("Drive Position", getDrivePosition());
+     //SmartDashboard.putNumber("Drive Velocity", getDriveVelocity());
+     
+
+    //}
 
 
     public void stop() {
