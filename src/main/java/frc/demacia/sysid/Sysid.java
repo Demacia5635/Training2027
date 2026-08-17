@@ -1,4 +1,4 @@
-package frc.demacia.sysID;
+package frc.demacia.sysid;
 
 import java.util.ArrayList;
 import java.util.Collections;

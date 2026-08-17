@@ -34,7 +34,7 @@ public final class Constants {
     public static final double STEER_KP = 2; 
     public static final double STEER_KI = 0; 
     public static final double STEER_KD = 0;
-    public static final double STEER_KS = 0.;
+    public static final double STEER_KS = 0;
     public static final double STEER_KV = 0;
     public static final double STEER_KA = 0;
     
