@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
 
@@ -88,8 +89,27 @@ public final class Constants {
         public final static double DRIVE_KV2 = 0.01106;
         public final static double DRIVE_KA2 = 0;
         public final static double DRIVE_KG2 = 0;
-    
-        public static final TalonFXConfig DRIVECONFIG = new TalonFXConfig(DRIVE_ID2 ,DRIVE_CANBUS2 ,DRIVE_NAME2);
+        public final static double DRIVEGEAR_RATIO2 = 8.14;
+        public final static double DRIVE_CIRCUMFERENCE2 = 4 * 0.0254 * Math.PI;
+        public final static double STEERGEAR_RATIO2 = 150d / 7d;
+        public final static double STEER_KP2= 0;
+        public final static double STEER_KI2 = 0;
+        public final static double STEER_KD2 = 0;
+        public final static double STEER_KS2 = 0;
+        public final static double STEER_KV2 = 0;
+        public final static double STEER_KA2 = 0;
+        public final static double STEER_KG2 = 0;
 
+        public final static int STEER_ID2 = 2;
+        public final static Canbus STEER_CANBUS2 = Canbus.Rio;
+        public final static String STEER_NAME = "steer motor";
+    
+        public static final TalonFXConfig DRIVECONFIG = new TalonFXConfig(DRIVE_ID2 ,DRIVE_CANBUS2 ,DRIVE_NAME2)
+        .withMeterMotor(DRIVEGEAR_RATIO2, DRIVE_CIRCUMFERENCE2)
+        .withPID(DRIVE_KP2, DRIVE_KI2, DRIVE_KD2, DRIVE_KS2, DRIVE_KV2, DRIVE_KA2, DRIVE_KG2);
+        
+        public static final TalonFXConfig STEERCONFIG = new TalonFXConfig(STEER_ID2, STEER_CANBUS2, STEER_NAME)
+        .withRadiansMotor(STEERGEAR_RATIO2)
+        .withPID(STEER_KP2, STEER_KI2, STEER_KD2, STEER_KS2, STEER_KV2, STEER_KA2, STEER_KG2);
   }
 }

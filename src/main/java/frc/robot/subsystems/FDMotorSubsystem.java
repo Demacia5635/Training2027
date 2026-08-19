@@ -5,11 +5,13 @@
 package frc.robot.subsystems;
 
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.demacia.utils.motors.TalonFXMotor;
 import frc.robot.Constants.FDMotorConstants;
 public class FDMotorSubsystem extends SubsystemBase {
    TalonFXMotor driveMotor = new TalonFXMotor(FDMotorConstants.DRIVECONFIG);
+   TalonFXMotor steerMotor = new TalonFXMotor(FDMotorConstants.STEERCONFIG);
     
   public FDMotorSubsystem(){
     super();
@@ -17,6 +19,14 @@ public class FDMotorSubsystem extends SubsystemBase {
 
   public void setDriveVolt(double volt){
     driveMotor.setVoltage(volt);
+  }
+
+  public double getDrivePosition(){
+    return driveMotor.getPosition().getValueAsDouble();
+  }
+
+  public double getDriveVolt(){
+    return driveMotor.getMotorVoltage().getValueAsDouble();
   }
 
   public double getDriveVelocity(){
@@ -27,7 +37,27 @@ public class FDMotorSubsystem extends SubsystemBase {
     driveMotor.setVelocity(velocity);
   }
 
+  public double getSteerPosition(){
+    return steerMotor.getPosition().getValueAsDouble();
+  }
+
+  public double getSteerVolt(){
+    return steerMotor.getMotorVoltage().getValueAsDouble();
+  }
+
+  public void setSteerVolt(double volt){
+    steerMotor.setVoltage(volt);
+  }
+
+  public double getSteerVelocity(){
+    return steerMotor.getVelocity().getValueAsDouble();
+  }
+
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Drive Position", getDrivePosition());
+    SmartDashboard.putNumber("Steer Velocity", getSteerVelocity());
+    SmartDashboard.putNumber("Steer Position", getSteerPosition());
+    SmartDashboard.putNumber("Drive Position", getDrivePosition());
   }
 }
