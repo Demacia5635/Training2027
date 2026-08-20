@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
-  // private CommandXboxController controller = new CommandXboxController(Constants.ControllerConstants.CONTROLLER_ID);
+  private CommandXboxController controller = new CommandXboxController(Constants.ControllerConstants.CONTROLLER_ID);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   /**
@@ -76,27 +76,27 @@ public class RobotContainer {
    * joysticks}.
    */
 
-  // public double leftYDeadBand() {
-  //   if (Math.abs(controller.getLeftY()) < 0.1) {
-  //     return 0;
-  //   } else {
-  //     return controller.getLeftY();
-  //   }
-  // }
+  public double leftYDeadBand() {
+    if (Math.abs(controller.getLeftY()) < 0.1) {
+      return 0;
+    } else {
+      return controller.getLeftY();
+    }
+  }
 
-  // public double rightYDeadBand() {
-  //   if (Math.abs(controller.getRightY()) < 0.1) {
-  //     return 0;
-  //   } else {
-  //     return controller.getRightY();
-  //   }
-  // }
+  public double rightYDeadBand() {
+    if (Math.abs(controller.getRightY()) < 0.1) {
+      return 0;
+    } else {
+      return controller.getRightY();
+    }
+  }
 
   private void configureBindings() {
     // When a is pressed move steer motor
-    // controller.a().onTrue(
-        // new SimpleMotorCommand(subsystem, 0.2, 0, 1)
-        //     .alongWith(Commands.print("A pressed"))); // power is between -1 and 1
+    controller.a().onTrue(
+        new SimpleMotorCommand(subsystem, 0.2, 0, 1)
+            .alongWith(Commands.print("A pressed"))); // power is between -1 and 1
 
     // call the function
     // leftYDeadBand();
@@ -104,24 +104,24 @@ public class RobotContainer {
     // // call the function
     // rightYDeadBand();
 
-    // // when b is pressed move drive motor
-    // controller.b().onTrue(
-    //     new SimpleMotorCommand(subsystem, 0, -0.3, 1)
-    //         .alongWith(Commands.print("B pressed!")));
+    // when b is pressed move drive motor
+    controller.b().onTrue(
+        new SimpleMotorCommand(subsystem, 0, -0.3, 1)
+            .alongWith(Commands.print("B pressed!")));
 
-    // // when the left trigger is pressed vibrate the controller
-    // controller.leftTrigger().whileTrue(
-    //     Commands.startEnd(
-    //         () -> controller.getHID().setRumble(RumbleType.kRightRumble, 1.0), // When pressed
-    //         () -> controller.getHID().setRumble(RumbleType.kRightRumble, 0.0) // When released
-    //     ));
-    // // when the right trigger is pressed vibrate the controller
+    // when the left trigger is pressed vibrate the controller
+    controller.leftTrigger().whileTrue(
+        Commands.startEnd(
+            () -> controller.getHID().setRumble(RumbleType.kRightRumble, 1.0), // When pressed
+            () -> controller.getHID().setRumble(RumbleType.kRightRumble, 0.0) // When released
+        ));
+    // when the right trigger is pressed vibrate the controller
 
-    // controller.rightTrigger().whileTrue(
-    //     Commands.startEnd(
-    //         () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 1.0), // When pressed
-    //         () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 0.0) // When released
-    //     ));
+    controller.rightTrigger().whileTrue(
+        Commands.startEnd(
+            () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 1.0), // When pressed
+            () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 0.0) // When released
+        ));
   }
 
   /**

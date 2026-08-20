@@ -34,9 +34,9 @@ public final class Constants {
     public static final double STEER_KP = 2; 
     public static final double STEER_KI = 0; 
     public static final double STEER_KD = 0;
-    public static final double STEER_KS = 0;
-    public static final double STEER_KV = 0;
-    public static final double STEER_KA = 0;
+    public static final double STEER_KS = 0.034773;
+    public static final double STEER_KV = 0.36748;
+    public static final double STEER_KA = 0.03267;
     
     public static final double DRIVE_KP = 1; 
     public static final double DRIVE_KI = 0; 

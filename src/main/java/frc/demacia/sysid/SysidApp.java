@@ -1,14 +1,13 @@
 package frc.demacia.sysid;
 
 import javax.swing.*;
-
-import frc.demacia.utils.log.LogReader;
-import frc.demacia.utils.log.LogReader.Entry;
-
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class SysidApp {
     public static boolean[] kFlags = {true, true, true, false, false, false};
@@ -23,8 +22,8 @@ public class SysidApp {
     }
 }
 
-class SysidMain {
-    JFrame frame = new JFrame("SysID");
+class SysidMain implements Consumer<File> {
+    JFrame frame = new JFrame("SysID - Pro Version");
     
     FileChooserPanel fileChooser = new FileChooserPanel(this);
     DefaultListModel<MotorData> listModel = new DefaultListModel<>();
@@ -34,9 +33,8 @@ class SysidMain {
     JTextArea msgArea = new JTextArea();
     JScrollPane msgPane = new JScrollPane(msgArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
     
-    Map<String, List<Entry>> cachedLogData = null;
-
-    Map<String, Sysid.BucketResult> analysisResults;
+    Map<String, LogReader.BucketResult> analysisResults;
+    File currentFile;
 
     private static SysidMain sysid = null;
 
@@ -96,19 +94,6 @@ class SysidMain {
         pane.add(msgPane, gbc);
     }
 
-    public void loadLogFile() {
-        try {
-            msg("Opening file explorer...");
-            cachedLogData = LogReader.getGroups(false, info -> info.metadata().contains("motor"));
-            msg("File loaded successfully. Starting analysis...");
-            
-            performFullAnalysis(); 
-        } catch (Exception e) {
-            msg("Error loading file: " + e.getMessage());
-            fileChooser.field.setText("Error loading file");
-        }
-    }
-
     public void show() {
         frame.setVisible(true);
     }
@@ -122,11 +107,15 @@ class SysidMain {
         }
     }
 
+    @Override
+    public void accept(File file) {
+        msg("File selected: " + file.getName());
+        this.currentFile = file;
+        performFullAnalysis();
+    }
+
     public void performFullAnalysis() {
-        if (cachedLogData == null || cachedLogData.isEmpty()) {
-            msg("No data loaded. Please open a WPILOG file first.");
-            return;
-        }
+        if (currentFile == null) return;
         
         MotorData currentlySelected = motorList.getSelectedValue();
         String selectedName = (currentlySelected != null) ? currentlySelected.fullName : null;
@@ -136,7 +125,7 @@ class SysidMain {
             MotorData.motors.clear();
             listModel.clear();
             
-            analysisResults = Sysid.getResult(cachedLogData);
+            analysisResults = LogReader.getResult(currentFile.getAbsolutePath());
             
             msg("Analysis complete. Found " + analysisResults.size() + " motor groups.");
             
@@ -180,11 +169,12 @@ class SysidMain {
 class FileChooserPanel extends JPanel implements ActionListener {
     JButton button;
     JTextField field;
-    SysidMain app;
+    JFileChooser chooser;
+    Consumer<File> consumer;
 
-    public FileChooserPanel(SysidMain app) {
+    public FileChooserPanel(Consumer<File> consumer) {
         super(new BorderLayout(5, 0));
-        this.app = app;
+        this.consumer = consumer;
         
         button = new JButton("Open WPILOG");
         button.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -194,6 +184,8 @@ class FileChooserPanel extends JPanel implements ActionListener {
         field.setBackground(Color.WHITE);
         
         button.addActionListener(this);
+        chooser = new JFileChooser(System.getProperty("user.dir"));
+        chooser.setFileFilter(new FileNameExtensionFilter("WPILOG Files", "wpilog"));
         
         add(button, BorderLayout.WEST);
         add(field, BorderLayout.CENTER);
@@ -201,7 +193,14 @@ class FileChooserPanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        app.loadLogFile();
+        int res = chooser.showOpenDialog(this);
+        if(res == JFileChooser.APPROVE_OPTION) {
+            File file = chooser.getSelectedFile();
+            field.setText(file.getAbsolutePath());
+            if(consumer != null) {
+                consumer.accept(file);
+            }
+        }
     }
 }
 
@@ -317,7 +316,7 @@ class SysidResultPanel extends JPanel {
             return;
         }
         
-        Sysid.BucketResult r = motorData.bucketResult;
+        LogReader.BucketResult r = motorData.bucketResult;
         
         valueLabels[0].setText(String.format("%.5f", r.ks));
         valueLabels[1].setText(String.format("%.5f", r.kv));
@@ -362,7 +361,7 @@ class MotorData {
     static List<MotorData> motors = new ArrayList<>();
     String fullName = "Motor";
     String displayName = "Motor";
-    Sysid.BucketResult bucketResult;
+    LogReader.BucketResult bucketResult;
 
     @Override
     public String toString() {
