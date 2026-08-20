@@ -1,7 +1,6 @@
 package frc.robot;
 
-import frc.robot.commands.DriveVelocityPIDCommand;
-import frc.robot.commands.SteerPIDCommand;
+import frc.robot.commands.SimpleMotorCommand;
 import frc.robot.subsystems.SimpleMotorSubsystem;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,35 +11,51 @@ public class RobotContainer {
     private final SimpleMotorSubsystem subsystem =
         new SimpleMotorSubsystem();
 
+
     public RobotContainer() {
+
         configureDashboard();
     }
 
+
     private void configureDashboard() {
 
+        // =========================
+        // MOTOR 1 - DRIVE POWER
+        // =========================
+
         SmartDashboard.putNumber(
-            "Steer Target Angle",
+            "Motor 1 Power",
             0.0
         );
 
-        SmartDashboard.putData(
-            "Start Steer PID",
-            new SteerPIDCommand(subsystem)
-        );
+
+        // =========================
+        // MOTOR 2 - STEER POWER
+        // =========================
 
         SmartDashboard.putNumber(
-            "Drive Target Velocity",
+            "Motor 2 Power",
             0.0
         );
 
+
+        // =========================
+        // MOTOR COMMAND
+        // =========================
+
         SmartDashboard.putData(
-            "Start Drive Velocity PID",
-            new DriveVelocityPIDCommand(subsystem)
+            "Run Simple Motor Command",
+            new SimpleMotorCommand(
+                subsystem,
+                10.0
+            )
         );
     }
 
 
     public Command getAutonomousCommand() {
+
         return null;
     }
 }

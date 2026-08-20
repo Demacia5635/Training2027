@@ -56,13 +56,9 @@ public class DriveVelocityPIDCommand extends Command {
                 0.0
             );
 
-        double currentVelocity =
-            subsystem.getDriveVelocity();
-
 
         double output =
             pidController.calculate(
-                currentVelocity,
                 targetVelocity
             );
 
@@ -75,23 +71,13 @@ public class DriveVelocityPIDCommand extends Command {
         );
 
 
-        subsystem.setDrivePower(output);
+        subsystem.setMotor1Power(output);
 
 
         // Elastic
         SmartDashboard.putNumber(
             "Drive Target Velocity",
             targetVelocity
-        );
-
-        SmartDashboard.putNumber(
-            "Drive Current Velocity",
-            currentVelocity
-        );
-
-        SmartDashboard.putNumber(
-            "Drive Velocity Error",
-            targetVelocity - currentVelocity
         );
 
         SmartDashboard.putNumber(
@@ -126,7 +112,7 @@ public class DriveVelocityPIDCommand extends Command {
     @Override
     public void end(boolean interrupted) {
 
-        subsystem.stopDrive();
+        subsystem.stop();
 
         System.out.println(
             "=== Drive Velocity PID Debug ==="

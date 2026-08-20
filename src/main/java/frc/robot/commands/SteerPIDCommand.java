@@ -58,7 +58,7 @@ public class SteerPIDCommand extends Command {
             );
 
         double currentAngle =
-            subsystem.getSteerAngle();
+            subsystem.getMotor2Pos();
 
 
         // PID calculation
@@ -77,7 +77,7 @@ public class SteerPIDCommand extends Command {
         );
 
 
-        subsystem.setSteerPower(output);
+        subsystem.setMotor2Power(output);
 
 
         // Elastic
@@ -128,7 +128,7 @@ public class SteerPIDCommand extends Command {
     @Override
     public void end(boolean interrupted) {
 
-        subsystem.stopSteer();
+        subsystem.stop();
 
         System.out.println(
             "=== Steer PID Debug ==="

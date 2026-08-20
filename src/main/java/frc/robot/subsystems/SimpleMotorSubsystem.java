@@ -10,83 +10,72 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class SimpleMotorSubsystem extends SubsystemBase {
 
     // Motor 1 = DRIVE
-    private final TalonFX driveMotor;
+    private final TalonFX motor1;
 
     // Motor 2 = STEER
-    private final TalonFX steerMotor;
+    private final TalonFX motor2;
 
 
     public SimpleMotorSubsystem() {
 
         super();
 
-        driveMotor = new TalonFX(
-            Constants.SimpleMotorConstants.MOTOR_DRIVE_FINAL_V1,
+        motor1 = new TalonFX(
+            Constants.SimpleMotorConstants.Motor1ID,
             Constants.SimpleMotorConstants.MotorCANbus
         );
 
-        steerMotor = new TalonFX(
-            Constants.SimpleMotorConstants.MOTOR_STEER_FINAL_V1,
+        motor2 = new TalonFX(
+            Constants.SimpleMotorConstants.Motor2ID,
             Constants.SimpleMotorConstants.MotorCANbus
         );
     }
 
 
     // =========================
-    // DRIVE
+    // MOTOR 1 - DRIVE
     // =========================
 
-    public void setDrivePower(double power) {
-        driveMotor.set(power);
+    public void setMotor1Power(double power) {
+
+        motor1.set(power);
     }
 
-    public double getDrivePosition() {
-        return driveMotor.getPosition().getValueAsDouble();
-    }
 
-    public double getDriveVelocity() {
-        return driveMotor.getVelocity().getValueAsDouble();
-    }
+    public double getMotor1Pos() {
 
-    public void stopDrive() {
-        driveMotor.set(0);
+        return motor1
+            .getPosition()
+            .getValueAsDouble();
     }
 
 
     // =========================
-    // STEER
+    // MOTOR 2 - STEER
     // =========================
 
-    public void setSteerPower(double power) {
-        steerMotor.set(power);
+    public void setMotor2Power(double power) {
+
+        motor2.set(power);
     }
 
-    public double getSteerPosition() {
-        return steerMotor.getPosition().getValueAsDouble();
-    }
 
-    public double getSteerVelocity() {
-        return steerMotor.getVelocity().getValueAsDouble();
-    }
+    public double getMotor2Pos() {
 
-    public double getSteerAngle() {
-
-        // Motor rotations -> degrees
-        return getSteerPosition() * 360.0;
-    }
-
-    public void stopSteer() {
-        steerMotor.set(0);
+        return motor2
+            .getPosition()
+            .getValueAsDouble();
     }
 
 
     // =========================
-    // STOP
+    // STOP BOTH MOTORS
     // =========================
 
     public void stop() {
-        stopDrive();
-        stopSteer();
+
+        motor1.set(0);
+        motor2.set(0);
     }
 
 
@@ -97,32 +86,14 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        // DRIVE
         SmartDashboard.putNumber(
-            "Drive Position",
-            getDrivePosition()
+            "Motor 1 Position",
+            getMotor1Pos()
         );
 
         SmartDashboard.putNumber(
-            "Drive Velocity",
-            getDriveVelocity()
-        );
-
-
-        // STEER
-        SmartDashboard.putNumber(
-            "Steer Position",
-            getSteerPosition()
-        );
-
-        SmartDashboard.putNumber(
-            "Steer Velocity",
-            getSteerVelocity()
-        );
-
-        SmartDashboard.putNumber(
-            "Steer Angle",
-            getSteerAngle()
+            "Motor 2 Position",
+            getMotor2Pos()
         );
     }
 }
