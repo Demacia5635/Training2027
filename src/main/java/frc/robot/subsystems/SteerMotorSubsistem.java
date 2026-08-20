@@ -70,7 +70,6 @@ public class SteerMotorSubsistem extends SubsystemBase {
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("get Velocity steer", this::getCurrentVelocitySteer, this::setVelocitySteer);
-    builder.addDoubleProperty("get Power steer", this::getPowerSteer, this::setPowerSteer);
 
   }
 

@@ -27,7 +27,7 @@ public final class Constants {
 
   public static final String STEER_MOTOR_NAME = "steerMotor";
   public static final String DRIVE_MOTOR_NAME = "driveMotor";
-  public static final Canbus CANBUS = Canbus.Rio;
+  public static final Canbus CANBUS = Canbus.CANIvore;
   public static final int STEER_MOTOR_ID = 2;
   public static final int DRIVE_MOTOR_ID = 1;
   public static final double SCOPE = 4 * 0.0254 * Math.PI;

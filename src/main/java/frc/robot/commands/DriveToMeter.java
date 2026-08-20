@@ -5,25 +5,28 @@
 package frc.robot.commands;
 
 import edu.wpi.first.units.measure.Velocity;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveMotorSubsistem;
 import frc.robot.subsystems.SteerMotorSubsistem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DriveToMeter extends Command {
-  DriveMotorSubsistem subsystem1 = new DriveMotorSubsistem();
+  DriveMotorSubsistem subsystem1;
   private double currentMeterDrive;
   private double wantedMeterDrive;
   private double power;
   private double velocity;
 
+
+
   /** Creates a new DriveToAngle. */
-  public DriveToMeter(DriveMotorSubsistem subsystem, double wantedMeterDrive, double power,double velocity) {
-    this.subsystem1 = subsystem1;
-    this.wantedMeterDrive = wantedMeterDrive;
-    this.power = power;
-    this.velocity = velocity;
+  public DriveToMeter(DriveMotorSubsistem subsystem , double power) {
+    this.subsystem1 = subsystem;
     addRequirements(subsystem);
+    this.power = power;
+    SmartDashboard.putData(this);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -38,13 +41,18 @@ public class DriveToMeter extends Command {
    // currentMeterDrive = subsystem1.getMeterDrive();
   //  int direction = ((wantedMeterDrive - currentMeterDrive) < 0) ? -1 : 1;
    // subsystem1.setPowerDrive(power * direction);
-    subsystem1.setVelocityDrive(velocity);
+    //subsystem1.setVelocityDrive(velocity);
+    subsystem1.setPowerDrive(power);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     subsystem1.stop();
+  }
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.addDoubleProperty("get Power drive", ()-> power, (x)-> power = x);
   }
 
   // Returns true when the command should end.

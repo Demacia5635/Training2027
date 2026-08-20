@@ -29,6 +29,7 @@ public class RobotContainer {
 
   private final SteerMotorSubsistem subsystemSteer;
   private final DriveMotorSubsistem subsystemDrive;
+  public final DriveToMeter driveToMeterCommand;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(
@@ -40,10 +41,15 @@ public class RobotContainer {
   public RobotContainer() {
     subsystemSteer = new SteerMotorSubsistem();
     subsystemDrive = new DriveMotorSubsistem();
+    driveToMeterCommand = new DriveToMeter(subsystemDrive , 0.7);
+
+    
     // Configure the trigger bindings
     configureBindings();
+    subsystemDrive.setDefaultCommand(driveToMeterCommand);
+    //subsystemSteer.setDefaultCommand(subsystemSteerCommand);
     // configureDifultCommands();
-     getAutonomousCommand();
+    //  getAutonomousCommand();
   }
 
   /**
@@ -77,7 +83,8 @@ public class RobotContainer {
     // .andThen(new DriveToMeter(subsystemDrive,1.0 ,0.3)
     // .alongWith(new SteerToAngle(subsystemSteer, Math.PI*135.0/180.0 , 0.03 )));
    // return new SteerToAngle(subsystemSteer, 0, 0, 0,2);
-   return new SteerToAngle(subsystemSteer, 0, 0, Math.toRadians(180), 0)
-   .alongWith(new DriveToMeter(subsystemDrive, 0, 0, 1));
+  //  return new SteerToAngle(subsystemSteer, 0, 0, Math.toRadians(180), 0)
+  //  .alongWith(new DriveToMeter(subsystemDrive, 0, 0, 1));
+  return null;
   }
 }

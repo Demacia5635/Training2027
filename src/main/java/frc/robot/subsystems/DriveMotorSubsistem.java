@@ -13,8 +13,7 @@ import frc.robot.Constants;
 public class DriveMotorSubsistem extends SubsystemBase {
   private final TalonFXMotor driveMotor;
   private double powerDrive;
-  public double ks;
-  public double kv;
+
 
   public DriveMotorSubsistem() {
     super();
@@ -39,7 +38,7 @@ public class DriveMotorSubsistem extends SubsystemBase {
   }
 
   public void setPowerDrive(double powerDrive) {
-    this.powerDrive = powerDrive;
+    // this.powerDrive = powerDrive;
     driveMotor.setDuty(powerDrive);
   }
 
@@ -62,7 +61,6 @@ public class DriveMotorSubsistem extends SubsystemBase {
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("get Velocity drive", this::getCurrentVelocityDrive, this::setVelocityDrive);
-    builder.addDoubleProperty("get Power drive", this::getPowerDrive, this::setPowerDrive);
   }
 
   @Override

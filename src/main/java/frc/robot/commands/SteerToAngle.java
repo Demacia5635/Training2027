@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SteerMotorSubsistem;
@@ -11,27 +12,27 @@ import frc.robot.subsystems.SteerMotorSubsistem;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SteerToAngle extends Command {
   /** Creates a new SteerToAngle. */
-  SteerMotorSubsistem subsystem1 = new SteerMotorSubsistem();
+  SteerMotorSubsistem subsystem1;
   private double currentAngleSteer;
   private double wantedAngleSteer;
-  private double power;
   private double position;
   private double velocity;
+  private double power;
 
-  public SteerToAngle(SteerMotorSubsistem subsystem, double wantedAngleSteer, double power, double position, double velocity) {
+  public SteerToAngle(SteerMotorSubsistem subsystem  , double power) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.subsystem1 = subsystem;
-    this.wantedAngleSteer = wantedAngleSteer;
-    this.power = power;
-    this.position = position;
-    this.velocity = velocity;
     addRequirements(subsystem);
+    this.power = power;
+    SmartDashboard.putData(this);
   }
 
   // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
+    @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.addDoubleProperty("get Power steer", ()-> power, (x)-> power = x);
   }
+
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
