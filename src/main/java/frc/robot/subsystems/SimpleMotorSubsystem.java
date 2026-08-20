@@ -1,8 +1,6 @@
 package frc.robot.subsystems;
 
-import frc.demacia.utils.motors.TalonFXMotor;
 import frc.robot.Constants;
-import frc.robot.Constants.SimpleMotorConstants;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -12,21 +10,26 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class SimpleMotorSubsystem extends SubsystemBase {
 
     // Motor 1 = DRIVE
-    private final TalonFXMotor driveMotor;
+    private final TalonFX driveMotor;
 
     // Motor 2 = STEER
-    private final TalonFXMotor steerMotor;
+    private final TalonFX steerMotor;
 
 
     public SimpleMotorSubsystem() {
 
         super();
 
-        driveMotor = new TalonFXMotor(SimpleMotorConstants.DIRVE_CONFIG);
+        driveMotor = new TalonFX(
+            Constants.SimpleMotorConstants.MOTOR_DRIVE_FINAL_V1,
+            Constants.SimpleMotorConstants.MotorCANbus
+        );
 
-        steerMotor = new TalonFXMotor(SimpleMotorConstants.STEER_CONFIG);
+        steerMotor = new TalonFX(
+            Constants.SimpleMotorConstants.MOTOR_STEER_FINAL_V1,
+            Constants.SimpleMotorConstants.MotorCANbus
+        );
     }
-
 
 
     public void setDrivePower(double power) {
@@ -45,6 +48,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
         driveMotor.set(0);
     }
 
+
     public void setSteerPower(double power) {
         steerMotor.set(power);
     }
@@ -58,12 +62,14 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     }
 
     public double getSteerAngle() {
+
         return getSteerPosition() * 360.0;
     }
 
     public void stopSteer() {
         steerMotor.set(0);
     }
+
 
     public void stop() {
         stopDrive();
@@ -73,6 +79,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
+        // DRIVE
         SmartDashboard.putNumber(
             "Drive Position",
             getDrivePosition()
@@ -84,6 +91,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
         );
 
 
+        // STEER
         SmartDashboard.putNumber(
             "Steer Position",
             getSteerPosition()
