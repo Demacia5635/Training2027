@@ -1,33 +1,30 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
-import com.ctre.phoenix6.CANBus;
-
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
+    public static final class ModuleConstants {
+        public static final int DRIVE_ID = 1;
+        public static final int STEER_ID = 2;
+        public static final int CANCODER_ID = 3;
 
-  public static final class SubsystemConstants {
-    // Motor id
-    public static final int MotorID1 = 2;
-    public static final int MotorID2 = 3;
-    // motor config
-    public static final String MotorCANbus = "rio";
-    public static final CANBus MOTOR_CANBUS = CANBus.roboRIO();
-  }
+        public static final double WHEEL_DIAMETER_METERS = 0; 
+        public static final double DRIVE_GEAR_RATIO = ; 
+        public static final double STEER_GEAR_RATIO = .0 / .0; 
 
-public static final String DriverConstants = null;
+        public static final double DRIVE_ROTATIONS_TO_METERS = (WHEEL_DIAMETER_METERS * Math.PI) / DRIVE_GEAR_RATIO;
+        public static final double DRIVE_RPM_TO_METERS_PER_SEC = DRIVE_ROTATIONS_TO_METERS / 60.0;
+        
+        public static final double STEER_ROTATIONS_TO_DEGREES = 360.0 / STEER_GEAR_RATIO;
 
+        public static final double CANCODER_OFFSET_DEGREES = 0.0; 
+
+        public static final double DRIVE_kS = 0.1; 
+        public static final double DRIVE_kV = 2.2; 
+        public static final double DRIVE_kP = 0.1;
+        public static final double DRIVE_kI = 0.0;
+        public static final double DRIVE_kD = 0.0;
+
+        public static final double STEER_kP = 0.5;
+        public static final double STEER_kI = 0.0;
+        public static final double STEER_kD = 0.0;
+    }
 }
