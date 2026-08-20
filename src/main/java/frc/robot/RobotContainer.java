@@ -18,34 +18,21 @@ public class RobotContainer {
 
     private void configureDashboard() {
 
-        // =========================
-        // STEER PID
-        // =========================
-
-        // Requested steer angle
         SmartDashboard.putNumber(
             "Steer Target Angle",
             0.0
         );
 
-        // Start/stop Steer PID from Elastic
         SmartDashboard.putData(
             "Start Steer PID",
             new SteerPIDCommand(subsystem)
         );
 
-
-        // =========================
-        // DRIVE PID
-        // =========================
-
-        // Requested drive velocity
         SmartDashboard.putNumber(
             "Drive Target Velocity",
             0.0
         );
 
-        // Start/stop Drive PID from Elastic
         SmartDashboard.putData(
             "Start Drive Velocity PID",
             new DriveVelocityPIDCommand(subsystem)
