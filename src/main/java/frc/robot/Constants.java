@@ -106,10 +106,13 @@ public final class Constants {
     
         public static final TalonFXConfig DRIVECONFIG = new TalonFXConfig(DRIVE_ID2 ,DRIVE_CANBUS2 ,DRIVE_NAME2)
         .withMeterMotor(DRIVEGEAR_RATIO2, DRIVE_CIRCUMFERENCE2)
-        .withPID(DRIVE_KP2, DRIVE_KI2, DRIVE_KD2, DRIVE_KS2, DRIVE_KV2, DRIVE_KA2, DRIVE_KG2);
+        .withPID(DRIVE_KP2, DRIVE_KI2, DRIVE_KD2, DRIVE_KS2, DRIVE_KV2, DRIVE_KA2, DRIVE_KG2)
+        .withBrake(true);
+        
         
         public static final TalonFXConfig STEERCONFIG = new TalonFXConfig(STEER_ID2, STEER_CANBUS2, STEER_NAME)
         .withRadiansMotor(STEERGEAR_RATIO2)
-        .withPID(STEER_KP2, STEER_KI2, STEER_KD2, STEER_KS2, STEER_KV2, STEER_KA2, STEER_KG2);
+        .withPID(STEER_KP2, STEER_KI2, STEER_KD2, STEER_KS2, STEER_KV2, STEER_KA2, STEER_KG2)
+        .withBrake(true);
   }
 }
