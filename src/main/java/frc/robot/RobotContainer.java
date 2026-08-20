@@ -47,16 +47,16 @@ public class RobotContainer {
     // set default command for both drive and steer
     // bonus: when you move the joystick you move the motor, the left joystick for
     // the drive motor and the right joystick for the steer motor.
-    // subsystem.setDefaultCommand(
-    //     new RunCommand(
-    //         () -> {
-    //           // check left joystick and update drive power
-    //           subsystem.setDrivePower(leftYDeadBand());
+    subsystem.setDefaultCommand(
+        new RunCommand(
+            () -> {
+              // check left joystick and update drive power
+              subsystem.setDrivePower(leftYDeadBand());
 
-    //           // check right joystick and update steer power
-    //           subsystem.setSteerPower(rightYDeadBand());
-    //         },
-    //         subsystem));
+              // check right joystick and update steer power
+              subsystem.setSteerPower(rightYDeadBand());
+            },
+            subsystem));
 
 
   }
