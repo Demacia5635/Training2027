@@ -1,48 +1,59 @@
 package frc.robot;
 
-import frc.robot.commands.SimpleMotorCommand;
+import frc.robot.commands.DriveVelocityPIDCommand;
+import frc.robot.commands.SteerPIDCommand;
 import frc.robot.subsystems.SimpleMotorSubsystem;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
 
-    // Subsystem
     private final SimpleMotorSubsystem subsystem =
         new SimpleMotorSubsystem();
 
-    // Controller
-    private final CommandXboxController controller =
-        new CommandXboxController(
-            Constants.DriverConstants.DriverControllerPort
-        );
-
     public RobotContainer() {
-
-        configureBindings();
+        configureDashboard();
     }
 
-    private void configureBindings() {
+    private void configureDashboard() {
 
-        controller.a().onTrue(
-            new SimpleMotorCommand(
-                subsystem,
-                0.5,   // Motor 1 power
-                0.3,   // Motor 2 power
-                5.0    // Duration
-            )
+        // =========================
+        // STEER PID
+        // =========================
+
+        // Requested steer angle
+        SmartDashboard.putNumber(
+            "Steer Target Angle",
+            0.0
+        );
+
+        // Start/stop Steer PID from Elastic
+        SmartDashboard.putData(
+            "Start Steer PID",
+            new SteerPIDCommand(subsystem)
+        );
+
+
+        // =========================
+        // DRIVE PID
+        // =========================
+
+        // Requested drive velocity
+        SmartDashboard.putNumber(
+            "Drive Target Velocity",
+            0.0
+        );
+
+        // Start/stop Drive PID from Elastic
+        SmartDashboard.putData(
+            "Start Drive Velocity PID",
+            new DriveVelocityPIDCommand(subsystem)
         );
     }
+
 
     public Command getAutonomousCommand() {
-
-        return new SimpleMotorCommand(
-            subsystem,
-            0.5,
-            0.3,
-            5.0
-        );
+        return null;
     }
-
 }

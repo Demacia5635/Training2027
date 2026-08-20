@@ -32,6 +32,10 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     }
 
 
+    // =========================
+    // DRIVE
+    // =========================
+
     public void setDrivePower(double power) {
         driveMotor.set(power);
     }
@@ -49,6 +53,10 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     }
 
 
+    // =========================
+    // STEER
+    // =========================
+
     public void setSteerPower(double power) {
         steerMotor.set(power);
     }
@@ -63,6 +71,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
 
     public double getSteerAngle() {
 
+        // Motor rotations -> degrees
         return getSteerPosition() * 360.0;
     }
 
@@ -71,10 +80,19 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     }
 
 
+    // =========================
+    // STOP
+    // =========================
+
     public void stop() {
         stopDrive();
         stopSteer();
     }
+
+
+    // =========================
+    // ELASTIC
+    // =========================
 
     @Override
     public void periodic() {
