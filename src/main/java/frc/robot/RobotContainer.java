@@ -23,6 +23,11 @@ public class RobotContainer {
         // Software PID targets
         SmartDashboard.putNumber("Drive Target Velocity", 0.0);
         SmartDashboard.putNumber("Steer Target Position", 0.0);
+            
+        // Drive PID telemetry
+        SmartDashboard.putNumber("Drive Current Velocity", 0.0);
+        SmartDashboard.putNumber("Drive Error", 0.0);
+        SmartDashboard.putNumber("Drive PID Output", 0.0);
 
         // Commands shown as buttons in Elastic
         SmartDashboard.putData(
