@@ -22,12 +22,13 @@ public final class Constants {
 	}
 
 	public static class SimplePIDConstants {
-		public static final double KS = 0.0;
-		public static final double KV = 0.0;
+		public static final double KP = 1;
+		public static final double KS = 0.02308;
+		public static final double KV = 0.12515;
 
 		public static final TalonFXConfig CONFIG = new TalonFXConfig(
 			1, Canbus.Rio, "SimplePID"
-		).withPID(0.0, 0.0, 0.0, KS, KV, 0.0, 0.0);
+		).withPID(KP, 0.0, 0.0, KS, KV, 0.0, 0.0);
 	}
 
 	public static class ModuleSubsystemConstants {
