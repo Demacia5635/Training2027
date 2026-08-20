@@ -112,15 +112,15 @@ public class RobotContainer {
     // when the left trigger is pressed vibrate the controller
     controller.leftTrigger().whileTrue(
         Commands.startEnd(
-            () -> controller.getHID().setRumble(RumbleType.kRightRumble, 1.0), // When pressed
-            () -> controller.getHID().setRumble(RumbleType.kRightRumble, 0.0) // When released
+            () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 1.0), // When pressed
+            () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 0.0) // When released
         ));
     // when the right trigger is pressed vibrate the controller
 
     controller.rightTrigger().whileTrue(
         Commands.startEnd(
-            () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 1.0), // When pressed
-            () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 0.0) // When released
+            () -> controller.getHID().setRumble(RumbleType.kRightRumble, 1.0), // When pressed
+            () -> controller.getHID().setRumble(RumbleType.kRightRumble, 0.0) // When released
         ));
   }
 
