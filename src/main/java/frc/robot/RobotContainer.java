@@ -34,9 +34,6 @@ public class RobotContainer {
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
-		Trigger xButton = m_driverController.x();
-		xButton.onChange() {}
-
 		configureBindings();
 	}
 
@@ -64,5 +61,6 @@ public class RobotContainer {
 
 	public Command getAutonomousCommand() {
 		return Autos.exampleAuto(m_exampleSubsystem);
+		// return JoystickUpdateCommand(m_driverController, m_moduleSubsystem);
 	}
 }
