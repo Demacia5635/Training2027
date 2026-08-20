@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.demacia.utils.chassis;
 
 import java.security.PublicKey;
@@ -38,50 +34,6 @@ import frc.demacia.utils.log.LogManager;
 import frc.demacia.utils.sensors.Pigeon;
 import frc.demacia.vision.utils.VisionConstants;
 
-/**
- * Main swerve drive chassis controller.
- * 
- * <p>
- * Manages four swerve modules, odometry, and provides high-level drive control
- * with acceleration limiting and smooth motion profiling.
- * </p>
- * <p>
- * Manages four swerve modules, odometry, and provides high-level drive control
- * with acceleration limiting and smooth motion profiling.
- * </p>
- * 
- * <p>
- * <b>Features:</b>
- * </p>
- * <ul>
- * <li>Field-relative and robot-relative control</li>
- * <li>Pose estimation with vision integration</li>
- * <li>Smooth acceleration limiting</li>
- * <li>Path following capabilities</li>
- * <li>Auto-rotate to target angle</li>
- * </ul>
- * 
- * <p>
- * <b>Example Usage:</b>
- * </p>
- * 
- * <p>
- * <b>Example Usage:</b>
- * </p>
- * 
- * <pre>
- * ChassisConfig config = new ChassisConfig(
- *         "MainChassis",
- *         swerveModueles[] swerveModulesConfig,
- *         pigeonConfig,
- * );
- * 
- * Chassis chassis = new Chassis(config);
- * 
- * // Field-relative drive with acceleration limiting
- * chassis.setVelocitiesWithAccel(new ChassisSpeeds(vx, vy, omega));
- * </pre>
- */
 public class Chassis extends SubsystemBase {
 
     private static Chassis instance;
@@ -150,8 +102,6 @@ public class Chassis extends SubsystemBase {
         SmartDashboard.putData("chassis/reset gyro 180",
                 new InstantCommand(() -> setYaw(Rotation2d.kPi)).ignoringDisable(true));
         SmartDashboard.putData("chassis/field", field);
-        // SmartDashboard.putData("chassis/quest field", questField);
-        // SmartDashboard.putData("chassis/tags field", tagsField);
         SmartDashboard.putData("chassis/set coast",
                 new InstantCommand(() -> setNeutralMode(false)).ignoringDisable(true));
         SmartDashboard.putData("chassis/set brake",
