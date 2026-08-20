@@ -1,10 +1,12 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.demacia.utils.motors.TalonFXMotor;
 import frc.demacia.utils.sensors.Cancoder;
 import frc.robot.Constants.ModuleSubsystemConstants;
+
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ModuleSubsystem extends SubsystemBase {
     private TalonFXMotor steerMotor;
@@ -54,6 +56,10 @@ public class ModuleSubsystem extends SubsystemBase {
     public void setDrivePower(double power) {
         driveMotor.setDuty(power);
     }
+    
+    public void setDriveVelocity(double velocity) {
+        driveMotor.set(velocity);
+    }
 
     public void setSteerPower(double power) {
         steerMotor.setDuty(power);
@@ -61,6 +67,10 @@ public class ModuleSubsystem extends SubsystemBase {
 
     public void setSteerAngle(double angle) {
         steerMotor.setAngle(angle);
+    }
+
+    public void setSteerVelocity(double velocity) {
+        steerMotor.set(velocity);
     }
     
     void calibrate() {

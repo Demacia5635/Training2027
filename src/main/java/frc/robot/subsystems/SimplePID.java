@@ -6,6 +6,7 @@ import frc.demacia.utils.motors.TalonFXMotor;
 import frc.robot.Constants.SimplePIDConstants;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SimplePID extends SubsystemBase {
     private TalonFXMotor motor;
