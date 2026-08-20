@@ -82,12 +82,12 @@ public final class Constants {
     public final static int DRIVE_ID2 = 1;
         public final static Canbus DRIVE_CANBUS2 = Canbus.Rio;
         public final static String DRIVE_NAME2 = "drive motor";
-        public final static double DRIVE_KP2= 0;
+        public final static double DRIVE_KP2 = 2;
         public final static double DRIVE_KI2 = 0;
         public final static double DRIVE_KD2 = 0;
-        public final static double DRIVE_KS2 = 0;
+        public final static double DRIVE_KS2 = 0.02103;
         // 0.11671;
-        public final static double DRIVE_KV2 = 0;
+        public final static double DRIVE_KV2 = 0.93436;
         // 0.01106
         public final static double DRIVE_KA2 = 0;
         public final static double DRIVE_KG2 = 0;
