@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveToMeter;
+import frc.robot.commands.SetSreerVoltage;
 import frc.robot.commands.SteerToAngle;
 import frc.robot.subsystems.DriveMotorSubsistem;
 import frc.robot.subsystems.SteerMotorSubsistem;
@@ -30,6 +31,7 @@ public class RobotContainer {
   private final SteerMotorSubsistem subsystemSteer;
   private final DriveMotorSubsistem subsystemDrive;
   public final DriveToMeter driveToMeterCommand;
+  public final SetSreerVoltage setSteerVelocityCommand;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(
@@ -42,11 +44,13 @@ public class RobotContainer {
     subsystemSteer = new SteerMotorSubsistem();
     subsystemDrive = new DriveMotorSubsistem();
     driveToMeterCommand = new DriveToMeter(subsystemDrive , 0.7);
+    setSteerVelocityCommand = new SetSreerVoltage(subsystemSteer, 0.6);
 
     
     // Configure the trigger bindings
     configureBindings();
     subsystemDrive.setDefaultCommand(driveToMeterCommand);
+    subsystemSteer.setDefaultCommand(setSteerVelocityCommand);
     //subsystemSteer.setDefaultCommand(subsystemSteerCommand);
     // configureDifultCommands();
     //  getAutonomousCommand();
@@ -85,6 +89,8 @@ public class RobotContainer {
    // return new SteerToAngle(subsystemSteer, 0, 0, 0,2);
   //  return new SteerToAngle(subsystemSteer, 0, 0, Math.toRadians(180), 0)
   //  .alongWith(new DriveToMeter(subsystemDrive, 0, 0, 1));
-  return null;
+  return new SetSreerVoltage(subsystemSteer, 0.7)
+  .andThen(new SetSreerVoltage(subsystemSteer, 0.3));
+
   }
 }

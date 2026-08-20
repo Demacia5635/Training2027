@@ -66,6 +66,9 @@ public class SteerMotorSubsistem extends SubsystemBase {
   public double calculateKvSteer() {
     return Constants.KV_STEER * getCurrentVelocitySteer();
   }
+  public void setVoltageSteer(double voltage) {
+    steerMotor.setVoltage(voltage);
+  }
 
   @Override
   public void initSendable(SendableBuilder builder) {

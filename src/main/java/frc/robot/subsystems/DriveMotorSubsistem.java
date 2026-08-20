@@ -32,7 +32,9 @@ public class DriveMotorSubsistem extends SubsystemBase {
   public double getCurrentVelocityDrive() {
     return driveMotor.getCurrentVelocity();
   }
-
+  public void setVoltageDrive(double voltage) {
+    driveMotor.setVoltage(voltage);
+  }
   public double getPowerDrive() {
     return powerDrive;
   }
