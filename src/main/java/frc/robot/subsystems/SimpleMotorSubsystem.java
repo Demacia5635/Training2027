@@ -25,14 +25,16 @@ public class SimpleMotorSubsystem extends SubsystemBase {
                 Constants.SimpleMotorConstants.STEER_CONFIG
             );
 
-        // Lets Elastic show the motor telemetry sendables.
         SmartDashboard.putData("Simple Motors/Drive", driveMotor);
         SmartDashboard.putData("Simple Motors/Steer", steerMotor);
     }
 
+    // Drive motor
 
     public void setDrivePower(double power) {
-        driveMotor.setDuty(MathUtil.clamp(power, -1.0, 1.0));
+        driveMotor.setDuty(
+            MathUtil.clamp(power, -1.0, 1.0)
+        );
     }
 
     public double getDrivePosition() {
@@ -47,10 +49,16 @@ public class SimpleMotorSubsystem extends SubsystemBase {
         return driveMotor.getCurrentCurrent();
     }
 
+    public void stopDrive() {
+        driveMotor.stop();
+    }
+
     // Steer motor
 
     public void setSteerPower(double power) {
-        steerMotor.setDuty(MathUtil.clamp(power, -1.0, 1.0));
+        steerMotor.setDuty(
+            MathUtil.clamp(power, -1.0, 1.0)
+        );
     }
 
     public double getSteerPosition() {
@@ -65,22 +73,8 @@ public class SimpleMotorSubsystem extends SubsystemBase {
         return steerMotor.getCurrentCurrent();
     }
 
-    // Compatibility with your existing SimpleMotorCommand 
-
-    public void setMotor1Power(double power) {
-        setDrivePower(power);
-    }
-
-    public double getMotor1Pos() {
-        return getDrivePosition();
-    }
-
-    public void setMotor2Power(double power) {
-        setSteerPower(power);
-    }
-
-    public double getMotor2Pos() {
-        return getSteerPosition();
+    public void stopSteer() {
+        steerMotor.stop();
     }
 
     // Demacia Data access
@@ -109,9 +103,27 @@ public class SimpleMotorSubsystem extends SubsystemBase {
         return steerMotor.getCurrentSignal();
     }
 
+    // Compatibility names for the training command
+
+    public void setMotor1Power(double power) {
+        setDrivePower(power);
+    }
+
+    public double getMotor1Pos() {
+        return getDrivePosition();
+    }
+
+    public void setMotor2Power(double power) {
+        setSteerPower(power);
+    }
+
+    public double getMotor2Pos() {
+        return getSteerPosition();
+    }
+
     public void stop() {
-        driveMotor.stop();
-        steerMotor.stop();
+        stopDrive();
+        stopSteer();
     }
 
     public void checkElectronics() {
@@ -121,14 +133,35 @@ public class SimpleMotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // Data.refreshAll() is already called by Demacia's LogManager.
-        // These getters therefore use the refreshed cached Data values.
-        SmartDashboard.putNumber("Motor 1 Position", getDrivePosition());
-        SmartDashboard.putNumber("Motor 1 Velocity", getDriveVelocity());
-        SmartDashboard.putNumber("Motor 1 Current", getDriveCurrent());
+        // Demacia's LogManager refreshes Data objects every scheduler loop.
+        SmartDashboard.putNumber(
+            "Motor 1 Position",
+            getDrivePosition()
+        );
 
-        SmartDashboard.putNumber("Motor 2 Position", getSteerPosition());
-        SmartDashboard.putNumber("Motor 2 Velocity", getSteerVelocity());
-        SmartDashboard.putNumber("Motor 2 Current", getSteerCurrent());
+        SmartDashboard.putNumber(
+            "Motor 1 Velocity",
+            getDriveVelocity()
+        );
+
+        SmartDashboard.putNumber(
+            "Motor 1 Current",
+            getDriveCurrent()
+        );
+
+        SmartDashboard.putNumber(
+            "Motor 2 Position",
+            getSteerPosition()
+        );
+
+        SmartDashboard.putNumber(
+            "Motor 2 Velocity",
+            getSteerVelocity()
+        );
+
+        SmartDashboard.putNumber(
+            "Motor 2 Current",
+            getSteerCurrent()
+        );
     }
 }

@@ -1,162 +1,89 @@
 package frc.robot.commands;
 
-import frc.robot.subsystems.SimpleMotorSubsystem;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.subsystems.SimpleMotorSubsystem;
 
 public class SteerPIDCommand extends Command {
-
     private final SimpleMotorSubsystem subsystem;
-
     private final PIDController pidController;
-
 
     public SteerPIDCommand(
             SimpleMotorSubsystem subsystem) {
-
         this.subsystem = subsystem;
 
-        // Start with P only
-        double kP = 0.005;
-        double kI = 0.0;
-        double kD = 0.0;
-
         pidController = new PIDController(
-            kP,
-            kI,
-            kD
+            Constants.SimpleMotorConstants.STEER_COMMAND_KP,
+            Constants.SimpleMotorConstants.STEER_COMMAND_KI,
+            Constants.SimpleMotorConstants.STEER_COMMAND_KD
         );
 
-        pidController.setTolerance(2.0);
+        pidController.setTolerance(0.05);
 
         addRequirements(subsystem);
     }
 
-
     @Override
     public void initialize() {
-
         pidController.reset();
-
-        System.out.println(
-            "Steer PID Command started"
-        );
+        System.out.println("Steer PID Command started");
     }
-
 
     @Override
     public void execute() {
+        // The current units are motor rotations, not degrees.
+        double targetPosition = SmartDashboard.getNumber(
+            "Steer Target Position",
+            0.0
+        );
 
-        // Read requested angle from Elastic
-        double targetAngle =
-            SmartDashboard.getNumber(
-                "Steer Target Angle",
-                0.0
-            );
+        double currentPosition = subsystem.getSteerPosition();
 
-        double currentAngle =
-            subsystem.getMotor2Pos();
+        double output = pidController.calculate(
+            currentPosition,
+            targetPosition
+        );
 
-
-        // PID calculation
-        double output =
-            pidController.calculate(
-                currentAngle,
-                targetAngle
-            );
-
-
-        // Safety limit
         output = MathUtil.clamp(
             output,
-            -0.3,
-            0.3
+            -Constants.SimpleMotorConstants.POWER_LIMIT,
+            Constants.SimpleMotorConstants.POWER_LIMIT
         );
 
+        subsystem.setSteerPower(output);
 
-        subsystem.setMotor2Power(output);
-
-
-        // Elastic
         SmartDashboard.putNumber(
-            "Steer Target Angle",
-            targetAngle
+            "Steer Target Position",
+            targetPosition
         );
 
         SmartDashboard.putNumber(
-            "Steer Current Angle",
-            currentAngle
+            "Steer Current Position",
+            currentPosition
         );
 
         SmartDashboard.putNumber(
             "Steer Error",
-            targetAngle - currentAngle
+            targetPosition - currentPosition
         );
 
         SmartDashboard.putNumber(
             "Steer PID Output",
             output
         );
-
-        SmartDashboard.putNumber(
-            "Steer Kp",
-            pidController.getP()
-        );
-
-        SmartDashboard.putNumber(
-            "Steer Ki",
-            pidController.getI()
-        );
-
-        SmartDashboard.putNumber(
-            "Steer Kd",
-            pidController.getD()
-        );
     }
-
 
     @Override
     public boolean isFinished() {
-
         return false;
     }
 
-
     @Override
     public void end(boolean interrupted) {
-
-        subsystem.stop();
-
-        System.out.println(
-            "=== Steer PID Debug ==="
-        );
-
-        System.out.println(
-            "Setpoint: "
-            + pidController.getSetpoint()
-        );
-
-        System.out.println(
-            "Error: "
-            + pidController.getError()
-        );
-
-        System.out.println(
-            "P: "
-            + pidController.getP()
-        );
-
-        System.out.println(
-            "I: "
-            + pidController.getI()
-        );
-
-        System.out.println(
-            "D: "
-            + pidController.getD()
-        );
+        subsystem.stopSteer();
+        System.out.println("Steer PID Command ended");
     }
 }

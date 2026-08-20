@@ -11,8 +11,13 @@ public final class Constants {
 
         public static final int MOTOR_DRIVE = 1;
         public static final int MOTOR_STEER = 2;
+
         public static final Canbus CAN_BUS = Canbus.Rio;
 
+        public static final double POWER_LIMIT = 0.3;
+
+        // TalonFX hardware PID/feedforward constants.
+        // Leave at zero while learning with the software PID commands below.
         public static final double DRIVE_KP = 0.0;
         public static final double DRIVE_KI = 0.0;
         public static final double DRIVE_KD = 0.0;
@@ -28,6 +33,15 @@ public final class Constants {
         public static final double STEER_KV = 0.0;
         public static final double STEER_KA = 0.0;
         public static final double STEER_KG = 0.0;
+
+        // WPILib software PID constants used by the training commands.
+        public static final double DRIVE_COMMAND_KP = 0.005;
+        public static final double DRIVE_COMMAND_KI = 0.0;
+        public static final double DRIVE_COMMAND_KD = 0.0;
+
+        public static final double STEER_COMMAND_KP = 0.005;
+        public static final double STEER_COMMAND_KI = 0.0;
+        public static final double STEER_COMMAND_KD = 0.0;
 
         public static final TalonFXConfig DRIVE_CONFIG =
             new TalonFXConfig(MOTOR_DRIVE, CAN_BUS, "Drive Motor")
