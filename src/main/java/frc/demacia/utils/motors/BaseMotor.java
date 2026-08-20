@@ -16,7 +16,7 @@ import frc.demacia.utils.elastic.ElasticGenerator;
 import frc.demacia.utils.log.Log;
 import frc.demacia.utils.log.Log.LogLevel;
 import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
-import frc.demacia.utils.sysid.Sysid;
+import frc.demacia.utils.sysid.SysidApp;
 
 public abstract class BaseMotor implements MotorInterface {
   protected BaseMotorConfig<?> config;
@@ -61,7 +61,7 @@ public abstract class BaseMotor implements MotorInterface {
     SmartDashboard.putData("motors/" + name, this);
     Log.log(name + " motor initialized");
     ElasticGenerator.getInstance().registerMotor(this);
-    Sysid.registerMotor(this);
+    SysidApp.registerMotor(this);
   }
 
   public BaseMotorConfig<?> getConfig() {

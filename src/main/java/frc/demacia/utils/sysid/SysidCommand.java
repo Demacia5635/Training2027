@@ -19,7 +19,7 @@ public class SysidCommand extends InstantCommand {
                 return;
             }
 
-            for (MotorInterface motor : Sysid.getMotors()) {
+            for (MotorInterface motor : SysidApp.getMotors()) {
                 String rawName = motor.getName();
 
                 List<Entry> motorEntries = null;
@@ -33,7 +33,7 @@ public class SysidCommand extends InstantCommand {
                 if (motorEntries != null && !motorEntries.isEmpty()) {
                     Log.log("Starting SysID for motor: " + rawName);
                     
-                    Sysid analyzer = new Sysid(rawName, motorEntries, motor.getSysidFlags());
+                    SysidApp analyzer = new SysidApp(rawName, motorEntries, motor.getSysidFlags());
 
                     CloseLoopParam params = analyzer.getParams();
                     double maxVelocity = analyzer.getMaxVelocity();

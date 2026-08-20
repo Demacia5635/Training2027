@@ -14,7 +14,7 @@ import frc.demacia.utils.log.LogReader.EntryPoint;
 import frc.demacia.utils.motors.CloseLoopParam;
 import frc.demacia.utils.motors.MotorInterface;
 
-public class Sysid {
+public class SysidApp {
     private static final List<MotorInterface> motors = new ArrayList<>();
 
     private static final double[] VOLTAGE_THRESHOLDS = {0.1, 0.2, 0.3, 0.4};
@@ -154,7 +154,7 @@ public class Sysid {
         return motors;
     }
 
-    public Sysid(String name, List<Entry> motorEntries, boolean[] kFlags) {
+    public SysidApp(String name, List<Entry> motorEntries, boolean[] kFlags) {
         Log.log("Performing analysis...");
 
         this.name = name;

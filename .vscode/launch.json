@@ -8,6 +8,13 @@
       "type": "java",
       "name": "SysidApp",
       "request": "launch",
+      "mainClass": "frc.demacia.sysid.SysidApp",
+      "projectName": "Training2027"
+    },
+    {
+      "type": "java",
+      "name": "SysidApp",
+      "request": "launch",
       "mainClass": "frc.demacia.sysID.SysidApp",
       "projectName": "Training2027"
     },
