@@ -29,16 +29,23 @@ public class SteerToAngle extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    simpleMotorSubsystem.setTargetAngle(wantedAngle); // Call the setAngle method to steer to the desired angle
+    simpleMotorSubsystem.goToTargetAngle(wantedAngle); // Call the goToTargetAngle method to steer to the desired angle
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+   simpleMotorSubsystem.stopSteer();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+     // Check if the current angle is within 1 degree of the desired angle
+      // Stop the steering motor
+      return Math.abs(simpleMotorSubsystem.getSteerMotorPosition() - wantedAngle) < 2.0; // Command is finished
+    
+    
+
   }
 }
