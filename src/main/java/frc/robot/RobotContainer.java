@@ -8,6 +8,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.GoToTargetAngleCommand;
 import frc.robot.commands.SimpleMotorCommand;
+import frc.robot.commands.YuvalSteer;
 import frc.robot.commands.moduleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SimpleMotorSubsystem;
@@ -29,7 +30,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     SmartDashboard.putData("Module Sequence Command", new moduleCommand(subsystem));
-
+    SmartDashboard.putData("YuvalSteer", new YuvalSteer(0, 100, subsystem));
     SmartDashboard.putNumber("3rd cmd Target", 0.0);
 
     SmartDashboard.putData("ThirdCommand", new GoToTargetAngleCommand(subsystem));

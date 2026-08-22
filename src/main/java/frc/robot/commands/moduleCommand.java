@@ -9,16 +9,10 @@ import frc.robot.subsystems.SimpleMotorSubsystem;
 public class moduleCommand extends SequentialCommandGroup {
     public moduleCommand(SimpleMotorSubsystem subsystem) {
         addCommands(
-                new InstantCommand(() -> subsystem.setPosition(0.25)),
-                Commands.waitSeconds(1.5),
-
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> subsystem.setDrivePosition(1.0)),
-                        new InstantCommand(() -> subsystem.setPosition(0.375))),
-                Commands.waitSeconds(2.0),
-
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> subsystem.setPosition(0.0)),
-                        new InstantCommand(() -> subsystem.setDrivePosition(-1.0))));
+                new YuvalSteer( 0, 0, subsystem),
+                new YuvalSteer( 90, 0, subsystem),
+                new YuvalSteer( 135, 100, subsystem),
+                new YuvalSteer( 0, -1, subsystem)
+                );
     }
 }
