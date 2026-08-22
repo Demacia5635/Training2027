@@ -12,8 +12,8 @@ public class SteerToAngle extends Command {
   /** Creates a new SteerToAngle. */
   private SimpleMotorSubsystem simpleMotorSubsystem;
   private double wantedAngle;
-  public SteerToAngle(SimpleMotorSubsystem simpleMotorSubsystem, double wantedAngle) {
-    this.wantedAngle = wantedAngle;
+  public SteerToAngle(SimpleMotorSubsystem simpleMotorSubsystem, double wantedAngle) {// Use addRequirements() here to declare subsystem dependencies.
+    this.wantedAngle = wantedAngle;// Store the desired angle
     this.simpleMotorSubsystem = simpleMotorSubsystem;
 
     addRequirements(simpleMotorSubsystem);
@@ -29,7 +29,7 @@ public class SteerToAngle extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    simpleMotorSubsystem.setAngle(wantedAngle); 
+    simpleMotorSubsystem.setTargetAngle(wantedAngle); // Call the setAngle method to steer to the desired angle
   }
 
   // Called once the command ends or is interrupted.

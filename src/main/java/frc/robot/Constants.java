@@ -14,10 +14,11 @@ package frc.robot;
  */
 public final class Constants {
   public static class OperatorConstants {
-    public static final int DriverID = 0;
-    public static final int SteerMotor_id = 2;
-    public static final int DriveMotor_id = 1;
-    public static final String Canbus = "rio";
+    public static final int CONTORLLER_ID = 0;
+    public static final int STEER_MOTOR_ID = 8;
+    public static final int DRIVE_MOTOR_ID = 7;
+    public static final String CANBUS = "rio";
+    public static final double STEER_MOTOR_SPEED = 0.3;
   }
 
 

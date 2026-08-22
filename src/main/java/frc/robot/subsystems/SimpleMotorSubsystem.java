@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.lang.annotation.Target;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -9,11 +11,12 @@ import frc.robot.Constants;
 public class SimpleMotorSubsystem extends SubsystemBase {
     private final TalonFX SteerMotor;
     private final TalonFX DriveMotor;
+    private double targetAngle;
 
     public SimpleMotorSubsystem() {
         super();
-        this.SteerMotor = new TalonFX(Constants.OperatorConstants.SteerMotor_id, Constants.OperatorConstants.Canbus);
-        this.DriveMotor = new TalonFX(Constants.OperatorConstants.DriveMotor_id, Constants.OperatorConstants.Canbus);
+        this.SteerMotor = new TalonFX(Constants.OperatorConstants.STEER_MOTOR_ID, Constants.OperatorConstants.CANBUS);
+        this.DriveMotor = new TalonFX(Constants.OperatorConstants.DRIVE_MOTOR_ID, Constants.OperatorConstants.CANBUS);
 
     }
 
@@ -45,9 +48,18 @@ public class SimpleMotorSubsystem extends SubsystemBase {
         setDrivePower(0);
 
     }
-    
-    public void setAngle(double angle) {
-        SteerMotor.setPosition(angle);
+
+    public void setTargetAngle(double angle) {
+        targetAngle = angle;
+    }
+    public void goToTargetAngle(double angle) {
+        if (getSteerMotorPosition() < angle) {
+            setSteerPower(Constants.OperatorConstants.STEER_MOTOR_SPEED);
+        } else if (getSteerMotorPosition() > angle) {
+            setSteerPower(-Constants.OperatorConstants.STEER_MOTOR_SPEED);
+        } else {
+            stopSteer();
+        }
     }
     public double getSteerMotorPosition() {
         return SteerMotor.getPosition().getValueAsDouble();

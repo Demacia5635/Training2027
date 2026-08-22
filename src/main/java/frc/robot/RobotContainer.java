@@ -26,7 +26,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final SimpleMotorSubsystem simpleMotorSubsystem = new SimpleMotorSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private CommandXboxController controller = new CommandXboxController(Constants.OperatorConstants.DriverID);
+  private CommandXboxController controller = new CommandXboxController(Constants.OperatorConstants.CONTORLLER_ID);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
