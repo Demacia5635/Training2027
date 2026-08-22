@@ -19,6 +19,7 @@ public final class Constants {
     public static final int DRIVE_MOTOR_ID = 1;
     public static final String CANBUS = "rio";
     public static final double STEER_MOTOR_SPEED = 0.3;
+    public static final double DRIVE_MOTOR_SPEED = 0.333333;
   }
 
 
