@@ -13,8 +13,6 @@ import frc.robot.Constants;
 public class SteerMotorSubsistem extends SubsystemBase {
   private final TalonFXMotor steerMotor;
   private double powerSteer;
-  public double ks;
-  public double kv;
 
   public SteerMotorSubsistem() {
     super();

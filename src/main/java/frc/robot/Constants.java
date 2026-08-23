@@ -36,7 +36,7 @@ public final class Constants {
   public static final double KP_Drive = 0;
   public static final double KI_Drive = 0;
   public static final double KD_Drive = 0;
-  public static final double KP_STEER = 0;
+  public static final double KP_STEER = 0.001;
   public static final double KI_STEER = 0;
   public static final double KD_STEER = 0;
   public static final double KS_DRIVE = 0;

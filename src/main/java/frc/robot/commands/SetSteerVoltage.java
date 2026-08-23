@@ -10,11 +10,11 @@ import frc.robot.subsystems.DriveMotorSubsistem;
 import frc.robot.subsystems.SteerMotorSubsistem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SetSreerVoltage extends Command {
+public class SetSteerVoltage extends Command {
   SteerMotorSubsistem subsystemSteer;
   private double voltageSteer;
   /** Creates a new SetDriveVelocity. */
-  public SetSreerVoltage(SteerMotorSubsistem subsystem , double voltage) {
+  public SetSteerVoltage(SteerMotorSubsistem subsystem , double voltage) {
     this.subsystemSteer = subsystem;
     addRequirements(subsystemSteer);
     this.voltageSteer = voltage;
