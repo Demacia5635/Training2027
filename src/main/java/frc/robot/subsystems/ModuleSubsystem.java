@@ -16,6 +16,7 @@ public class ModuleSubsystem extends SubsystemBase {
     private double powerSteer;
     private double powerDrive;
     private double targetVelocityDrive;
+    private double targetAngleSteer;
 
     public ModuleSubsystem() {
         super();
@@ -78,6 +79,8 @@ public class ModuleSubsystem extends SubsystemBase {
     // steer:
     public void setSteerAngle(double position) {
         steerMotor.setPositionVoltage(position);
+        this.targetAngleSteer = position;
+
     }
 
     public double getCurrentPositionSteer() {
@@ -121,16 +124,20 @@ public class ModuleSubsystem extends SubsystemBase {
     public void setVoltageSteer(double voltage) {
         steerMotor.setVoltage(voltage);
     }
+
     public double getAbsoluteAngleDeg() {
         return Math.toDegrees(getAbsoluteAngle());
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("(initSendable) (set) Velocity steer", this::getCurrentVelocitySteer, this::setVelocitySteer);
-        builder.addDoubleProperty("(initSendable) (set) Drive Velocity", this::getCurrentVelocityDrive, this::setVelocityDrive);
+        builder.addDoubleProperty("(initSendable) (set) Velocity steer", this::getCurrentVelocitySteer,
+                this::setVelocitySteer);
+        builder.addDoubleProperty("(initSendable) (set) Drive Velocity", this::getCurrentVelocityDrive,
+                this::setVelocityDrive);
         builder.addDoubleProperty("(initSendable) (get) Absolute Steer Angle", this::getAbsoluteAngleDeg, null);
-        builder.addDoubleProperty("(initSendable) (get) Target Setpoint velocity drive (target Velocity)", () -> Math.toDegrees(targetVelocityDrive), null);
+        builder.addDoubleProperty("(initSendable) (get) Target Setpoint velocity drive (target Velocity)",() -> Math.toDegrees(targetVelocityDrive), null);
+        builder.addDoubleProperty("(initSendable) (get) Target Setpoint angle steer (target angle)",() -> Math.toDegrees(targetAngleSteer), null);
     }
 
     @Override
@@ -138,17 +145,21 @@ public class ModuleSubsystem extends SubsystemBase {
         // double angleFromMotor = SmartDashboard.getAngle(), -1);
         SmartDashboard.putNumber("(Dashbord) meter drive", getMeterDrive());
         SmartDashboard.putNumber("(Dashbord) Drive Velocity", getCurrentVelocityDrive());
-        // SmartDashboard.putNumber("(Dashbord) Ks Calculate drive", calculateKsDrive());
-        // SmartDashboard.putNumber("(Dashbord) Kv Calculate drive", calculateKvDrive());
+        // SmartDashboard.putNumber("(Dashbord) Ks Calculate drive",
+        // calculateKsDrive());
+        // SmartDashboard.putNumber("(Dashbord) Kv Calculate drive",
+        // calculateKvDrive());
         SmartDashboard.putNumber("(Dashbord) angle steer", getAngleSteerDeg());
         SmartDashboard.putNumber("(Dashbord) position steer", Math.toDegrees(getCurrentPositionSteer()));
         SmartDashboard.putNumber("(Dashbord) velocity steer", getCurrentVelocitySteer());
-        //SmartDashboard.putNumber("(Dashbord) Ks Calculate steer", calculateKsSteer());
+        // SmartDashboard.putNumber("(Dashbord) Ks Calculate steer",
+        // calculateKsSteer());
         SmartDashboard.putNumber("(Dashbord) power steer", getPowerSteer());
-        //SmartDashboard.putNumber("(Dashbord) Kv Calculate steer", calculateKvSteer());
+        // SmartDashboard.putNumber("(Dashbord) Kv Calculate steer",
+        // calculateKvSteer());
         SmartDashboard.putNumber("(Dashbord) Drive Velocity", getCurrentVelocityDrive());
         SmartDashboard.putNumber("(Dashbord) Absolute steer angel", getAbsoluteAngleDeg());
         SmartDashboard.putNumber("(Dasshbord) power drive", getPowerDrive());
-    }   
+    }
 
 }

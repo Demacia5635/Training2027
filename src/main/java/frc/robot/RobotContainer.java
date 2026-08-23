@@ -14,6 +14,7 @@ import frc.robot.subsystems.SteerMotorSubsistem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -48,6 +49,7 @@ public class RobotContainer {
     //setSteerVelocityCommand = new SetSteerVoltage(subsystemSteer, 0);
     moduleSubsystem = new ModuleSubsystem();
     controller = new CommandXboxController(OperatorConstants.CONTROLLER_PORT);
+    //controller = new CommandPS4Controller(OperatorConstants.CONTROLLER_PORT);
 
     // Configure the trigger bindings
     configureBindings();
@@ -59,27 +61,30 @@ public class RobotContainer {
     moduleSubsystem.setDefaultCommand(
         new RunCommand(
             () -> {
-              double x = controller.getLeftX();
-              double y = controller.getLeftY();
+                double x = controller.getLeftX();
+                double y = controller.getLeftY();
 
-              if (Math.abs(x) < 0.1) {
-                x = 0;
-              }
-              if (Math.abs(y) < 0.1) {
-                y = 0;
-              }
+                if (Math.abs(x) < 0.1) {
+                    x = 0;
+                }
+                if (Math.abs(y) < 0.1) {
+                    y = 0;
+                }
 
-              double speed = Math.hypot(x, y);// pitagoras
-              moduleSubsystem.setVelocityDrive(speed);
+                double speed = Math.hypot(x, y); // pitagoras
+                moduleSubsystem.setVelocityDrive(speed);
 
-              if (speed > 0.1) {
-                double targetAngle = Math.atan2(x, -y); // tangas
-                moduleSubsystem.setSteerAngle(targetAngle);
-              }
+                if (x != 0 || y != 0) {
+                    double targetAngle = Math.atan2(x, -y); // tangas
+                    moduleSubsystem.setSteerAngle(targetAngle);
+                } else {
+                    moduleSubsystem.setSteerAngle(0.0);
+                }
             },
-            moduleSubsystem));
+            moduleSubsystem
+        )
+    );
   }
-
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
    * created via the
