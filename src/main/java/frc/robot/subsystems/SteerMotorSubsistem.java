@@ -43,6 +43,7 @@ public class SteerMotorSubsistem extends SubsystemBase {
 
   public double getPowerSteer() {
     return powerSteer;
+
   }
 
   public void stop() {
@@ -64,6 +65,7 @@ public class SteerMotorSubsistem extends SubsystemBase {
   public double calculateKvSteer() {
     return Constants.KV_STEER * getCurrentVelocitySteer();
   }
+
   public void setVoltageSteer(double voltage) {
     steerMotor.setVoltage(voltage);
   }
@@ -81,6 +83,7 @@ public class SteerMotorSubsistem extends SubsystemBase {
     SmartDashboard.putNumber("PID position steer", Math.toDegrees(getCurrentPositionSteer()));
     SmartDashboard.putNumber("PID velocity steer", getCurrentVelocitySteer());
     SmartDashboard.putNumber("Ks Calculate steer", calculateKsSteer());
+    SmartDashboard.putNumber("power steer", getPowerSteer());
     SmartDashboard.putNumber("Kv Calculate steer", calculateKvSteer());
   }
 }

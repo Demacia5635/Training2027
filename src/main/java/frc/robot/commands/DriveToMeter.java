@@ -33,6 +33,7 @@ public class DriveToMeter extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println("started drive to meter");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,6 +50,7 @@ public class DriveToMeter extends Command {
   @Override
   public void end(boolean interrupted) {
     subsystem1.stop();
+    System.out.println("ended drive to meter");
   }
   @Override
   public void initSendable(SendableBuilder builder) {

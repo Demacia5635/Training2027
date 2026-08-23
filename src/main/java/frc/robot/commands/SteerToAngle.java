@@ -19,7 +19,7 @@ public class SteerToAngle extends Command {
   private double velocity;
   private double power;
 
-  public SteerToAngle(SteerMotorSubsistem subsystem  , double position) {
+  public SteerToAngle(SteerMotorSubsistem subsystem  , double position ) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.subsystem1 = subsystem;
     addRequirements(subsystem);
@@ -32,7 +32,10 @@ public class SteerToAngle extends Command {
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("get Power steer", ()-> power, (x)-> power = x);
   }
-
+  @Override
+  public void initialize() {
+    System.out.println("started steer to angle");
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -52,6 +55,7 @@ public class SteerToAngle extends Command {
   @Override
   public void end(boolean interrupted) {
     subsystem1.stop();
+    System.out.println("ended steer to angle");
   }
 
   // Returns true when the command should end.
