@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
 
@@ -94,11 +93,11 @@ public final class Constants {
         public final static double DRIVEGEAR_RATIO2 = 8.14;
         public final static double DRIVE_CIRCUMFERENCE2 = 4 * 0.0254 * Math.PI;
         public final static double STEERGEAR_RATIO2 = 150d / 7d;
-        public final static double STEER_KP2= 0;
-        public final static double STEER_KI2 = 0;
+        public final static double STEER_KP2 = 8;
+        public final static double STEER_KI2 = 0.005;
         public final static double STEER_KD2 = 0;
-        public final static double STEER_KS2 = 0;
-        public final static double STEER_KV2 = 0;
+        public final static double STEER_KS2 = 0.03034;
+        public final static double STEER_KV2 = 0.37645;
         public final static double STEER_KA2 = 0;
         public final static double STEER_KG2 = 0;
 

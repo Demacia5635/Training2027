@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.units.measure.Power;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,6 +40,7 @@ public class PIDMotorCommand2 extends Command {
     builder.addDoubleProperty("Error", () -> error, null);
     builder.addDoubleProperty("Wanted steer Position", () -> Math.toDegrees(wantedSteerPos), (x) -> wantedSteerPos = Math.toRadians(x));
     builder.addDoubleProperty("Steer Error", () -> Math.toDegrees(steerError), null);
+    
 
   }
 

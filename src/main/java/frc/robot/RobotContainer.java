@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  public static double driveX;
+  public static double driveY;
   private final FDMotorSubsystem fdMotorSubsystem;
   private final FDMotorCommand fdCommand;
   // private final PIDMotorSubsystem pidMotorSubsystem;
@@ -29,7 +31,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
+  public final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -63,6 +65,8 @@ public class RobotContainer {
   
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+      driveY = -(m_driverController.getLeftY());
+      driveX = m_driverController.getLeftX();
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 

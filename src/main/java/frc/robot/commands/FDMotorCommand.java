@@ -8,6 +8,8 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.demacia.utils.geometry.Rotation2dDemacia;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.FDMotorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -15,6 +17,11 @@ public class FDMotorCommand extends Command {
   public final FDMotorSubsystem subsystem;
   private double driveVolt;
   private double driveVelocity;
+  private double steerVolt;
+  private double steerVelocity;
+  private double driveError;
+  private double steerError;
+
 
   /** Creates a new FDMotorCommand. */
   public FDMotorCommand(FDMotorSubsystem subsystem) {
@@ -28,8 +35,12 @@ public class FDMotorCommand extends Command {
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("Drive volt", () -> driveVolt, (x) -> driveVolt = x);
     builder.addDoubleProperty("Get Drive velocity", () -> subsystem.getDriveVelocity(), null);
-    builder.addDoubleProperty("Set Drive velocity",() -> driveVelocity , (x) -> driveVelocity = x);
-
+    builder.addDoubleProperty("Set Drive velocity", () -> driveVelocity, (x) -> driveVelocity = x);
+    builder.addDoubleProperty("Steer volt", () -> steerVolt, (x) -> steerVolt = x);
+    builder.addDoubleProperty("Get steer velocity", () -> subsystem.getSteerVelocity(), null);
+    builder.addDoubleProperty("Set steer velocity", () -> steerVelocity, (x) -> steerVelocity = x);
+    builder.addDoubleProperty("Drive error", () -> driveError, null);
+    builder.addDoubleProperty("Steer error", () -> steerError, null);
 
   }
 
@@ -39,22 +50,28 @@ public class FDMotorCommand extends Command {
     System.out.println("initialized");
     // driveVolt = 0;
     driveVelocity = 0;
+    // steerVolt = 0;
+    steerVelocity = 0;
+    driveError = 0;
+    steerError = 0;
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    subsystem.setDriveVelocity(driveVelocity);
+    // subsystem.setSteerVelocity(steerVelocity);
     // System.out.println("drive volt: " + driveVolt);
     // subsystem.setDriveVelocity(driveVelocity);
-
-    
+    // driveError = subsystem.getDriveVelocity() - driveError;
+    // steerError = subsystem.getSteerVelocity() - steerVelocity;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     subsystem.setDriveVolt(0);
+    subsystem.setSteerVolt(0);
   }
 
   // Returns true when the command should end.

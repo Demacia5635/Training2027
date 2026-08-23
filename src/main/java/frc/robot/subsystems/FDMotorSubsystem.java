@@ -12,6 +12,7 @@ import frc.robot.Constants.FDMotorConstants;
 public class FDMotorSubsystem extends SubsystemBase {
    TalonFXMotor driveMotor = new TalonFXMotor(FDMotorConstants.DRIVECONFIG);
    TalonFXMotor steerMotor = new TalonFXMotor(FDMotorConstants.STEERCONFIG);
+
     
   public FDMotorSubsystem(){
     super();
@@ -52,6 +53,15 @@ public class FDMotorSubsystem extends SubsystemBase {
   public double getSteerVelocity(){
     return steerMotor.getVelocity().getValueAsDouble();
   }
+
+  public void setSteerVelocity(double velocity){
+    steerMotor.setVelocity(velocity);
+  }
+
+  public void setDrivePosition(double pos){
+    driveMotor.setPosition(pos);
+  }
+
 
   @Override
   public void periodic() {
