@@ -126,24 +126,26 @@ public class ModuleSubsystem extends SubsystemBase {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("(set) Velocity steer", this::getCurrentVelocitySteer, this::setVelocitySteer);
-        builder.addDoubleProperty("(set) Drive Velocity", this::getCurrentVelocityDrive, this::setVelocityDrive);
-        builder.addDoubleProperty("Absolute Steer Angle", this::getAbsoluteAngleDeg, null);
+        builder.addDoubleProperty("(initSendable) (set) Velocity steer", this::getCurrentVelocitySteer, this::setVelocitySteer);
+        builder.addDoubleProperty("(initSendable) (set) Drive Velocity", this::getCurrentVelocityDrive, this::setVelocityDrive);
+        builder.addDoubleProperty("(initSendable) Absolute Steer Angle", this::getAbsoluteAngleDeg, null);
     }
 
     @Override
     public void periodic() {
         // double angleFromMotor = SmartDashboard.getAngle(), -1);
-        SmartDashboard.putNumber("meter drive", getMeterDrive());
-        SmartDashboard.putNumber(" Drive Velocity", getCurrentVelocityDrive());
-        // SmartDashboard.putNumber("Ks Calculate drive", calculateKsDrive());
-        // SmartDashboard.putNumber("Kv Calculate drive", calculateKvDrive());
-        SmartDashboard.putNumber("angle steer", getAngleSteerDeg());
-        SmartDashboard.putNumber(" position steer", Math.toDegrees(getCurrentPositionSteer()));
-        SmartDashboard.putNumber(" velocity steer", getCurrentVelocitySteer());
-        //SmartDashboard.putNumber("Ks Calculate steer", calculateKsSteer());
-        SmartDashboard.putNumber("power steer", getPowerSteer());
-        //SmartDashboard.putNumber("Kv Calculate steer", calculateKvSteer());
-    }
+        SmartDashboard.putNumber("(Dashbord) meter drive", getMeterDrive());
+        SmartDashboard.putNumber("(Dashbord) Drive Velocity", getCurrentVelocityDrive());
+        // SmartDashboard.putNumber("(Dashbord) Ks Calculate drive", calculateKsDrive());
+        // SmartDashboard.putNumber("(Dashbord) Kv Calculate drive", calculateKvDrive());
+        SmartDashboard.putNumber("(Dashbord) angle steer", getAngleSteerDeg());
+        SmartDashboard.putNumber("(Dashbord) position steer", Math.toDegrees(getCurrentPositionSteer()));
+        SmartDashboard.putNumber("(Dashbord) velocity steer", getCurrentVelocitySteer());
+        //SmartDashboard.putNumber("(Dashbord) Ks Calculate steer", calculateKsSteer());
+        SmartDashboard.putNumber("(Dashbord) power steer", getPowerSteer());
+        //SmartDashboard.putNumber("(Dashbord) Kv Calculate steer", calculateKvSteer());
+        SmartDashboard.putNumber("(Dashbord) Drive Velocity", getCurrentVelocityDrive());
+        SmartDashboard.putNumber("(Dashbord) Absolute steer angel", getAbsoluteAngleDeg());
+    }   
 
 }
