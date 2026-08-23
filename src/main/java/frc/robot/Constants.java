@@ -36,16 +36,16 @@ public final class Constants {
   public static final double KP_Drive = 0;
   public static final double KI_Drive = 0;
   public static final double KD_Drive = 0;
-  public static final double KP_STEER = 0.001;
+  public static final double KP_STEER = 1;
   public static final double KI_STEER = 0;
   public static final double KD_STEER = 0;
-  public static final double KS_DRIVE = 0;
-  public static final double KV_DRIVE = 0;
-  public static final double KA_DRIVE = 0;
+  public static final double KS_DRIVE = 0.03203;
+  public static final double KV_DRIVE = 0.09435;
+  public static final double KA_DRIVE = 0.00679;
   public static final double KG_DRIVE = 0;
-  public static final double KS_STEER = 0.05;
-  public static final double KV_STEER = 0.374;
-  public static final double KA_STEER = 0;
+  public static final double KS_STEER = 0.034773;
+  public static final double KV_STEER = 0.36748;
+  public static final double KA_STEER = 0.03267;
   public static final double KG_STEER = 0;
   public static final TalonFXConfig CONFIG_STEER = new TalonFXConfig(STEER_MOTOR_ID, CANBUS, STEER_MOTOR_NAME)
       .withPID(KP_STEER, KI_STEER, KD_STEER, KS_STEER, KV_STEER, KA_STEER, KG_STEER,0,0)

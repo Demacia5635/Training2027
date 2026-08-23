@@ -44,8 +44,8 @@ public class RobotContainer {
   public RobotContainer() {
     subsystemSteer = new SteerMotorSubsistem();
     subsystemDrive = new DriveMotorSubsistem();
-    driveToMeterCommand = new DriveToMeter(subsystemDrive , 0.7);
-    setSteerVelocityCommand = new SetSteerVoltage(subsystemSteer, 0.6);
+    driveToMeterCommand = new DriveToMeter(subsystemDrive , 0);
+    setSteerVelocityCommand = new SetSteerVoltage(subsystemSteer, 0);
 
     
     // Configure the trigger bindings

@@ -78,8 +78,8 @@ public class SteerMotorSubsistem extends SubsystemBase {
   public void periodic() {
     // double angleFromMotor = SmartDashboard.getAngle(), -1);
     SmartDashboard.putNumber("angle steer", getAngleSteerDeg());
-    SmartDashboard.putNumber("PID position", getCurrentPositionSteer());
-    SmartDashboard.putNumber("PID velocity", getCurrentVelocitySteer());
+    SmartDashboard.putNumber("PID position steer", Math.toDegrees(getCurrentPositionSteer()));
+    SmartDashboard.putNumber("PID velocity steer", getCurrentVelocitySteer());
     SmartDashboard.putNumber("Ks Calculate steer", calculateKsSteer());
     SmartDashboard.putNumber("Kv Calculate steer", calculateKvSteer());
   }
