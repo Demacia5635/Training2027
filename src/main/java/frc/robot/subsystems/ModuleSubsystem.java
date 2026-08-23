@@ -74,7 +74,7 @@ public class ModuleSubsystem extends SubsystemBase {
     }
 
     // steer:
-    public void setPositionSteer(double position) {
+    public void setSteerAngle(double position) {
         steerMotor.setPositionVoltage(position);
     }
 
