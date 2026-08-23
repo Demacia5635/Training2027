@@ -13,6 +13,7 @@ import frc.robot.subsystems.ModuleSubsystem;
 import frc.robot.subsystems.SteerMotorSubsistem;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -35,8 +36,7 @@ public class RobotContainer {
   private final ModuleSubsystem moduleSubsystem;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController = new CommandXboxController(
-      OperatorConstants.CONTROLLER_PORT);
+  private final CommandXboxController controller;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -47,6 +47,7 @@ public class RobotContainer {
     driveToMeterCommand = new DriveToMeter(subsystemDrive, 0);
     setSteerVelocityCommand = new SetSteerVoltage(subsystemSteer, 0);
     moduleSubsystem = new ModuleSubsystem();
+    controller = new CommandXboxController(OperatorConstants.CONTROLLER_PORT);
 
     // Configure the trigger bindings
     configureBindings();
@@ -55,6 +56,28 @@ public class RobotContainer {
     // subsystemSteer.setDefaultCommand(subsystemSteerCommand);
     // configureDifultCommands();
     // getAutonomousCommand();
+    moduleSubsystem.setDefaultCommand(
+        new RunCommand(
+            () -> {
+              double x = controller.getLeftX();
+              double y = controller.getLeftY();
+
+              if (Math.abs(x) < 0.1) {
+                x = 0;
+              }
+              if (Math.abs(y) < 0.1) {
+                y = 0;
+              }
+
+              double speed = Math.hypot(x, y);// pitagoras
+              moduleSubsystem.setVelocitySteer(speed);
+
+              if (speed > 0.1) {
+                double targetAngle = Math.atan2(x, -y); // tangas
+                moduleSubsystem.setSteerAngle(targetAngle);
+              }
+            },
+            moduleSubsystem));
   }
 
   /**
@@ -78,10 +101,6 @@ public class RobotContainer {
   // private void configureDifultCommands(){
   // subsystem.setDefaultCommand(new SimpleMotorCommand(subsystem, 0, 0));
   // }
-
-  private CommandXboxController controller = new CommandXboxController(
-      Constants.OperatorConstants.CONTROLLER_PORT);
-  double leftY = controller.getLeftY(); // -1 forward!!! -1 to 1
 
   public Command getAutonomousCommand() {
     // return new SteerToAngle(subsystemSteer, Math.PI / 2, 0.03)
