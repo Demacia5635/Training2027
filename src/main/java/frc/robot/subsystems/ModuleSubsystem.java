@@ -15,6 +15,7 @@ public class ModuleSubsystem extends SubsystemBase {
     private final CANcoder cancoder;
     private double powerSteer;
     private double powerDrive;
+    private double targetVelocityDrive;
 
     public ModuleSubsystem() {
         super();
@@ -36,6 +37,7 @@ public class ModuleSubsystem extends SubsystemBase {
 
     public void setVelocityDrive(double velocity) {
         driveMotor.setVelocity(velocity);
+        this.targetVelocityDrive = velocity;
     }
 
     public double getCurrentVelocityDrive() {
@@ -127,7 +129,8 @@ public class ModuleSubsystem extends SubsystemBase {
     public void initSendable(SendableBuilder builder) {
         builder.addDoubleProperty("(initSendable) (set) Velocity steer", this::getCurrentVelocitySteer, this::setVelocitySteer);
         builder.addDoubleProperty("(initSendable) (set) Drive Velocity", this::getCurrentVelocityDrive, this::setVelocityDrive);
-        builder.addDoubleProperty("(initSendable) Absolute Steer Angle", this::getAbsoluteAngleDeg, null);
+        builder.addDoubleProperty("(initSendable) (get) Absolute Steer Angle", this::getAbsoluteAngleDeg, null);
+        builder.addDoubleProperty("(initSendable) (get) Target Setpoint velocity drive", () -> targetVelocityDrive, null);
     }
 
     @Override
