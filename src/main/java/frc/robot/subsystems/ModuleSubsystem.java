@@ -130,7 +130,7 @@ public class ModuleSubsystem extends SubsystemBase {
         builder.addDoubleProperty("(initSendable) (set) Velocity steer", this::getCurrentVelocitySteer, this::setVelocitySteer);
         builder.addDoubleProperty("(initSendable) (set) Drive Velocity", this::getCurrentVelocityDrive, this::setVelocityDrive);
         builder.addDoubleProperty("(initSendable) (get) Absolute Steer Angle", this::getAbsoluteAngleDeg, null);
-        builder.addDoubleProperty("(initSendable) (get) Target Setpoint velocity drive", () -> targetVelocityDrive, null);
+        builder.addDoubleProperty("(initSendable) (get) Target Setpoint velocity drive (target Velocity)", () -> Math.toDegrees(targetVelocityDrive), null);
     }
 
     @Override
@@ -148,6 +148,7 @@ public class ModuleSubsystem extends SubsystemBase {
         //SmartDashboard.putNumber("(Dashbord) Kv Calculate steer", calculateKvSteer());
         SmartDashboard.putNumber("(Dashbord) Drive Velocity", getCurrentVelocityDrive());
         SmartDashboard.putNumber("(Dashbord) Absolute steer angel", getAbsoluteAngleDeg());
+        SmartDashboard.putNumber("(Dasshbord) power drive", getPowerDrive());
     }   
 
 }
