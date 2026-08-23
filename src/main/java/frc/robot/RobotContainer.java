@@ -9,9 +9,8 @@ import frc.robot.commands.DriveToMeter;
 import frc.robot.commands.SetSteerVoltage;
 import frc.robot.commands.SteerToAngle;
 import frc.robot.subsystems.DriveMotorSubsistem;
+import frc.robot.subsystems.ModuleSubsystem;
 import frc.robot.subsystems.SteerMotorSubsistem;
-
-import static frc.demacia.vision.VisionConstants.MAX_CROP;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -33,6 +32,7 @@ public class RobotContainer {
   private final DriveMotorSubsistem subsystemDrive;
   public final DriveToMeter driveToMeterCommand;
   public final SetSteerVoltage setSteerVelocityCommand;
+  private final ModuleSubsystem moduleSubsystem;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(
@@ -44,17 +44,17 @@ public class RobotContainer {
   public RobotContainer() {
     subsystemSteer = new SteerMotorSubsistem();
     subsystemDrive = new DriveMotorSubsistem();
-    driveToMeterCommand = new DriveToMeter(subsystemDrive , 0);
+    driveToMeterCommand = new DriveToMeter(subsystemDrive, 0);
     setSteerVelocityCommand = new SetSteerVoltage(subsystemSteer, 0);
+    moduleSubsystem = new ModuleSubsystem();
 
-    
     // Configure the trigger bindings
     configureBindings();
     subsystemDrive.setDefaultCommand(driveToMeterCommand);
     subsystemSteer.setDefaultCommand(setSteerVelocityCommand);
-    //subsystemSteer.setDefaultCommand(subsystemSteerCommand);
+    // subsystemSteer.setDefaultCommand(subsystemSteerCommand);
     // configureDifultCommands();
-    //  getAutonomousCommand();
+    // getAutonomousCommand();
   }
 
   /**
@@ -84,14 +84,14 @@ public class RobotContainer {
   double leftY = controller.getLeftY(); // -1 forward!!! -1 to 1
 
   public Command getAutonomousCommand() {
-     //return new SteerToAngle(subsystemSteer, Math.PI / 2, 0.03)
+    // return new SteerToAngle(subsystemSteer, Math.PI / 2, 0.03)
     // .andThen(new DriveToMeter(subsystemDrive,1.0 ,0.3)
     // .alongWith(new SteerToAngle(subsystemSteer, Math.PI*135.0/180.0 , 0.03 )));
-   // return new SteerToAngle(subsystemSteer, 0, 0, 0,2);
-  //  return new SteerToAngle(subsystemSteer, 0, 0, Math.toRadians(180), 0)
-  //  .alongWith(new DriveToMeter(subsystemDrive, 0, 0, 1));
-  //return new SetSteerVoltage(subsystemSteer, 0.7)
-  //.andThen(new SetSteerVoltage(subsystemSteer, 0.3));
- return new SteerToAngle(subsystemSteer, Math.toRadians(90));
+    // return new SteerToAngle(subsystemSteer, 0, 0, 0,2);
+    // return new SteerToAngle(subsystemSteer, 0, 0, Math.toRadians(180), 0)
+    // .alongWith(new DriveToMeter(subsystemDrive, 0, 0, 1));
+    // return new SetSteerVoltage(subsystemSteer, 0.7)
+    // .andThen(new SetSteerVoltage(subsystemSteer, 0.3));
+    return new SteerToAngle(subsystemSteer, Math.toRadians(90));
   }
 }
