@@ -29,10 +29,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final SteerMotorSubsistem subsystemSteer;
-  private final DriveMotorSubsistem subsystemDrive;
-  public final DriveToMeter driveToMeterCommand;
-  public final SetSteerVoltage setSteerVelocityCommand;
+  //private final SteerMotorSubsistem subsystemSteer;
+  //private final DriveMotorSubsistem subsystemDrive;
+  //public final DriveToMeter driveToMeterCommand;
+  //public final SetSteerVoltage setSteerVelocityCommand;
   private final ModuleSubsystem moduleSubsystem;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -42,17 +42,17 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    subsystemSteer = new SteerMotorSubsistem();
-    subsystemDrive = new DriveMotorSubsistem();
-    driveToMeterCommand = new DriveToMeter(subsystemDrive, 0);
-    setSteerVelocityCommand = new SetSteerVoltage(subsystemSteer, 0);
+    //subsystemSteer = new SteerMotorSubsistem();
+    //subsystemDrive = new DriveMotorSubsistem();
+    //driveToMeterCommand = new DriveToMeter(subsystemDrive, 0);
+    //setSteerVelocityCommand = new SetSteerVoltage(subsystemSteer, 0);
     moduleSubsystem = new ModuleSubsystem();
     controller = new CommandXboxController(OperatorConstants.CONTROLLER_PORT);
 
     // Configure the trigger bindings
     configureBindings();
-    subsystemDrive.setDefaultCommand(driveToMeterCommand);
-    subsystemSteer.setDefaultCommand(setSteerVelocityCommand);
+    //subsystemDrive.setDefaultCommand(driveToMeterCommand);
+   // subsystemSteer.setDefaultCommand(setSteerVelocityCommand);
     // subsystemSteer.setDefaultCommand(subsystemSteerCommand);
     // configureDifultCommands();
     // getAutonomousCommand();
@@ -70,7 +70,7 @@ public class RobotContainer {
               }
 
               double speed = Math.hypot(x, y);// pitagoras
-              moduleSubsystem.setVelocitySteer(speed);
+              moduleSubsystem.setVelocityDrive(speed);
 
               if (speed > 0.1) {
                 double targetAngle = Math.atan2(x, -y); // tangas
@@ -111,6 +111,7 @@ public class RobotContainer {
     // .alongWith(new DriveToMeter(subsystemDrive, 0, 0, 1));
     // return new SetSteerVoltage(subsystemSteer, 0.7)
     // .andThen(new SetSteerVoltage(subsystemSteer, 0.3));
-    return new SteerToAngle(subsystemSteer, Math.toRadians(90));
+    //return new SteerToAngle(subsystemSteer, Math.toRadians(90));
+    return null;
   }
 }
