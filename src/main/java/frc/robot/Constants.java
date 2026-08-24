@@ -10,9 +10,12 @@ public final class Constants {
         public static final int MOTOR_DRIVE = 1;
         public static final int MOTOR_STEER = 2;
 
+        public static final int DRIVER_CONTROLLER_PORT = 0;
+
         public static final Canbus CAN_BUS = Canbus.Rio;
 
         public static final double POWER_LIMIT = 0.3;
+        public static final double PRECISION_POWER_LIMIT = 0.1;
 
         // TalonFX hardware PID/feedforward constants.
         // Leave at zero while learning with the software PID commands below.

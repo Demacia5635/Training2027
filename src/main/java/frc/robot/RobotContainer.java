@@ -2,17 +2,37 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.demacia.utils.controller.CommandController;
+import frc.demacia.utils.controller.CommandController.ControllerType;
 import frc.robot.commands.DriveVelocityPIDCommand;
 import frc.robot.commands.SimpleMotorCommand;
 import frc.robot.commands.SteerPIDCommand;
+import frc.robot.commands.XboxDriveSteerCommand;
 import frc.robot.subsystems.SimpleMotorSubsystem;
 
 public class RobotContainer {
     private final SimpleMotorSubsystem subsystem =
         new SimpleMotorSubsystem();
 
+    private final CommandController driverController =
+        new CommandController(
+            Constants.SimpleMotorConstants.DRIVER_CONTROLLER_PORT,
+            ControllerType.kXbox
+        );
+
     public RobotContainer() {
         configureDashboard();
+        configureDefaultCommand();
+    }
+
+    private void configureDefaultCommand() {
+        subsystem.setDefaultCommand(
+            new XboxDriveSteerCommand(
+                subsystem,
+                driverController,
+                driverController.leftBumper()
+            )
+        );
     }
 
     private void configureDashboard() {
@@ -28,6 +48,11 @@ public class RobotContainer {
         SmartDashboard.putNumber("Drive Current Velocity", 0.0);
         SmartDashboard.putNumber("Drive Error", 0.0);
         SmartDashboard.putNumber("Drive PID Output", 0.0);
+
+        // Xbox teleop telemetry
+        SmartDashboard.putNumber("Xbox Drive Power Command", 0.0);
+        SmartDashboard.putNumber("Xbox Steer Power Command", 0.0);
+        SmartDashboard.putBoolean("Xbox Precision Mode", false);
 
         // Commands shown as buttons in Elastic
         SmartDashboard.putData(

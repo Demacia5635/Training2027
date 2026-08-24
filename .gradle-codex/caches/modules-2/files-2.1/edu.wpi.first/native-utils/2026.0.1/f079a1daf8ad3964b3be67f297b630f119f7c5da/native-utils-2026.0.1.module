@@ -1,0 +1,146 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "edu.wpi.first",
+    "module": "native-utils",
+    "version": "2026.0.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.11"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "edu.wpi.first",
+          "module": "ToolchainPlugin",
+          "version": {
+            "requires": "2026.0.1"
+          }
+        },
+        {
+          "group": "edu.wpi.first",
+          "module": "gradle-cpp-vscode",
+          "version": {
+            "requires": "2.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "native-utils-2026.0.1.jar",
+          "url": "native-utils-2026.0.1.jar",
+          "size": 842748,
+          "sha512": "8903b2d580256f202fc959900763ad73844b122b2ef030bbfe5b50922dd668765fa70b7683577154e3e2a51ee83648c9428972ce999184e4804ccb3de5cbdbdf",
+          "sha256": "41e2cdd4a0ff8fbbafe282a536b93e04a56d0ae0d18330a959fb7cc806efd3ca",
+          "sha1": "d21ca7bf4d7f4f2e7c8c85d76213022c7a4ccb14",
+          "md5": "ea9c358d33f449db1e45d3292ab05aa2"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.ajoberstar.grgit",
+          "module": "grgit-core",
+          "version": {
+            "requires": "5.0.0"
+          }
+        },
+        {
+          "group": "com.google.code.gson",
+          "module": "gson",
+          "version": {
+            "requires": "2.8.6"
+          }
+        },
+        {
+          "group": "edu.wpi.first",
+          "module": "ToolchainPlugin",
+          "version": {
+            "requires": "2026.0.1"
+          }
+        },
+        {
+          "group": "edu.wpi.first",
+          "module": "gradle-cpp-vscode",
+          "version": {
+            "requires": "2.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "native-utils-2026.0.1.jar",
+          "url": "native-utils-2026.0.1.jar",
+          "size": 842748,
+          "sha512": "8903b2d580256f202fc959900763ad73844b122b2ef030bbfe5b50922dd668765fa70b7683577154e3e2a51ee83648c9428972ce999184e4804ccb3de5cbdbdf",
+          "sha256": "41e2cdd4a0ff8fbbafe282a536b93e04a56d0ae0d18330a959fb7cc806efd3ca",
+          "sha1": "d21ca7bf4d7f4f2e7c8c85d76213022c7a4ccb14",
+          "md5": "ea9c358d33f449db1e45d3292ab05aa2"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "native-utils-2026.0.1-javadoc.jar",
+          "url": "native-utils-2026.0.1-javadoc.jar",
+          "size": 322906,
+          "sha512": "e5feec594eb0438f1422f4666e9e65d6d5d52a37b2ce94d423f1c49aa5a7d41cb51c2c03a12c3255413a846e3dce999d05063cd484ccd22ece1efd4061e400de",
+          "sha256": "510f9772229acf83cd04f4ae5a7ea9097c0cc7882328459f0e2fbc5ca6c955a9",
+          "sha1": "4ce9637ceffe617037c7ab5c07c48d220febcd26",
+          "md5": "deeb8a38f8b9c147dd571944f0a9a1bc"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "native-utils-2026.0.1-sources.jar",
+          "url": "native-utils-2026.0.1-sources.jar",
+          "size": 761091,
+          "sha512": "e60b92a4ac1457feacb872137a66afc072274daa9961706463689025795623c6715c39471b483e3e8d0b9f1237d63d0460642528c8b216b6710af6ec18b2d464",
+          "sha256": "7555c706ecca9ce93a24d701ca481a97c4984456b6ef480f98c2fedb5de58edd",
+          "sha1": "fb11e01a402d2437f3b786a2a656eecd9728ebd3",
+          "md5": "7486a7c06b7bbf27d476af212fb1f371"
+        }
+      ]
+    }
+  ]
+}

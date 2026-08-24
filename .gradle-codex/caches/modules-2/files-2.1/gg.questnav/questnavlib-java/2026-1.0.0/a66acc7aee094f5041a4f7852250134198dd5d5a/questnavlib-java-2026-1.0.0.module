@@ -1,0 +1,158 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "gg.questnav",
+    "module": "questnavlib-java",
+    "version": "2026-1.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.11"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "questnavlib-java-2026-1.0.0.jar",
+          "url": "questnavlib-java-2026-1.0.0.jar",
+          "size": 53486,
+          "sha512": "054e55b034bbcf0d6bbdc1eb50521c7e9710c6339fc7e8732841bb1f85ab427090ec3db8edb44725a71172a79cb5353d10c599a77966d53139f96563073e3d7f",
+          "sha256": "a77f7813a3dfd937e49abbd14dbf5d8b5609c315e0c788cdf96884832550b177",
+          "sha1": "4eb51a63b620e7487fdc833dd78cdd925bb3512d",
+          "md5": "a4e7c8c07fd01ff5286f31923615454a"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "edu.wpi.first.wpilibj",
+          "module": "wpilibj-java",
+          "version": {
+            "requires": "2026.1.1"
+          }
+        },
+        {
+          "group": "edu.wpi.first.wpiutil",
+          "module": "wpiutil-java",
+          "version": {
+            "requires": "2026.1.1"
+          }
+        },
+        {
+          "group": "edu.wpi.first.wpimath",
+          "module": "wpimath-java",
+          "version": {
+            "requires": "2026.1.1"
+          }
+        },
+        {
+          "group": "edu.wpi.first.ntcore",
+          "module": "ntcore-java",
+          "version": {
+            "requires": "2026.1.1"
+          }
+        },
+        {
+          "group": "edu.wpi.first.wpiunits",
+          "module": "wpiunits-java",
+          "version": {
+            "requires": "2026.1.1"
+          }
+        },
+        {
+          "group": "com.google.protobuf",
+          "module": "protobuf-java",
+          "version": {
+            "requires": "4.31.1"
+          }
+        },
+        {
+          "group": "us.hebi.quickbuf",
+          "module": "quickbuf-runtime",
+          "version": {
+            "requires": "1.4"
+          }
+        },
+        {
+          "group": "com.fasterxml.jackson.core",
+          "module": "jackson-annotations",
+          "version": {
+            "requires": "2.15.2"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "questnavlib-java-2026-1.0.0.jar",
+          "url": "questnavlib-java-2026-1.0.0.jar",
+          "size": 53486,
+          "sha512": "054e55b034bbcf0d6bbdc1eb50521c7e9710c6339fc7e8732841bb1f85ab427090ec3db8edb44725a71172a79cb5353d10c599a77966d53139f96563073e3d7f",
+          "sha256": "a77f7813a3dfd937e49abbd14dbf5d8b5609c315e0c788cdf96884832550b177",
+          "sha1": "4eb51a63b620e7487fdc833dd78cdd925bb3512d",
+          "md5": "a4e7c8c07fd01ff5286f31923615454a"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "questnavlib-java-2026-1.0.0-sources.jar",
+          "url": "questnavlib-java-2026-1.0.0-sources.jar",
+          "size": 37732,
+          "sha512": "213e459db6cd849dca262711eadd4cc2c44e354d7ebcadca0e9f7c4d57a53d4c97af533c0ec971627a642b1b8a91fd16d2e99681a59ef4da8a2199b10cb538fc",
+          "sha256": "587133ff034826cd6c3fbfd846ed10deb96e12c5cdc178a9db28919652b58e60",
+          "sha1": "380ead50cfd6567367089eb2ab6d469a4371f570",
+          "md5": "02b1e99d3d14ab6fd50bf5251b56c084"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "questnavlib-java-2026-1.0.0-javadoc.jar",
+          "url": "questnavlib-java-2026-1.0.0-javadoc.jar",
+          "size": 109991,
+          "sha512": "8bfb90c5b553f80d6f4f8a4f6eb820d2f36f1439a2204f9358f76a40027069e38adffff6a1a106afd710b61b68c6fd0fd7e2d324a381fd3cd3304e22df2a5053",
+          "sha256": "742b9b7c0efe33a788f7eace6cc06ca4bdbd3ebb10d354c145c9418d17645574",
+          "sha1": "a76a39e69f12063b208ea44d6110852d22f9ad0e",
+          "md5": "c2d3d1377c28fb22ed990dca5f23d894"
+        }
+      ]
+    }
+  ]
+}
