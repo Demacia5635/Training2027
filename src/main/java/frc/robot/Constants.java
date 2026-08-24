@@ -18,7 +18,6 @@ public final class Constants {
         public static final double PRECISION_POWER_LIMIT = 0.1;
 
         // TalonFX hardware PID/feedforward constants.
-        // Leave at zero while learning with the software PID commands below.
         public static final double DRIVE_KP = 28.2662;
         public static final double DRIVE_KI = 0.0;
         public static final double DRIVE_KD = 0.0;
