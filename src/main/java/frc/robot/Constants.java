@@ -4,10 +4,8 @@ import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
 import frc.demacia.utils.motors.TalonFXConfig;
 
 public final class Constants {
-    private Constants() {}
 
     public static final class SimpleMotorConstants {
-        private SimpleMotorConstants() {}
 
         public static final int MOTOR_DRIVE = 1;
         public static final int MOTOR_STEER = 2;
@@ -18,7 +16,7 @@ public final class Constants {
 
         // TalonFX hardware PID/feedforward constants.
         // Leave at zero while learning with the software PID commands below.
-        public static final double DRIVE_KP = 0.0;
+        public static final double DRIVE_KP = 1.0;
         public static final double DRIVE_KI = 0.0;
         public static final double DRIVE_KD = 0.0;
         public static final double DRIVE_KS = 0.0;
@@ -26,7 +24,7 @@ public final class Constants {
         public static final double DRIVE_KA = 0.0;
         public static final double DRIVE_KG = 0.0;
 
-        public static final double STEER_KP = 0.0;
+        public static final double STEER_KP = 1.0;
         public static final double STEER_KI = 0.0;
         public static final double STEER_KD = 0.0;
         public static final double STEER_KS = 0.0;
