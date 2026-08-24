@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SimpleMotorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class YuvalDrive extends Command {
-  /** Creates a new YuvalDrive. */
+public class SteerToAngle extends Command {
+  /** Creates a new SteerToAngle. */
   private SimpleMotorSubsystem simpleMotorSubsystem;
   private double wantedAngle;
-  public YuvalDrive(SimpleMotorSubsystem simpleMotorSubsystem, double wantedAngle, double distance) {// Use addRequirements() here to declare subsystem dependencies.
+  public SteerToAngle(SimpleMotorSubsystem simpleMotorSubsystem, double wantedAngle) {// Use addRequirements() here to declare subsystem dependencies.
     this.wantedAngle = wantedAngle;// Store the desired angle
     this.simpleMotorSubsystem = simpleMotorSubsystem;
 
@@ -30,7 +30,6 @@ public class YuvalDrive extends Command {
   @Override
   public void execute() {
     simpleMotorSubsystem.goToTargetAngle(wantedAngle); // Call the goToTargetAngle method to steer to the desired angle
-    simpleMotorSubsystem.driveForward();
   }
 
   // Called once the command ends or is interrupted.

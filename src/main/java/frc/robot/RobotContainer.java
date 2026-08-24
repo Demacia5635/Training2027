@@ -8,11 +8,10 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SimpleMotorCommand;
-import frc.robot.commands.YuvalDrive;
+import frc.robot.commands.SteerToAngle;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SimpleMotorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -64,8 +63,7 @@ public class RobotContainer {
     // An example command will be run in autonomous
     // return Autos.exampleAuto(m_exampleSubsystem);
     // return new SimpleMotorCommand(simpleMotorSubsystem, 0.5,0.7, 3.0);
-    return new SequentialCommandGroup(new YuvalDrive(simpleMotorSubsystem, 90.0),
-     new driveForward (simpleMotorSubsystem, 0.5, 2.0);
+    return new SteerToAngle(simpleMotorSubsystem, 90.0);
     // return new driveForward(simpleMotorSubsystem, 0.5, 2.0);
 
   }

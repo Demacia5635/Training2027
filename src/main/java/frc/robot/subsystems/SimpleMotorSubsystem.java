@@ -61,17 +61,6 @@ public class SimpleMotorSubsystem extends SubsystemBase {
             stopSteer();
         }
     }
-    public void driveForward(double distance) {
-        if (getDriveMotorPosition() < distance) {
-            setDrivePower(Constants.OperatorConstants.DRIVE_MOTOR_SPEED);
-        } 
-        else if (getDriveMotorPosition() > distance) {
-            setDrivePower(-Constants.OperatorConstants.DRIVE_MOTOR_SPEED);
-        }
-        else {
-            stopDrive();
-        }
-    }
     public double getSteerMotorPosition() {
         return SteerMotor.getPosition().getValueAsDouble();
     }
