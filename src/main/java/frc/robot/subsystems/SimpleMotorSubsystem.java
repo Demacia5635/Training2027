@@ -89,7 +89,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     }
 
 
-    // Runs automatically every ~20ms
+    // Runs automatically every 0.02 secs
     @Override
     public void periodic() {
 
