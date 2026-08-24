@@ -244,4 +244,14 @@ public class TalonFXMotor extends BaseMotor {
   public void setEncoderPosition(double position) {
     motor.setPosition(position);
   }
+
+public void set(double power) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'set'");
+}
+
+public double moudulestats() {
+	// TODO Auto-generated method stub
+	throw new UnsupportedOperationException("Unimplemented method 'moudulestats'");
+}
 }

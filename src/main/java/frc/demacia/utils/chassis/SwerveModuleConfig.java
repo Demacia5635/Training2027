@@ -2,6 +2,7 @@ package frc.demacia.utils.chassis;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.demacia.utils.motors.BaseMotorConfig;
+import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.sensors.CancoderConfig;
 
 /**
@@ -20,6 +21,22 @@ import frc.demacia.utils.sensors.CancoderConfig;
  * </pre>
  */
 public class SwerveModuleConfig {
+
+    public static final TalonFXConfig STEER_CONFIG = null;
+
+    public static final TalonFXConfig DRIVE_CONFIG = null;
+
+    public static final CancoderConfig CANCODER_CONFIG = null;
+
+    public static final double STEER_OFFSET = 0;
+
+    public static final SwerveModuleConfig FRONT_LEFT = null;
+
+    public static final SwerveModuleConfig FRONT_RIGHT = null;
+
+    public static final SwerveModuleConfig BACK_LEFT = null;
+
+    public static final SwerveModuleConfig BACK_RIGHT = null;
 
     public final String name;             // Name of the motor - used for logging
 
