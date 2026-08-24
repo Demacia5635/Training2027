@@ -1,63 +1,124 @@
 package frc.robot.subsystems;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import frc.robot.Constants;
+
 public class SimpleMotorSubsystem extends SubsystemBase {
 
-   // המנועים שלנו
-  private final TalonFX STEERMOTOR;
-  private final TalonFX DRIVEMOTOR;
+    // Steering motor - CAN ID 2
+    private final TalonFX STEERMOTOR;
 
-// Constructor
-  public SimpleMotorSubsystem() {
-    super();
-    STEERMOTOR = new TalonFX(Constants.OperatorConstants.STEERMOTOR_ID, Constants.OperatorConstants.Canbus);
-    DRIVEMOTOR = new TalonFX(Constants.OperatorConstants.DRIVEMOTOR_ID, Constants.OperatorConstants.Canbus);
-    
-  }
-// Simple power -1 to 1
-  public void setPower(double power) {
-   STEERMOTOR.set(power);
-  }
-
-  public void setTwoPowers(double steerPower, double drivePower) {
-    STEERMOTOR.set(steerPower);
-    DRIVEMOTOR.set(drivePower);
-  }
-// stop
-  public void stop() {
-    STEERMOTOR.set(0);
-    DRIVEMOTOR.set(0);
-  }
+    // Drive motor - CAN ID 1
+    private final TalonFX DRIVEMOTOR;
 
 
+    // Constructor
+    public SimpleMotorSubsystem() {
 
+        STEERMOTOR = new TalonFX(
+            Constants.OperatorConstants.STEERMOTOR_ID,
+            Constants.OperatorConstants.Canbus
+        );
 
-
-
-
-
-
-
-
-
-
-
-  double getMotorPosition() {
-    return STEERMOTOR.getPosition().getValueAsDouble();
-  }
-  @Override
-  public void periodic() {
-     SmartDashboard.putNumber("Motor Position", getMotorPosition());
-     double toRadiants = getMotorPosition() * (2 * Math.PI);
-     SmartDashboard.putNumber("Motor Position (Degrees)", Math.toDegrees(toRadiants));
+        DRIVEMOTOR = new TalonFX(
+            Constants.OperatorConstants.DRIVEMOTOR_ID,
+            Constants.OperatorConstants.Canbus
+        );
     }
 
-  }
+
+    // Controls only the steering motor
+    public void setPower(double power) {
+        STEERMOTOR.set(power);
+    }
 
 
+    // Controls both motors at the same time
+    public void setTwoPowers(double steerPower, double drivePower) {
+        STEERMOTOR.set(steerPower);
+        DRIVEMOTOR.set(drivePower);
+    }
 
+
+    // Stop both motors
+    public void stop() {
+        STEERMOTOR.set(0);
+        DRIVEMOTOR.set(0);
+    }
+
+
+    // -------------------------
+    // STEER MOTOR DATA
+    // -------------------------
+
+    // Position in rotations
+    public double getSteerPosition() {
+        return STEERMOTOR.getPosition().getValueAsDouble();
+    }
+
+
+    // Position in degrees
+    public double getSteerPositionDegrees() {
+        return getSteerPosition() * 360.0;
+    }
+
+
+    // Velocity in rotations per second
+    public double getSteerVelocity() {
+        return STEERMOTOR.getVelocity().getValueAsDouble();
+    }
+
+
+    // -------------------------
+    // DRIVE MOTOR DATA
+    // -------------------------
+
+    // Position in rotations
+    public double getDrivePosition() {
+        return DRIVEMOTOR.getPosition().getValueAsDouble();
+    }
+
+
+    // Velocity in rotations per second
+    public double getDriveVelocity() {
+        return DRIVEMOTOR.getVelocity().getValueAsDouble();
+    }
+
+
+    // Runs automatically every ~20ms
+    @Override
+    public void periodic() {
+
+        // Steering motor
+        SmartDashboard.putNumber(
+            "Steer Position",
+            getSteerPosition()
+        );
+
+        SmartDashboard.putNumber(
+            "Steer Position Degrees",
+            getSteerPositionDegrees()
+        );
+
+        SmartDashboard.putNumber(
+            "Steer Velocity",
+            getSteerVelocity()
+        );
+
+
+        // Drive motor
+        SmartDashboard.putNumber(
+            "Drive Position",
+            getDrivePosition()
+        );
+
+        SmartDashboard.putNumber(
+            "Drive Velocity",
+            getDriveVelocity()
+        );
+    }
+}
