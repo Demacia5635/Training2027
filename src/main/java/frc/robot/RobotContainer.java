@@ -75,7 +75,9 @@ public class RobotContainer {
                 }
 
                 double speed = Math.hypot(x, y); // pitagoras
-                moduleSubsystem.setVelocityDrive(speed);
+
+                moduleSubsystem.setPowerDrive(x);
+                System.out.println(speed);
 
                 if (x != 0 || y != 0) {
                     double targetAngle = Math.atan2(x, -y); // tangas
