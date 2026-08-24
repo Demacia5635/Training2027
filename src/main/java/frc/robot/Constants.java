@@ -19,7 +19,7 @@ public final class Constants {
 
         // TalonFX hardware PID/feedforward constants.
         // Leave at zero while learning with the software PID commands below.
-        public static final double DRIVE_KP = 1.0;
+        public static final double DRIVE_KP = 28.2662;
         public static final double DRIVE_KI = 0.0;
         public static final double DRIVE_KD = 0.0;
         public static final double DRIVE_KS = 0.0;
@@ -27,7 +27,7 @@ public final class Constants {
         public static final double DRIVE_KA = 0.0;
         public static final double DRIVE_KG = 0.0;
 
-        public static final double STEER_KP = 1.0;
+        public static final double STEER_KP = 24.2413;
         public static final double STEER_KI = 0.0;
         public static final double STEER_KD = 0.0;
         public static final double STEER_KS = 0.0;
