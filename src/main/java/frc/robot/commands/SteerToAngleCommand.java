@@ -9,7 +9,7 @@ public class SteerToAngleCommand extends Command {
     private final double targetDegrees;
 
     private final double power = 0.2;
-    private final double tolerance = 2.0;
+    private final double tolerance = 100.0;
 
     public SteerToAngleCommand(
         SimpleMotorSubsystem subsystem,

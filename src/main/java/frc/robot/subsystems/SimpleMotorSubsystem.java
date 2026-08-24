@@ -65,7 +65,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     public double getSteerPositionDegrees() {
         return getSteerPosition() * 360.0;
     }
-
+// gear ratio 150(engine) : 7(steer)
 
     // Velocity in rotations per second
     public double getSteerVelocity() {
