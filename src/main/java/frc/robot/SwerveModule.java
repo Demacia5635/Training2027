@@ -5,19 +5,21 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.TalonFXMotor;
 import frc.demacia.utils.sensors.Cancoder;
+import frc.demacia.utils.sensors.CancoderConfig;
 
 public class SwerveModule {
     private final TalonFXMotor steerMotor;
     private final TalonFXMotor driveMotor;
     private final Cancoder cancoder;
 
-    public SwerveModule() {
+    public SwerveModule(TalonFXConfig steer, TalonFXConfig drive, CancoderConfig cancoder) {
         super();
-        steerMotor = new TalonFXMotor(Constants.CONFIG_STEER);
-        driveMotor = new TalonFXMotor(Constants.CONFIG_DRIVE);
-        cancoder = new Cancoder(Constants.CONFIG_CANCODER);
+        steerMotor = new TalonFXMotor(steer);
+        driveMotor = new TalonFXMotor(drive);
+        this.cancoder = new Cancoder(cancoder);
     }
 
     public void setDrivePower(double power) {
