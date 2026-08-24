@@ -1,33 +1,80 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+import frc.robot.Constants;
+import frc.robot.subsystems.SUBSYS_name_V1_FINAL;
+
 public class name_V1_FINAL extends Command {
-  /** Creates a new name_V1_FINAL. */
-  public name_V1_FINAL() {
-    // Use addRequirements() here to declare subsystem dependencies.
+
+  private final SUBSYS_name_V1_FINAL subsystem;
+
+  private final double duration;
+
+  private final Timer timer = new Timer();
+
+  public name_V1_FINAL(SUBSYS_name_V1_FINAL subsystem,double duration) {
+
+    this.subsystem = subsystem;
+    this.duration = duration;
+
+    addRequirements(subsystem);
   }
 
-  // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
 
-  // Called every time the scheduler runs while the command is scheduled.
+    timer.restart();
+
+    System.out.println(
+        "Simple Motor Command started");
+  }
+
   @Override
-  public void execute() {}
+  public void execute() {
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
+    double drivePower = SmartDashboard.getNumber(
+        "Manual/Drive Power",
+        0.0);
 
-  // Returns true when the command should end.
+    double steerPower = SmartDashboard.getNumber(
+        "Manual/Steer Power",
+        0.0);
+
+    drivePower = MathUtil.clamp(
+        drivePower,
+        -Constants.SimpleMotorConstants.POWER_LIMIT,
+        Constants.SimpleMotorConstants.POWER_LIMIT);
+
+    steerPower = MathUtil.clamp(
+        steerPower,
+        -Constants.SimpleMotorConstants.POWER_LIMIT,
+        Constants.SimpleMotorConstants.POWER_LIMIT);
+
+    subsystem.setDrivePower(
+        drivePower);
+
+    subsystem.setSteerPower(
+        steerPower);
+  }
+
   @Override
   public boolean isFinished() {
-    return false;
+
+    return timer.hasElapsed(
+        duration);
+  }
+
+  @Override
+  public void end(
+      boolean interrupted) {
+
+    subsystem.stop();
+
+    System.out.println(
+        "Simple Motor Command ended");
   }
 }

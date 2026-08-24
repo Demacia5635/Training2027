@@ -33,12 +33,6 @@ public abstract class BaseMotorConfig<T extends BaseMotorConfig<T>> {
                 return new TalonFXMotor((TalonFXConfig) config);
             }
         },
-        TalonSRX {
-            @Override
-            public MotorInterface create(BaseMotorConfig<?> config) {
-                return new TalonSRXMotor((TalonSRXConfig) config);
-            }
-        },
         SparkMax {
             @Override
             public MotorInterface create(BaseMotorConfig<?> config) {

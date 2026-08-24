@@ -1,17 +1,157 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import frc.demacia.utils.motors.TalonFXMotor;
+import frc.robot.Constants;
+
 public class SUBSYS_name_V1_FINAL extends SubsystemBase {
-  /** Creates a new SUBSYS_name_V1_FINAL. */
-  public SUBSYS_name_V1_FINAL() {}
+
+  private final TalonFXMotor driveMotor;
+  private final TalonFXMotor steerMotor;
+
+  public SUBSYS_name_V1_FINAL() {
+
+    driveMotor = new TalonFXMotor(
+        Constants.SimpleMotorConstants.DRIVE_CONFIG);
+
+    steerMotor = new TalonFXMotor(
+        Constants.SimpleMotorConstants.STEER_CONFIG);
+
+    SmartDashboard.putData(
+        "Motors/Drive",
+        driveMotor);
+
+    SmartDashboard.putData(
+        "Motors/Steer",
+        steerMotor);
+  }
+
+
+  public void setDrivePower(double power) {
+
+    driveMotor.setDuty(
+        MathUtil.clamp(
+            power,
+            -1.0,
+            1.0));
+  }
+
+  public void setDriveVelocity(
+      double velocityMetersPerSecond) {
+
+    driveMotor.setVelocity(
+        velocityMetersPerSecond);
+  }
+
+  public double getDrivePosition() {
+
+    return driveMotor.getCurrentPosition();
+  }
+
+  public double getDriveVelocity() {
+
+    return driveMotor.getCurrentVelocity();
+  }
+
+  public double getDriveCurrent() {
+
+    return driveMotor.getCurrentCurrent();
+  }
+
+  public void stopDrive() {
+
+    driveMotor.stop();
+  }
+
+
+  public void setSteerPower(double power) {
+
+    steerMotor.setDuty(
+        MathUtil.clamp(
+            power,
+            -1.0,
+            1.0));
+  }
+
+  public void setSteerAngleDegrees(
+      double angleDegrees) {
+
+    steerMotor.setAngle(
+        Math.toRadians(angleDegrees));
+  }
+
+  public double getSteerAngleDegrees() {
+
+    return Math.toDegrees(
+        steerMotor.getCurrentAngle());
+  }
+
+  public double getSteerPosition() {
+
+    return steerMotor.getCurrentPosition();
+  }
+
+  public double getSteerVelocity() {
+
+    return steerMotor.getCurrentVelocity();
+  }
+
+  public double getSteerCurrent() {
+
+    return steerMotor.getCurrentCurrent();
+  }
+
+  public void stopSteer() {
+
+    steerMotor.stop();
+  }
+
+  public void stop() {
+
+    driveMotor.stop();
+    steerMotor.stop();
+  }
+
+  public void checkElectronics() {
+
+    driveMotor.checkElectronics();
+    steerMotor.checkElectronics();
+  }
+
+  // ELASTIC TELEMETRY
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+
+    // DRIVE
+
+    SmartDashboard.putNumber(
+        "Drive/Position (m)",
+        getDrivePosition());
+
+    SmartDashboard.putNumber(
+        "Drive/Velocity (mps)",
+        getDriveVelocity());
+
+    SmartDashboard.putNumber(
+        "Drive/Current (A)",
+        getDriveCurrent());
+
+    // STEER
+
+    SmartDashboard.putNumber(
+        "Steer/Angle (deg)",
+        getSteerAngleDegrees());
+
+    SmartDashboard.putNumber(
+        "Steer/Velocity",
+        getSteerVelocity());
+
+    SmartDashboard.putNumber(
+        "Steer/Current (A)",
+        getSteerCurrent());
   }
 }

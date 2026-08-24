@@ -11,8 +11,6 @@ import org.ejml.simple.SimpleMatrix;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 
-import choreo.trajectory.SwerveSample;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -171,30 +169,6 @@ public class Chassis extends SubsystemBase {
         headingController.enableContinuousInput(-Math.PI, Math.PI);
 
         LogManager.log(chassisConfig.name + " initalize");
-    }
-
-    public void followTrajectory(SwerveSample sample) {
-
-
-        Pose2d pose = getPose();
-
-        ChassisSpeeds speeds = new ChassisSpeeds(
-                sample.vx + xController.calculate(pose.getX(), sample.x),
-                sample.vy + yController.calculate(pose.getY(), sample.y),
-                -sample.omega + headingController.calculate(pose.getRotation().getRadians(), -sample.heading));
-
-
-        
-
-        SmartDashboard.putNumber("traj/current heading", pose.getRotation().getDegrees());
-        SmartDashboard.putNumber("traj/heading error", sample.heading - pose.getRotation().getRadians());
-        SmartDashboard.putNumber("traj/speeds omega", speeds.omegaRadiansPerSecond);
-        SmartDashboard.putNumber("traj/sample time", sample.getTimestamp());
-
-        field.getObject("trajectory point #" + index).setPose(sample.getPose());
-        index++;
-
-        setVelocities(speeds);
     }
 
     public void resetTrajectory() {
@@ -460,7 +434,6 @@ public class Chassis extends SubsystemBase {
     public void setYaw(Rotation2d angle) {
         if (angle != null) {
             gyro.setYaw(angle.getDegrees());
-            RobotPose.getInstance().setQuestHeading(angle);
             RobotPose.getInstance()
                     .resetPose(
                             new Pose2d(Translation2d.kZero, gyro.getRotation2d()));
