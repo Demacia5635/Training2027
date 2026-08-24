@@ -37,9 +37,8 @@ public class ModuleSubsystem extends SubsystemBase {
     }
 
     public void setVelocityDrive(double velocity) {
-        double maxSpeed = 3.0;
-        driveMotor.setVelocity(velocity * maxSpeed);
-        this.targetVelocityDrive = velocity * maxSpeed;
+        driveMotor.setVelocity(velocity);
+        this.targetVelocityDrive = velocity;
     }
 
     public double getCurrentVelocityDrive() {
@@ -137,10 +136,8 @@ public class ModuleSubsystem extends SubsystemBase {
         builder.addDoubleProperty("(initSendable) (set) Drive Velocity", this::getCurrentVelocityDrive,
                 this::setVelocityDrive);
         builder.addDoubleProperty("(initSendable) (get) Absolute Steer Angle", this::getAbsoluteAngleDeg, null);
-        builder.addDoubleProperty("(initSendable) (get) Target Setpoint velocity drive (target Velocity)",
-                () -> Math.toDegrees(targetVelocityDrive), null);
-        builder.addDoubleProperty("(initSendable) (get) Target Setpoint angle steer (target angle)",
-                () -> Math.toDegrees(targetAngleSteer), null);
+        builder.addDoubleProperty("(initSendable) (get) Target Setpoint velocity drive (target Velocity)",() -> Math.toDegrees(targetVelocityDrive), null);
+        builder.addDoubleProperty("(initSendable) (get) Target Setpoint angle steer (target angle)",() -> Math.toDegrees(targetAngleSteer), null);
     }
 
     @Override
