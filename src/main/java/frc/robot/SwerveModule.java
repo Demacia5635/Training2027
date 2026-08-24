@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 
@@ -6,18 +6,18 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.demacia.utils.motors.TalonFXMotor;
-import frc.robot.Constants;
+import frc.demacia.utils.sensors.Cancoder;
 
 public class SwerveModule {
     private final TalonFXMotor steerMotor;
     private final TalonFXMotor driveMotor;
-    private final CANcoder cancoder;
+    private final Cancoder cancoder;
 
     public SwerveModule() {
         super();
         steerMotor = new TalonFXMotor(Constants.CONFIG_STEER);
         driveMotor = new TalonFXMotor(Constants.CONFIG_DRIVE);
-        cancoder = new CANcoder(Constants.CANCODER_ID);
+        cancoder = new Cancoder(Constants.CONFIG_CANCODER);
     }
 
     public void setDrivePower(double power) {

@@ -7,6 +7,7 @@ package frc.robot;
 
 import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
+import frc.demacia.utils.sensors.CancoderConfig;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -27,6 +28,7 @@ public final class Constants {
 
   public static final String STEER_MOTOR_NAME = "steerMotor";
   public static final String DRIVE_MOTOR_NAME = "driveMotor";
+  public static final String CANCODER_NAME = "cancoder";
   public static final Canbus CANBUS = Canbus.Rio;
   public static final int STEER_MOTOR_ID = 2;
   public static final int DRIVE_MOTOR_ID = 1;
@@ -39,18 +41,19 @@ public final class Constants {
   public static final double KP_STEER = 5;
   public static final double KI_STEER = 0;
   public static final double KD_STEER = 0;
-  public static final double KS_DRIVE = 0.03203;
-  public static final double KV_DRIVE = 0.09435;
-  public static final double KA_DRIVE = 0.00679;
+  public static final double KS_DRIVE = 0;
+  public static final double KV_DRIVE = 0;
+  public static final double KA_DRIVE = 0;
   public static final double KG_DRIVE = 0;
-  public static final double KS_STEER = 0.035773;
-  public static final double KV_STEER = 0.36748;
-  public static final double KA_STEER = 0.03267;
+  public static final double KS_STEER = 0;
+  public static final double KV_STEER = 0;
+  public static final double KA_STEER = 0;
   public static final double KG_STEER = 0;
   public static final int CANCODER_ID = 3;//this is not the real ID
   public static final TalonFXConfig CONFIG_STEER = new TalonFXConfig(STEER_MOTOR_ID, CANBUS, STEER_MOTOR_NAME)
       .withPID(KP_STEER, KI_STEER, KD_STEER, KS_STEER, KV_STEER, KA_STEER, KG_STEER)
       .withRadiansMotor(GEAR_RATIO_STEER);
+  public static CancoderConfig CONFIG_CANCODER = new CancoderConfig(CANCODER_ID, CANBUS, CANCODER_NAME);
   public static final TalonFXConfig CONFIG_DRIVE = new TalonFXConfig(DRIVE_MOTOR_ID, CANBUS, DRIVE_MOTOR_NAME)
       .withPID(KP_Drive, KI_Drive, KD_Drive, KS_DRIVE, KV_DRIVE, KA_DRIVE, KG_DRIVE)
       .withMeterMotor(GEAR_RATIO_DRIVE,SCOPE);
