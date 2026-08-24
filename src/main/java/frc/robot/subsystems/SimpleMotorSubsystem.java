@@ -12,6 +12,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     private final TalonFX SteerMotor;
     private final TalonFX DriveMotor;
     private double targetAngle;
+    private double targetDistance;
 
     public SimpleMotorSubsystem() {
         super();
@@ -51,6 +52,9 @@ public class SimpleMotorSubsystem extends SubsystemBase {
 
     public void setTargetAngle(double angle) {
         targetAngle = angle;
+    }
+    public void setTargetDistance(double distance) {
+        targetDistance = distance;
     }
     public void goToTargetAngle(double angle) {
         if (getSteerMotorPosition() < angle) {

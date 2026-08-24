@@ -64,8 +64,10 @@ public class RobotContainer {
     // An example command will be run in autonomous
     // return Autos.exampleAuto(m_exampleSubsystem);
     // return new SimpleMotorCommand(simpleMotorSubsystem, 0.5,0.7, 3.0);
-    return new SequentialCommandGroup(new YuvalDrive(simpleMotorSubsystem, 90.0),
-     new driveForward (simpleMotorSubsystem, 0.5, 2.0);
+    return new SequentialCommandGroup(new YuvalDrive(simpleMotorSubsystem, 90.0,0.0 ),
+     new YuvalDrive(simpleMotorSubsystem, 135.0,1.0 ),
+     new YuvalDrive(simpleMotorSubsystem, 0.0,-1.0 ));
+     
     // return new driveForward(simpleMotorSubsystem, 0.5, 2.0);
 
   }
