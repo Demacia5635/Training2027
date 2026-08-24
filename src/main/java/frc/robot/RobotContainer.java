@@ -21,10 +21,11 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new SimpleMotorCommand(
-            motorSubsystem,
-            0.3,
-            3.0
-        );
+    return new TwoMotorCommand(
+        motorSubsystem,
+        0.2,   // turning motor
+        0.6,   // drive motor
+        3.0    // both run for 3 seconds
+    );
     }
 }
