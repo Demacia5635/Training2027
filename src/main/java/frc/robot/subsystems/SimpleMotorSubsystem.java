@@ -4,6 +4,7 @@ import java.lang.annotation.Target;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,7 +19,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
         super();
         this.SteerMotor = new TalonFX(Constants.OperatorConstants.STEER_MOTOR_ID, Constants.OperatorConstants.CANBUS);
         this.DriveMotor = new TalonFX(Constants.OperatorConstants.DRIVE_MOTOR_ID, Constants.OperatorConstants.CANBUS);
-
+        SmartDashboard.putData("SimpleMotorSubsystem", this);
     }
 
     public void setSteerPower(double power) {
@@ -86,8 +87,15 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Steer Power", getSteerPower());
         SmartDashboard.putNumber("Drive Power", getDrivePower());
-        SmartDashboard.putNumber("Steer Position", getSteerMotorPosition());
-        SmartDashboard.putNumber("Drive Position", getDriveMotorPosition());
+        SmartDashboard.putNumber("Drive velocity", getDriveMotorPosition());
+
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.addDoubleProperty("steer pos", () -> getSteerMotorPosition(), null);
+        builder.addDoubleProperty("drive power",()-> getDrivePower(), null);
+        builder.addDoubleProperty("steer power",()-> getSteerPower(), null);
 
     }
 }

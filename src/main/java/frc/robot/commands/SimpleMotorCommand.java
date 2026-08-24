@@ -33,7 +33,7 @@ public class SimpleMotorCommand extends Command {
     public void execute() {
         subsystem.setSteerPower(Steerpower);
         subsystem.setDrivePower(Steerpower);
-
+        
     }
 
     @Override

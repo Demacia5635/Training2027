@@ -17,9 +17,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
@@ -28,29 +31,38 @@ public class RobotContainer {
   private final SimpleMotorSubsystem simpleMotorSubsystem = new SimpleMotorSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private CommandXboxController controller = new CommandXboxController(Constants.OperatorConstants.CONTORLLER_ID);
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
-     controller.a().onTrue(new SimpleMotorCommand(simpleMotorSubsystem, 0.5, 0.7, 3.0));
+    controller.a().onTrue(new SimpleMotorCommand(simpleMotorSubsystem, 0.5, 0.7, 3.0));
 
     // // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
-    //     .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // // Schedule `exampleMethodCommand` when the Xbox controller's B button is
+    // pressed,
     // // cancelling on release.
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
@@ -63,11 +75,12 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     // return Autos.exampleAuto(m_exampleSubsystem);
-    // return new SimpleMotorCommand(simpleMotorSubsystem, 0.5,0.7, 3.0);
-    return new SequentialCommandGroup(new YuvalDrive(simpleMotorSubsystem, 90.0,0.0 ),
-     new YuvalDrive(simpleMotorSubsystem, 135.0,1.0 ),
-     new YuvalDrive(simpleMotorSubsystem, 0.0,-1.0 ));
-     
+    // return new SimpleMotorCommand(simpleMotorSubsystem, 0.5,0.7, 31.0);
+    return new SequentialCommandGroup(
+        new YuvalDrive(simpleMotorSubsystem, Math.toRadians(90.0), 0.0),
+        new YuvalDrive(simpleMotorSubsystem, Math.toRadians(135), 1.0),
+        new YuvalDrive(simpleMotorSubsystem, Math.toRadians(0), -1.0));
+
     // return new driveForward(simpleMotorSubsystem, 0.5, 2.0);
 
   }

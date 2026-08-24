@@ -14,42 +14,55 @@ public class YuvalDrive extends Command {
   private SimpleMotorSubsystem simpleMotorSubsystem;
   private double wantedAngle;
   private double Distance;
-  public YuvalDrive(SimpleMotorSubsystem simpleMotorSubsystem, double wantedAngle, double distance) {// Use addRequirements() here to declare subsystem dependencies.
+  private double maxDriveError = 2;
+  private double maxSteerError = 2;
+  private double driveError = 0;
+  private double steerError = 0;
+
+  public YuvalDrive(SimpleMotorSubsystem simpleMotorSubsystem, double wantedAngle, double distance) {
     this.wantedAngle = wantedAngle;// Store the desired angle
     this.Distance = distance;// Store the desired distance
     this.simpleMotorSubsystem = simpleMotorSubsystem;
 
     addRequirements(simpleMotorSubsystem);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    simpleMotorSubsystem.goToTargetAngle(wantedAngle); // Call the goToTargetAngle method to steer to the desired angle
+    driveError = Math.abs(simpleMotorSubsystem.getDriveMotorPosition() - Distance);
+    steerError = Math.abs(simpleMotorSubsystem.getSteerMotorPosition() - wantedAngle);
+
+    if (steerError < maxSteerError) {
+      simpleMotorSubsystem.stopSteer();
+    } else {
+
+      simpleMotorSubsystem.goToTargetAngle(wantedAngle);
+    }
+
     simpleMotorSubsystem.driveForward(Distance);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-   simpleMotorSubsystem.stopSteer();
+    simpleMotorSubsystem.stopSteer();
+    simpleMotorSubsystem.stopDrive();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-     // Check if the current angle is within 1 degree of the desired angle
-      // Stop the steering motor
-      return Math.abs(simpleMotorSubsystem.getSteerMotorPosition() - wantedAngle) < 2.0; // Command is finished
-    
-    
+    // Check if the current angle is within 1 degree of the desired angle
+    // Stop the steering motor
+    return Math.abs(simpleMotorSubsystem.getSteerMotorPosition() - wantedAngle) < 2.0
+        && Math.abs(simpleMotorSubsystem.getDriveMotorPosition() - Distance) < 2.0;
 
   }
 }
