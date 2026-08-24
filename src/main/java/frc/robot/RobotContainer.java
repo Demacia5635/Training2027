@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import frc.demacia.utils.controller.CommandController;
+import frc.demacia.utils.controller.CommandController.ControllerType;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveToMeter;
 import frc.robot.commands.SetSteerVoltage;
@@ -14,7 +16,6 @@ import frc.robot.subsystems.SteerMotorSubsistem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -37,7 +38,7 @@ public class RobotContainer {
   private final ModuleSubsystem moduleSubsystem;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController controller;
+  private final CommandController controller;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -48,7 +49,7 @@ public class RobotContainer {
     //driveToMeterCommand = new DriveToMeter(subsystemDrive, 0);
     //setSteerVelocityCommand = new SetSteerVoltage(subsystemSteer, 0);
     moduleSubsystem = new ModuleSubsystem();
-    controller = new CommandXboxController(OperatorConstants.CONTROLLER_PORT);
+    controller = new CommandController(OperatorConstants.CONTROLLER_PORT, ControllerType.kXbox);
     //controller = new CommandPS4Controller(OperatorConstants.CONTROLLER_PORT);
 
     // Configure the trigger bindings
@@ -63,6 +64,8 @@ public class RobotContainer {
             () -> {
                 double x = controller.getLeftX();
                 double y = controller.getLeftY();
+
+              System.out.println("Joystick X: " + x + ", Y: " + y);
 
                 if (Math.abs(x) < 0.1) {
                     x = 0;
