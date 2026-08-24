@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.TwoMotorCommand;
 import frc.robot.subsystems.SimpleMotorSubsystem;
+import frc.robot.commands.SteerToAngleCommand;
 
 public class RobotContainer {
 
@@ -22,11 +23,9 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new TwoMotorCommand(
-                motorSubsystem,
-                0.2, // turning motor
-                0.6, // drive motor
-                3.0 // both run for 3 seconds
-        );
+    return new SteerToAngleCommand(
+        motorSubsystem,
+        90.0
+    );
     }
 }
