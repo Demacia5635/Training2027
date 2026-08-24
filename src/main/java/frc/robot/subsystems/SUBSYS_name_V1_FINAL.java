@@ -1,16 +1,21 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.CANcoder;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.demacia.utils.motors.TalonFXMotor;
+import frc.demacia.utils.sensors.Cancoder;
 import frc.robot.Constants;
 
 public class SUBSYS_name_V1_FINAL extends SubsystemBase {
 
   private final TalonFXMotor driveMotor;
   private final TalonFXMotor steerMotor;
+  private final Cancoder driveEncoder;
+  private final Cancoder steerEncoder;
 
   public SUBSYS_name_V1_FINAL() {
 
@@ -20,6 +25,12 @@ public class SUBSYS_name_V1_FINAL extends SubsystemBase {
     steerMotor = new TalonFXMotor(
         Constants.SimpleMotorConstants.STEER_CONFIG);
 
+    driveEncoder = new Cancoder(
+        Constants.SimpleMotorConstants.DRIVE_ENCODER_CONFIG);
+
+    steerEncoder = new Cancoder(
+        Constants.SimpleMotorConstants.STEER_ENCODER_CONFIG);
+
     SmartDashboard.putData(
         "Motors/Drive",
         driveMotor);
@@ -28,7 +39,6 @@ public class SUBSYS_name_V1_FINAL extends SubsystemBase {
         "Motors/Steer",
         steerMotor);
   }
-
 
   public void setDrivePower(double power) {
 
@@ -65,7 +75,6 @@ public class SUBSYS_name_V1_FINAL extends SubsystemBase {
 
     driveMotor.stop();
   }
-
 
   public void setSteerPower(double power) {
 
