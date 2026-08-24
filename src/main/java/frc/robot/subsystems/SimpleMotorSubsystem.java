@@ -12,13 +12,12 @@ import frc.demacia.utils.motors.TalonFXMotor;
 import frc.robot.Constants;
 
 public class SimpleMotorSubsystem extends SubsystemBase {
-    private final TalonFXMotor drive;
-    private final TalonFXMotor steer;
-
+    private final TalonFXMotor driveMotor;
+    private final TalonFXMotor steerMotor;
     public SimpleMotorSubsystem() {
         super();
-        drive = new TalonFXMotor(Constants.MotorConstants.DRIVE_CONFIG);
-        steer = new TalonFXMotor(Constants.MotorConstants.STEER_CONFIG);
+        driveMotor = new TalonFXMotor(Constants.MotorConstants.DRIVE_CONFIG);
+        steerMotor = new TalonFXMotor(Constants.MotorConstants.STEER_CONFIG);
         SmartDashboard.putData("this", this);
         // SmartDashboard.putData("Wanted Motor Angle command", new
         // SimpleMotorCommand(this, 5, 5, 5));
@@ -27,42 +26,42 @@ public class SimpleMotorSubsystem extends SubsystemBase {
 
     // Set drive motor power
     public void setDrivePower(double power) {
-        drive.setDuty(power);
+        driveMotor.setDuty(power);
     }
 
     // Set steeer motor power
     public void setSteerPower(double power) {
-        steer.setDuty(power);
+        steerMotor.setDuty(power);
     }
 
     // setters:
     public void setSteerPositionRadians(double targetRadians) {
-        steer.setPositionVoltage(targetRadians);
+        steerMotor.setPositionVoltage(targetRadians);
     }
 
     public void setDrivePositionMeters(double targetMeters) {
-        drive.setPositionVoltage(targetMeters);
+        driveMotor.setPositionVoltage(targetMeters);
     }   
 
     public void setDriveVelocityRPM(double targetVelocity) {
-        drive.setVelocity(targetVelocity);
+        driveMotor.setVelocity(targetVelocity);
     }
 
     // getters:
     public double getSteerPositionRadians() {
-        return steer.getCurrentPosition(); // convert rotations to degrees
+        return steerMotor.getCurrentPosition(); // convert rotations to degrees
     }
 
     public double getDrivePositionMeters() {
-        return drive.getCurrentPosition();
+        return driveMotor.getCurrentPosition();
     }
 
     public double getSteerVelocity() {
-        return steer.getCurrentVelocity(); // convert degrees to rotations
+        return steerMotor.getCurrentVelocity(); // convert degrees to rotations
     }
 
     public double getDriveVel() {
-        return drive.getCurrentVelocity();
+        return driveMotor.getCurrentVelocity();
     }
 
     // stopping the motors:
