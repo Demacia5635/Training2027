@@ -16,4 +16,10 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public final class SwerveModuleConstants {
+    public final static int DRIVE_MOTOR_ID = 1;
+    public final static int STEER_MOTOR_ID = 2;
+    public final static Canbus DRIVE_CANBUS = Canbus.Rio;
+    public final static Canbus STEER_CANBUS = Canbus.Rio;
 }
