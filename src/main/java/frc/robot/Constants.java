@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import frc.demacia.utils.motors.TalonFXConfig;
+import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -26,5 +29,10 @@ public static final class driverConstants {
     public static final int driverControllerPort = 0;
     public static final int operatorControllerPort = 1;
     public static final double driverDeadband = 0.1;
+
+    public static final TalonFXConfig DRIVE_CONFIG = new TalonFXConfig( 1, Canbus.Rio, "Drive Motor")
+    .withPID(0.05, 0.01, 0.002, 0, 0, 0, 0);
+    public static final TalonFXConfig STEER_CONFIG = new TalonFXConfig( 2, Canbus.Rio, "Steer Motor")
+    .withPID(0.05, 0.01, 0.002, 0, 0, 0, 0);
   }
 }

@@ -16,7 +16,7 @@ public class GoToTargetAngleCommand extends Command {
     public void execute() {
         double target = SmartDashboard.getNumber("3rd cmd Target", 0.0);
         
-        subsystem.setPosition(target);
+        // subsystem.setPosition(target);
     }
 
     @Override
