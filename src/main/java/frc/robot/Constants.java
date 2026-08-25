@@ -30,8 +30,15 @@ public final class Constants {
     public static final String STEER_NAME = "Steer";
     public static final String DRIVE_NAME = "Drive";
 
-    public static final int STEER_ID = 2;
+    public static final int STEER_ID = 1;
+    public static final int STEER_ID2 = 2;
+    public static final int STEER_ID3 = 3;
+    public static final int STEER_ID4 = 4;
+
     public static final int DRIVE_ID = 1;
+    public static final int DRIVE_ID2 = 2;
+    public static final int DRIVE_ID3 = 3;
+    public static final int DRIVE_ID4 = 4;
 
     public static final double STEER_KP = 2;
     public static final double STEER_KI = 0;
@@ -76,21 +83,23 @@ public final class Constants {
 
   }
 
-
-
-
   public final class GYROconstants {
-  public static final String PIGEON_NAME = "GYRO";
-  public static final int PIGEON_ID = 3;
-  public static final Canbus PIGEON_CANBUS = Canbus.Rio;
-    
+    public static final String PIGEON_NAME = "GYRO";
+    public static final int PIGEON_ID = 3;
+    public static final Canbus PIGEON_CANBUS = Canbus.Rio;
+
   }
 
-  public final class cancoderconstant{
-public static final String CANCODERNAME ="cancoder";
-public static final int CANCODER_ID = 3;
-public static final Canbus CANCODER_CANBUS = Canbus.Rio;
+  public final class cancoderconstant {
+    public static final String CANCODERNAME = "cancoder";
+    public static final int CANCODER_ID = 3;
+    public static final Canbus CANCODER_CANBUS = Canbus.Rio;
     public static final TalonFXConfig STEER_CONFIG = new TalonFXConfig(CANCODER_ID, CANCODER_CANBUS, CANCODERNAME);
 
+  }
+
+  public static boolean getIsRed() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getIsRed'");
   }
 }

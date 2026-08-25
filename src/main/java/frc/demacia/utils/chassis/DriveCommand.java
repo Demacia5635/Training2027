@@ -7,6 +7,8 @@ package frc.demacia.utils.chassis;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.demacia.utils.RobotCommon;
 import frc.demacia.utils.controller.CommandController;
 
@@ -25,7 +27,15 @@ public class DriveCommand extends Command {
     addRequirements(chassis);
   }
 
-  public void invertPrecisionMode() {
+  public DriveCommand(Subsystem subsystem, double i, double d, int j) {
+    //TODO Auto-generated constructor stub
+}
+
+public DriveCommand(Subsystem subsystem, Object object, Object object2) {
+    //TODO Auto-generated constructor stub
+}
+
+public void invertPrecisionMode() {
     setPrecisionMode(!precisionMode);
   }
 
@@ -81,4 +91,14 @@ public class DriveCommand extends Command {
   public boolean isFinished() {
     return false;
   }
+
+public void setDefaultCommand(RunCommand runCommand) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'setDefaultCommand'");
+}
+
+public void setDrivePower(double leftYDeadBand) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'setDrivePower'");
+}
 }

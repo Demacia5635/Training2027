@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import org.ietf.jgss.GSSException;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -19,13 +17,13 @@ public class SwerveModuleSUB {
     public final String name;
     private final double steerOffset;
 
-    public SwerveModuleSUB(SwerveModuleConfig configs) {
+    public SwerveModuleSUB(frc.robot.subsystems.SwerveModuleConfig backLeft) {
         // שימוש בהגדרות ספציפיות מתוך ה-config של המודול הנוכחי
         steerMotor = new TalonFXMotor(SwerveModuleConfig.STEER_CONFIG); 
         driveMotor = new TalonFXMotor(SwerveModuleConfig.DRIVE_CONFIG);
         cancoder = new Cancoder(SwerveModuleConfig.CANCODER_CONFIG);
         
-        name = configs.name;
+        name = backLeft.name;
         steerOffset = SwerveModuleConfig.STEER_OFFSET;
         
         steerMotor.setEncoderPosition(getAbsoluteAngle() - steerOffset);
@@ -100,11 +98,6 @@ public class SwerveModuleSUB {
         
         setSteerPosition(currentPos + diff);
         setDriveVelocity(optimizedState.speedMetersPerSecond);
-    }
-
-    //  התאמה ל-SysId עבור מנוע ה-Drive 
-    public void runSysIdDrive(double output) {
-        driveMotor.set(output); 
     }
 
     public void InitSendable(SendableBuilder builder) {

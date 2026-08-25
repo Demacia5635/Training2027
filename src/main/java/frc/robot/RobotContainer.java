@@ -4,19 +4,14 @@
 
 package frc.robot;
 
-import frc.robot.commands.SetDriveDistanceCommand;
-import frc.robot.commands.SetSteerAngleCommand;
-import frc.robot.commands.SimpleMotorCommand;
-import frc.robot.subsystems.SimpleMotorSubsystem;
+import frc.demacia.utils.chassis.DriveCommand;
+
+import frc.robot.subsystems.CHASSIS;
 
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -31,9 +26,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
+  private CHASSIS chassis;
+  private DriveCommand driveCommand = new DriveCommand(null, null);
   private CommandXboxController controller = new CommandXboxController(Constants.ControllerConstants.CONTROLLER_ID);
-
   // Replace with CommandPS4Controller or CommandJoystick if needed
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -42,22 +37,11 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     getAutonomousCommand();
-
+    
     // set the default command using RunCommand
     // set default command for both drive and steer
     // bonus: when you move the joystick you move the motor, the left joystick for
     // the drive motor and the right joystick for the steer motor.
-    subsystem.setDefaultCommand(
-        new RunCommand(
-            () -> {
-              // check left joystick and update drive power
-              subsystem.setDrivePower(leftYDeadBand());
-
-              // check right joystick and update steer power
-              subsystem.setSteerPower(rightYDeadBand());
-            },
-            subsystem));
-
 
   }
 
@@ -92,10 +76,10 @@ public class RobotContainer {
     }
   }
 
-  private void configureBindings() {
+  private void configureBindings() { 
     // When a is pressed move steer motor
     controller.a().onTrue(
-        new SimpleMotorCommand(subsystem, 0.2, 0, 1)
+        new DriveCommand(chassis,5.4 ,6 ,0)
             .alongWith(Commands.print("A pressed"))); // power is between -1 and 1
 
     // call the function
@@ -106,7 +90,7 @@ public class RobotContainer {
 
     // when b is pressed move drive motor
     controller.b().onTrue(
-        new SimpleMotorCommand(subsystem, 0, -0.3, 1)
+        new DriveCommand(chassis, 0, -0.3, 1)
             .alongWith(Commands.print("B pressed!")));
 
     // when the left trigger is pressed vibrate the controller
