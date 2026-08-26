@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import frc.demacia.utils.controller.CommandController;
+import frc.demacia.utils.controller.CommandController;
 import frc.robot.Chassis;
 import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -8,15 +10,16 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class DriveCommand extends Command {
   private final Chassis chassisDriveAndSteer;
-  private final CommandXboxController xboxController;
+  private final CommandController xboxController;
 
-  public DriveCommand(Chassis chassisDriveAndSteer, CommandXboxController xboxController) {
+  public DriveCommand(Chassis chassisDriveAndSteer, CommandController xboxController) {
     this.chassisDriveAndSteer = chassisDriveAndSteer;
     this.xboxController = xboxController;
-
     addRequirements(chassisDriveAndSteer);
-  }
+   
 
+  }
+    
   @Override
   public void execute() {
     double forwardSpeedMetersPerSecond = -xboxController.getLeftY() * Constants.MAX_DRIVE_SPEED_METERS_PER_SECOND;

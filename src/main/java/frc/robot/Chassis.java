@@ -40,7 +40,7 @@ public class Chassis extends SubsystemBase {
         poseEstimator = new SwerveDrivePoseEstimator(kinematicsFix, getGyroAngle(), getModulePositions(),
                 new edu.wpi.first.math.geometry.Pose2d());
         
-        SmartDashboard.putData(this)
+        SmartDashboard.putData(this);
     }
 
     public void setVelocities(ChassisSpeeds speeds) {
