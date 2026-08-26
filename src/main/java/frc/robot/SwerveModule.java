@@ -10,7 +10,7 @@ import frc.demacia.utils.motors.TalonFXMotor;
 import frc.demacia.utils.sensors.Cancoder;
 import frc.demacia.utils.sensors.CancoderConfig;
 
-public class SwerveModule {
+public class SwerveModule extends SubsystemBase{
     private final TalonFXMotor steerMotor;
     private final TalonFXMotor driveMotor;
     private final Cancoder cancoder;
@@ -70,5 +70,13 @@ public class SwerveModule {
 
     public void resetEncoder() {
         steerMotor.setEncoderPosition(0);
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.addDoubleProperty("abs encoder", this::Math.toDegrees(getAbsoluteAngle()), null);
+        builder.addDoubleProperty("steer velocity", this::getSteerVelocity, null);
+        builder.addDoubleProperty("drive velocty", this::getDriveVelocity, null);
+        builder.addDoubleProperty("steer angle", this::Math.toDegrees(getSteerAngle()), null);
     }
 }
