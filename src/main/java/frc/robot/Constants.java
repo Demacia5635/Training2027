@@ -88,6 +88,9 @@ public final class Constants {
     public static final double KA_STEER = 0;
     public static final double KG_STEER = 0;
 
+    public static final double MAX_DRIVE_SPEED_METERS_PER_SECOND = 4.0;
+    public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 3.0;
+
     public static final TalonFXConfig CONFIG_STEER_FRONT_LEFT = new TalonFXConfig(STEER_MOTOR_ID_FRONT_LEFT, CANBUS,
             STEER_MOTOR_NAME_FRONT_LEFT)
             .withPID(KP_STEER, KI_STEER, KD_STEER, KS_STEER, KV_STEER, KA_STEER, KG_STEER)
