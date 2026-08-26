@@ -9,7 +9,7 @@ import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
 import frc.demacia.utils.sensors.CancoderConfig;
 import frc.demacia.utils.sensors.PigeonConfig;
-import frc.robot.subsystems.SwerveModule;
+import frc.robot.subsystems.BasicSwerveModule;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide

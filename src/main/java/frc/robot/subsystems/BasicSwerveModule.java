@@ -13,13 +13,13 @@ import frc.demacia.utils.motors.TalonFXMotor;
 import frc.demacia.utils.sensors.Cancoder;
 import frc.robot.Constants;
 
-public class SwerveModule extends SubsystemBase {
+public class BasicSwerveModule extends SubsystemBase {
 
   private final TalonFXMotor driveMotor;
   private final TalonFXMotor steerMotor;
   private final Cancoder cancoder;
 
-  public SwerveModule(SwerveModuleConfig swerveModuleConfig) {
+  public BasicSwerveModule(SwerveModuleConfig swerveModuleConfig) {
     super();
     driveMotor = new TalonFXMotor(Constants.MotorConstants.DRIVE_CONFIG);
     steerMotor = new TalonFXMotor(Constants.MotorConstants.STEER_CONFIG);
@@ -70,6 +70,12 @@ public class SwerveModule extends SubsystemBase {
   public double getModuleState() {
     return driveMotor.getCurrentVelocity();
   }
+
+  public void stopAll() {
+  steerMotor.stop();;
+  driveMotor.stop();
+}
+
 
   @Override
   public void initSendable(SendableBuilder builder) {
