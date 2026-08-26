@@ -81,8 +81,9 @@ public class BasicSwerveModule extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     super.initSendable(builder);
     builder.addDoubleProperty("Absolute Encoder", () -> cancoder.getCurrentAbsPosition(), null);
-    builder.addDoubleProperty("Steer Motor", () -> steerMotor.getCurrentAngle(), null);
-    builder.addDoubleProperty("Drive Motor", () -> steerMotor.getCurrentVelocity(), null);
+    builder.addDoubleProperty("Steer Motor Angle", () -> steerMotor.getCurrentAngle(), null);
+    builder.addDoubleProperty("Drive Motor Velocity", () -> driveMotor.getCurrentVelocity(), null);
+    builder.addDoubleProperty("Steer Motor Velocity", () -> steerMotor.getCurrentVelocity(), null);
 
   }
 
