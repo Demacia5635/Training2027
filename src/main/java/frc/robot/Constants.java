@@ -4,11 +4,8 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.configs.GyroTrimConfigs;
-
 import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.BaseMotorConfig.Canbus;
-import frc.demacia.utils.sensors.CancoderConfig;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -96,10 +93,5 @@ public final class Constants {
     public static final Canbus CANCODER_CANBUS = Canbus.Rio;
     public static final TalonFXConfig STEER_CONFIG = new TalonFXConfig(CANCODER_ID, CANCODER_CANBUS, CANCODERNAME);
 
-  }
-
-  public static boolean getIsRed() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getIsRed'");
   }
 }

@@ -8,7 +8,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.demacia.utils.RobotCommon;
 import frc.demacia.utils.controller.CommandController;
 
@@ -26,14 +25,6 @@ public class DriveCommand extends Command {
     precisionMode = false;
     addRequirements(chassis);
   }
-
-  public DriveCommand(Subsystem subsystem, double i, double d, int j) {
-    //TODO Auto-generated constructor stub
-}
-
-public DriveCommand(Subsystem subsystem, Object object, Object object2) {
-    //TODO Auto-generated constructor stub
-}
 
 public void invertPrecisionMode() {
     setPrecisionMode(!precisionMode);

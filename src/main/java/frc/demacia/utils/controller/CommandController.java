@@ -41,6 +41,12 @@ public class CommandController extends CommandGenericHID{
         HAL.report(tResourceType.kResourceType_Controller, port + 1, 0, "Driver Controller");
     }
 
+
+
+
+
+
+
     /**
      * Top face button (Y on Xbox, Triangle on PS5).
      * 

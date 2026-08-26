@@ -17,8 +17,7 @@ public class SwerveModuleSUB {
     public final String name;
     private final double steerOffset;
 
-    public SwerveModuleSUB(frc.robot.subsystems.SwerveModuleConfig backLeft) {
-        // שימוש בהגדרות ספציפיות מתוך ה-config של המודול הנוכחי
+    public SwerveModuleSUB(SwerveModuleConfig backLeft) {
         steerMotor = new TalonFXMotor(SwerveModuleConfig.STEER_CONFIG); 
         driveMotor = new TalonFXMotor(SwerveModuleConfig.DRIVE_CONFIG);
         cancoder = new Cancoder(SwerveModuleConfig.CANCODER_CONFIG);

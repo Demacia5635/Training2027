@@ -4,13 +4,13 @@
 
 package frc.robot;
 
-import frc.demacia.utils.chassis.DriveCommand;
-
+import frc.demacia.utils.controller.CommandController;
+import frc.demacia.utils.controller.CommandController.ControllerType;
+import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.Chassis;
 
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -27,8 +27,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private Chassis chassis;
-  private DriveCommand driveCommand = new DriveCommand(null, null);
-  private CommandXboxController controller = new CommandXboxController(Constants.ControllerConstants.CONTROLLER_ID);
+  private CommandController controller = new CommandController(Constants.ControllerConstants.CONTROLLER_ID, ControllerType.kXbox);
+  private DriveCommand driveCommand = new DriveCommand(chassis, controller);
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -94,29 +95,28 @@ public class RobotContainer {
 
   private void configureBindings() { 
     // When a is pressed move steer motor
-    controller.a().onTrue(
-        new DriveCommand(chassis,5.4 ,6 ,0)
+    controller.leftStick().onTrue(
+        driveCommand
             .alongWith(Commands.print("A pressed"))); // power is between -1 and 1
-
     // call the function
-    // leftYDeadBand();
+    leftYDeadBand();
     //
     // call the function
     // rightYDeadBand();
     // when b is pressed move drive motor
-    controller.b().onTrue(
-        new DriveCommand(chassis, 0, -0.3, 1)
+    controller.rightStick().onTrue(
+        driveCommand
             .alongWith(Commands.print("B pressed!")));
 
     // when the left trigger is pressed vibrate the controller
-    controller.leftTrigger().whileTrue(
+    controller.getLeftTrigger(0).whileTrue(
         Commands.startEnd(
             () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 1.0), // When pressed
             () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 0.0) // When released
         ));
 
     // when the right trigger is pressed vibrate the controller
-    controller.rightTrigger().whileTrue(
+    controller.getRightTrigger(0).whileTrue(
         Commands.startEnd(
             () -> controller.getHID().setRumble(RumbleType.kRightRumble, 1.0), // When pressed
             () -> controller.getHID().setRumble(RumbleType.kRightRumble, 0.0) // When released
