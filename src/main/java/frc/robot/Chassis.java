@@ -30,6 +30,14 @@ public class Chassis extends SubsystemBase {
                         Constants.CONFIG_CANCODER_BACK_RIGHT)
         };
         gyro = new Pigeon2(Constants.GYRO_ID);
+
+        field = new Field2d();
+
+        kinematicsFix = new SwerveDriveKinematics(Constants.FRONT_LEFT_POSITION, Constants.FRONT_RIGHT_POSITION,
+                Constants.BACK_LEFT_POSITION, Constants.BACK_RIGHT_POSITION);
+
+        poseEstimator = new SwerveDrivePoseEstimator(kinematicsFix, getGyroAngle(), getModulePositions(),
+                new edu.wpi.first.math.geometry.Pose2d());
     }
 
     public void setVelocities(ChassisSpeeds speeds) {
@@ -50,17 +58,17 @@ public class Chassis extends SubsystemBase {
 
     public SwerveModulePosition[] getModulePositions() {
         return new SwerveModulePosition[] {
-            modules[0].getPosition(),
-            modules[1].getPosition(),
-            modules[2].getPosition(),
-            modules[3].getPosition()
+                modules[0].getPosition(),
+                modules[1].getPosition(),
+                modules[2].getPosition(),
+                modules[3].getPosition()
         };
     }
 
     public void setModuleStates(SwerveModuleState[] states) {
-    for (int i = 0; i < modules.length; i++) {
-        modules[i].setVelocityDrive(states[i].speedMetersPerSecond);
-        modules[i].setSteerPosition(states[i].angle.getRadians());
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].setVelocityDrive(states[i].speedMetersPerSecond);
+            modules[i].setSteerPosition(states[i].angle.getRadians());
+        }
     }
-}
 }
