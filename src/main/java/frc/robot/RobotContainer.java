@@ -6,10 +6,11 @@ package frc.robot;
 
 import frc.demacia.utils.chassis.DriveCommand;
 
-import frc.robot.subsystems.CHASSIS;
+import frc.robot.subsystems.Chassis;
 
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -20,13 +21,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in
  * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
+ * periodic methods (other than the scheduler calls). Instead, the structure of * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private CHASSIS chassis;
+  private Chassis chassis;
   private DriveCommand driveCommand = new DriveCommand(null, null);
   private CommandXboxController controller = new CommandXboxController(Constants.ControllerConstants.CONTROLLER_ID);
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -36,6 +36,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
     getAutonomousCommand();
     
     // set the default command using RunCommand
@@ -59,12 +60,27 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-
   public double leftYDeadBand() {
     if (Math.abs(controller.getLeftY()) < 0.1) {
       return 0;
     } else {
       return controller.getLeftY();
+    }
+  }
+
+  public double leftXDeadBand() {
+    if (Math.abs(controller.getLeftX()) < 0.1) {
+      return 0;
+    } else {
+      return controller.getLeftX();
+    }
+  }
+
+  public double rightXDeadBand() {
+    if (Math.abs(controller.getRightX()) < 0.1) {
+      return 0;
+    } else {
+      return controller.getRightX();
     }
   }
 
@@ -84,10 +100,9 @@ public class RobotContainer {
 
     // call the function
     // leftYDeadBand();
-
-    // // call the function
+    //
+    // call the function
     // rightYDeadBand();
-
     // when b is pressed move drive motor
     controller.b().onTrue(
         new DriveCommand(chassis, 0, -0.3, 1)
@@ -99,8 +114,8 @@ public class RobotContainer {
             () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 1.0), // When pressed
             () -> controller.getHID().setRumble(RumbleType.kLeftRumble, 0.0) // When released
         ));
-    // when the right trigger is pressed vibrate the controller
 
+    // when the right trigger is pressed vibrate the controller
     controller.rightTrigger().whileTrue(
         Commands.startEnd(
             () -> controller.getHID().setRumble(RumbleType.kRightRumble, 1.0), // When pressed
@@ -116,29 +131,17 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // return new SetSteerAngleCommand(subsystem, Math.toRadians(0)); // if u want degrees
     return null;
- 
- 
- 
- 
- 
- 
- 
     // return null;
-// return new SequentialCommandGroup(
-//         new SetSteerAngleCommand(subsystem, 90.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS),
-
-//         new ParallelCommandGroup(
-          
-//             new SetSteerAngleCommand(subsystem, 135.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS)
-//         ).withTimeout(2.0),
-
-//         new ParallelCommandGroup(
-//             new SetDriveDistanceCommand(subsystem, -1.0),
-//             new SetSteerAngleCommand(subsystem, 0.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS)
-//         ).withTimeout(2.0),
-
-
-//         Commands.runOnce(() -> subsystem.stopAll(), subsystem)
-//     );
+    // return new SequentialCommandGroup(
+    // new SetSteerAngleCommand(subsystem, 90.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS),
+    // new ParallelCommandGroup(
+    // new SetSteerAngleCommand(subsystem, 135.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS)
+    // ).withTimeout(2.0),
+    // new ParallelCommandGroup(
+    // new SetDriveDistanceCommand(subsystem, -1.0),
+    // new SetSteerAngleCommand(subsystem, 0.0 * Constants.ConvertionConstants.DEGREES_TO_RADIANS)
+    // ).withTimeout(2.0),
+    // Commands.runOnce(() -> subsystem.stopAll(), subsystem)
+    // );
   }
 }
