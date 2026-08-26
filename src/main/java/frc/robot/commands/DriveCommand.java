@@ -10,12 +10,10 @@ public class DriveCommand extends Command {
   private final Chassis chassisDriveAndSteer;
   private final CommandXboxController xboxController;
 
-  // הבנאי מקבל את השאסי ואת השלט
   public DriveCommand(Chassis chassisDriveAndSteer, CommandXboxController xboxController) {
     this.chassisDriveAndSteer = chassisDriveAndSteer;
     this.xboxController = xboxController;
 
-    // דרישה למערכת השאסי (Chassis Subsystem)
     addRequirements(chassisDriveAndSteer);
   }
 
