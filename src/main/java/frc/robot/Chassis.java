@@ -14,5 +14,5 @@ public class Chassis {
             new SwerveModule(Constants.CONFIG_STEER_BACK_RIGHT, Constants.CONFIG_DRIVE_BACK_RIGHT, Constants.CONFIG_CANCODER_BACK_RIGHT)
         };   
         gyro = new Pigeon2(Constants.GYRO_ID);
-    }
+    } 
 }
