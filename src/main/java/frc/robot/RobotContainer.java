@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private Chassis chassis;
+  private Chassis chassis = new Chassis();
   private CommandController controller = new CommandController(Constants.ControllerConstants.CONTROLLER_ID, ControllerType.kXbox);
   private DriveCommand driveCommand = new DriveCommand(chassis, controller);
 
