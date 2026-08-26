@@ -21,18 +21,16 @@ public class BasicDriveCommand extends Command {
     addRequirements(chassis);
   }
 
-  double joystickX = controller.getLeftX();
-  double joystickY = controller.getLeftY();
 
   @Override
   public void initialize() {}
 
   @Override
   public void execute() {
-    if (RobotState.isAutonomous()) {
-      return;
+    chassis.drive(new ChassisSpeeds(controller.getLeftX(), controller.getLeftY(),0));
     }
-  }
+  
+
 
   @Override
   public void end(boolean interrupted) {

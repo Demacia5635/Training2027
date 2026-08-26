@@ -38,6 +38,7 @@ public class BasicChassis extends SubsystemBase {
 
         
     gyro = new Pigeon(Constants.GyroConstants.PIGEON_CONFIG);
+  
     field2d = new Field2d();
     kinematics = new SwerveDriveKinematics(new Translation2d[4]);
 
