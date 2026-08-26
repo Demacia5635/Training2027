@@ -23,6 +23,7 @@ public class SwerveModule extends SubsystemBase {
         steerMotor = new TalonFXMotor(steer);
         driveMotor = new TalonFXMotor(drive);
         this.cancoder = new Cancoder(cancoder);
+        SmartDashboard.putData(this);
     }
 
     public void setDrivePower(double power) {
