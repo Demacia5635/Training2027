@@ -17,27 +17,28 @@ public class Chassis extends SubsystemBase {
     private Pigeon2 gyro;
     private SwerveDrivePoseEstimator poseEstimator;
     private Field2d field;
-    private SwerveDriveKinematics kinematicsFix;
+    private SwerveDriveKinematics kinematics;
 
     public Chassis() {
+        super();
         modules = new SwerveModule[] {
                 new SwerveModule(Constants.CONFIG_STEER_FRONT_LEFT, Constants.CONFIG_DRIVE_FRONT_LEFT,
-                        Constants.CONFIG_CANCODER_FRONT_LEFT),
+                        Constants.CONFIG_CANCODER_FRONT_LEFT , Constants.STEER_MOTOR_OFFSET_FRONT_LEFT),
                 new SwerveModule(Constants.CONFIG_STEER_FRONT_RIGHT, Constants.CONFIG_DRIVE_FRONT_RIGHT,
-                        Constants.CONFIG_CANCODER_FRONT_RIGHT),
+                        Constants.CONFIG_CANCODER_FRONT_RIGHT, Constants.STEER_MOTOR_OFFSET_FRONT_RIGHT),
                 new SwerveModule(Constants.CONFIG_STEER_BACK_LEFT, Constants.CONFIG_DRIVE_BACK_LEFT,
-                        Constants.CONFIG_CANCODER_BACK_LEFT),
+                        Constants.CONFIG_CANCODER_BACK_LEFT, Constants.STEER_MOTOR_OFFSET_BACK_LEFT),
                 new SwerveModule(Constants.CONFIG_STEER_BACK_RIGHT, Constants.CONFIG_DRIVE_BACK_RIGHT,
-                        Constants.CONFIG_CANCODER_BACK_RIGHT)
+                        Constants.CONFIG_CANCODER_BACK_RIGHT, Constants.STEER_MOTOR_OFFSET_BACK_RIGHT)
         };
         gyro = new Pigeon2(Constants.GYRO_ID);
 
         field = new Field2d();
 
-        kinematicsFix = new SwerveDriveKinematics(Constants.FRONT_LEFT_POSITION, Constants.FRONT_RIGHT_POSITION,
+        kinematics = new SwerveDriveKinematics(Constants.FRONT_LEFT_POSITION, Constants.FRONT_RIGHT_POSITION,
                 Constants.BACK_LEFT_POSITION, Constants.BACK_RIGHT_POSITION);
 
-        poseEstimator = new SwerveDrivePoseEstimator(kinematicsFix, getGyroAngle(), getModulePositions(),
+        poseEstimator = new SwerveDrivePoseEstimator(kinematics, getGyroAngle(), getModulePositions(),
                 new edu.wpi.first.math.geometry.Pose2d());
         
         SmartDashboard.putData(this);
@@ -45,7 +46,7 @@ public class Chassis extends SubsystemBase {
 
     public void setVelocities(ChassisSpeeds speeds) {
         speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getGyroAngle());
-        SwerveModuleState[] states = kinematicsFix.toSwerveModuleStates(speeds);
+        SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
         setModuleStates(states);
     }
 

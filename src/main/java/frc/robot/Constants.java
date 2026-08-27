@@ -25,6 +25,11 @@ public final class Constants {
         public static final int CONTROLLER_PORT = 0;
     }
 
+    public static final double STEER_MOTOR_OFFSET_FRONT_LEFT = -1;
+    public static final double STEER_MOTOR_OFFSET_FRONT_RIGHT = -1;
+    public static final double STEER_MOTOR_OFFSET_BACK_LEFT = -1;
+    public static final double STEER_MOTOR_OFFSET_BACK_RIGHT = -1;
+
     public static final String STEER_MOTOR_NAME_FRONT_LEFT = "steerMotorFrontLeft";
     public static final String DRIVE_MOTOR_NAME_FRONT_LEFT = "driveMotorFrontLeft";
     public static final String CANCODER_NAME_FRONT_LEFT = "cancoderFrontLeft";
@@ -76,7 +81,7 @@ public final class Constants {
     public static final double KP_Drive = 0;
     public static final double KI_Drive = 0;
     public static final double KD_Drive = 0;
-    public static final double KP_STEER = 5;
+    public static final double KP_STEER = 0;
     public static final double KI_STEER = 0;
     public static final double KD_STEER = 0;
     public static final double KS_DRIVE = 0;

@@ -13,17 +13,16 @@ import frc.demacia.utils.motors.TalonFXMotor;
 import frc.demacia.utils.sensors.Cancoder;
 import frc.demacia.utils.sensors.CancoderConfig;
 
-public class SwerveModule extends SubsystemBase {
+public class SwerveModule {
     private final TalonFXMotor steerMotor;
     private final TalonFXMotor driveMotor;
     private final Cancoder cancoder;
 
-    public SwerveModule(TalonFXConfig steer, TalonFXConfig drive, CancoderConfig cancoder) {
-        super();
+    public SwerveModule(TalonFXConfig steer, TalonFXConfig drive, CancoderConfig cancoder ,double offset ) {
         steerMotor = new TalonFXMotor(steer);
         driveMotor = new TalonFXMotor(drive);
         this.cancoder = new Cancoder(cancoder);
-        SmartDashboard.putData(this);
+        steerMotor.setEncoderPosition(getAbsoluteAngle()- offset);
     }
 
     public void setDrivePower(double power) {
@@ -69,11 +68,11 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public SwerveModuleState getState() {
-        return new SwerveModuleState(driveMotor.getCurrentPosition(), getSteerRotation());
+        return new SwerveModuleState(driveMotor.getCurrentVelocity(), getSteerRotation());
     }
 
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(getDriveVelocity(), getSteerRotation());
+        return new SwerveModulePosition(driveMotor.getCurrentPosition(), getSteerRotation());
     }
 
     public void resetEncoder() {
@@ -88,11 +87,4 @@ public class SwerveModule extends SubsystemBase {
         return Math.toDegrees(getSteerAngle());
     }
 
-    @Override
-    public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("abs encoder", this::getAbsoluteAngleDeg, null);
-        builder.addDoubleProperty("steer velocity", this::getSteerVelocity, null);
-        builder.addDoubleProperty("drive velocty", this::getDriveVelocity, null);
-        builder.addDoubleProperty("steer angle", this::getSteerAngleDeg, null);
-    }
 }
