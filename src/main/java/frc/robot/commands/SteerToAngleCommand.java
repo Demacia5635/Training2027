@@ -6,17 +6,19 @@ import frc.robot.subsystems.SimpleMotorSubsystem;
 public class SteerToAngleCommand extends Command {
 
     private final SimpleMotorSubsystem subsystem;
-    private final double targetDegrees;
+    private final double targetRadians;
 
     private final double power = 0.2;
-    private final double tolerance = 100.0;
+
+
+    private final double tolerance = Math.toRadians(2.0);
 
     public SteerToAngleCommand(
         SimpleMotorSubsystem subsystem,
-        double targetDegrees
+        double targetRadians
     ) {
         this.subsystem = subsystem;
-        this.targetDegrees = targetDegrees;
+        this.targetRadians = targetRadians;
 
         addRequirements(subsystem);
     }
@@ -25,18 +27,18 @@ public class SteerToAngleCommand extends Command {
     public void initialize() {
         System.out.println(
             "SteerToAngleCommand started - target: "
-            + targetDegrees + " degrees"
+            + targetRadians + " radians"
         );
     }
 
     @Override
     public void execute() {
 
-        double currentDegrees =
-            subsystem.getSteerPositionDegrees();
+        double currentRadians =
+            subsystem.getSteerPositionRadians();
 
         double error =
-            targetDegrees - currentDegrees;
+            targetRadians - currentRadians;
 
         if (error > 0) {
             subsystem.setPower(power);
@@ -49,11 +51,11 @@ public class SteerToAngleCommand extends Command {
     @Override
     public boolean isFinished() {
 
-        double currentDegrees =
-            subsystem.getSteerPositionDegrees();
+        double currentRadians =
+            subsystem.getSteerPositionRadians();
 
         double error =
-            targetDegrees - currentDegrees;
+            targetRadians - currentRadians;
 
         return Math.abs(error) <= tolerance;
     }
@@ -69,13 +71,14 @@ public class SteerToAngleCommand extends Command {
 
         System.out.println(
             "Steer Position: "
-            + subsystem.getSteerPositionDegrees()
-            + " degrees"
+            + subsystem.getSteerPositionRadians()
+            + " radians"
         );
 
         System.out.println(
             "Steer Velocity: "
-            + subsystem.getSteerVelocity()
+            + subsystem.getSteerVelocityRadians()
+            + " radians/second"
         );
     }
 }

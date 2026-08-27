@@ -25,7 +25,6 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
     return new SteerToAngleCommand(
         motorSubsystem,
-        90.0
-    );
+        90.0);
     }
 }

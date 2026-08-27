@@ -61,21 +61,26 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     }
 
 
-    // Position in degrees
-    public double getSteerPositionDegrees() {
-        return getSteerPosition() * 360.0;
-    }
+    public double getSteerPositionRadians() {
+    return getSteerPosition()
+        * (7.0 / 150.0)
+        * 2.0
+        * Math.PI;
+}
 // gear ratio 150(engine) : 7(steer)
-
+    
     // Velocity in rotations per second
     public double getSteerVelocity() {
         return STEERMOTOR.getVelocity().getValueAsDouble();
     }
-
-
-    // -------------------------
-    // DRIVE MOTOR DATA
-    // -------------------------
+    
+public double getSteerVelocityRadians() {
+    return getSteerVelocity()
+        * (7.0 / 150.0)
+        * 2.0
+        * Math.PI;
+}
+    
 
     // Position in rotations
     public double getDrivePosition() {
@@ -100,13 +105,13 @@ public class SimpleMotorSubsystem extends SubsystemBase {
         );
 
         SmartDashboard.putNumber(
-            "Steer Position Degrees",
-            getSteerPositionDegrees()
+            "Steer Position Radians",
+            getSteerPositionRadians()
         );
 
         SmartDashboard.putNumber(
-            "Steer Velocity",
-            getSteerVelocity()
+            "Steer Velocity Radians",
+            getSteerVelocityRadians()
         );
 
 
