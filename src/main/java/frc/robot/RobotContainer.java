@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SimpleMoorCommand;
+import frc.robot.commands.difrent_power;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SimpleMotorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,12 +24,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-private final SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
+  private final SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
+
+  private CommandXboxController controller = new CommandXboxController(0);
 
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
     getAutonomousCommand();
+    controller.leftBumper().onTrue(new difrent_power(subsystem));
   }
 
   /**
@@ -47,7 +51,7 @@ private final SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-   
+
   }
 
   /**
@@ -57,6 +61,6 @@ private final SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new SimpleMoorCommand(subsystem, 0.5, 3);
+    return new difrent_power(subsystem);
   }
 }

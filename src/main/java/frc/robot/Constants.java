@@ -18,16 +18,10 @@ package frc.robot;
  */
 public final class Constants {
 
-  public static final class SwerveModuleConstants {
-    public static final int MOTOT_ID = 1;
-    public static final String MotorCANbus = "rio";
-    public static final String Name ="";
-  }
-
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-    public static final int MOTOR_ID = 2;
-    public static final int MOTOR_ID2 = 1;
+    public static final int DriverControllerPort = 0;
+    public static final int STEER_ID = 2;
+    public static final int DRIVE_ID = 1;
     public static final String MotorCANbus = "rio";
 
   }
