@@ -27,7 +27,8 @@ public class DetectBall {
 public static void main(String[] args) {
         String fileName = "detectBallExercise.jpg";
         // Load the OpenCV native library
-        System.load("D:\\Projects\\OpenCV\\opencv\\build\\java\\x64\\opencv_java4140.dll");
+//        System.load("D:\\Projects\\OpenCV\\opencv\\build\\java\\x64\\opencv_java4140.dll");
+        System.load(System.getProperty("user.dir") + "\\opencv_java4140.dll");
 
         // Read the image and resize it to a smaller size for faster processing
         Mat img = Imgcodecs.imread(fileName);
