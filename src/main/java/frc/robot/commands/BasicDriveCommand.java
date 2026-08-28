@@ -4,11 +4,11 @@
 
 package frc.robot.commands;
 
+
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.demacia.utils.controller.CommandController;
-import  frc.robot.subsystems.BasicChassis;
+import frc.robot.subsystems.BasicChassis;
 
 public class BasicDriveCommand extends Command {
   private BasicChassis chassis; // Basic are the ones I made
@@ -21,21 +21,26 @@ public class BasicDriveCommand extends Command {
     addRequirements(chassis);
   }
 
-
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   @Override
   public void execute() {
-    chassis.drive(new ChassisSpeeds(controller.getLeftX(), controller.getLeftY(),0));
-    }
-  
+    double omega = controller.getRightTrigger() - controller.getLeftTrigger();
+    double leftStickX = controller.getLeftX();
+    double leftStickY = controller.getLeftY();
+    speeds = new ChassisSpeeds(leftStickX, leftStickY,
+        omega);
 
+    chassis.drive(speeds);
+  }
 
   @Override
   public void end(boolean interrupted) {
     chassis.stopAll(); // when finished, stop all modules.
   }
+
   @Override
   public boolean isFinished() {
     return false;

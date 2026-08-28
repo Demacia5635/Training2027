@@ -9,24 +9,25 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.demacia.utils.chassis.SwerveModuleConfig;
+import frc.demacia.utils.motors.TalonFXConfig;
 import frc.demacia.utils.motors.TalonFXMotor;
 import frc.demacia.utils.sensors.Cancoder;
-import frc.robot.Constants;
 
 public class BasicSwerveModule extends SubsystemBase {
 
-  private final TalonFXMotor driveMotor;
-  private final TalonFXMotor steerMotor;
-  private final Cancoder cancoder;
+  private TalonFXMotor driveMotor;
+  private TalonFXMotor steerMotor;
+  private Cancoder cancoder;
+  private SwerveModuleConfig config;
+  public String name;
 
-  public BasicSwerveModule(SwerveModuleConfig swerveModuleConfig) {
-    super();
-    driveMotor = new TalonFXMotor(Constants.MotorConstants.DRIVE_CONFIG);
-    steerMotor = new TalonFXMotor(Constants.MotorConstants.STEER_CONFIG);
-    cancoder = new Cancoder(Constants.cancoderConstants.CANCODER_CONFIG);
 
-    steerMotor.setEncoderPosition(cancoder.getCurrentAbsPosition()  - swerveModuleConfig.steerOffset);
-
+  public BasicSwerveModule(SwerveModuleConfig config) {
+    this.config = config;
+    driveMotor = new TalonFXMotor((TalonFXConfig) config.driveConfig);
+    steerMotor = new TalonFXMotor((TalonFXConfig) config.steerConfig);
+    cancoder = new Cancoder(config.cancoderConfig);
+    name = config.name;
   }
 
   // Set drive motor power
@@ -72,10 +73,10 @@ public class BasicSwerveModule extends SubsystemBase {
   }
 
   public void stopAll() {
-  steerMotor.stop();;
-  driveMotor.stop();
-}
-
+    steerMotor.stop();
+    ;
+    driveMotor.stop();
+  }
 
   @Override
   public void initSendable(SendableBuilder builder) {
@@ -87,8 +88,4 @@ public class BasicSwerveModule extends SubsystemBase {
 
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
 }

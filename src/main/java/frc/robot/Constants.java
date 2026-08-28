@@ -23,15 +23,26 @@ import frc.demacia.utils.sensors.PigeonConfig;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-  }
 
-  public static class MotorConstants {
+  public static class ChassisConstants {
     public static final String STEER_NAME = "Steer";
     public static final String DRIVE_NAME = "Drive";
 
-    public static final int STEER_ID = 2;
-    public static final int DRIVE_ID = 1;
+    public static final int STEER_FRONT_LEFT_ID = 1;
+    public static final int DRIVE_FRONT_LEFT_ID = 2;
+    public static final int CANCODER_FRONT_LEFT_ID = 3;
+
+    public static final int STEER_FRONT_RIGHT_ID = 4;
+    public static final int DRIVE_FRONT_RIGHT_ID = 5;
+    public static final int CANCODER_FRONT_RIGHT_ID = 6;
+
+    public static final int STEER_BACK_LEFT_ID = 7;
+    public static final int DRIVE_BACK_LEFT_ID = 8;
+    public static final int CANCODER_BACK_LEFT_ID = 9;
+
+    public static final int STEER_BACK_RIGHT_ID = 10;
+    public static final int DRIVE_BACK_RIGHT_ID = 11;
+    public static final int CANCODER_BACK_RIGHT_ID = 12;
 
     public static final double STEER_KP = 2;
     public static final double STEER_KI = 0;
@@ -50,49 +61,138 @@ public final class Constants {
     public static final double STEER_GEAR_RATIO = 150 / 7;
     public static final double DRIVE_GEAR_RATIO = 8.14;
 
-    public static final Canbus MOTOR_CANBUS = Canbus.Rio;
+    public static final Canbus CANBUS = Canbus.Rio;
+    public static final String CANCODER_NAME = "Cancoder";
 
-    public static final TalonFXConfig STEER_CONFIG = new TalonFXConfig(STEER_ID, MOTOR_CANBUS, STEER_NAME)
+
+
+
+    // FRONT RIGHT
+
+
+
+
+
+    public static final TalonFXConfig STEER_FRONT_RIGHT_CONFIG = new TalonFXConfig(STEER_FRONT_RIGHT_ID, CANBUS,
+        STEER_NAME)
         .withPID(STEER_KP, STEER_KI, STEER_KD, STEER_KS, STEER_KV, STEER_KA, 0, 0, 0)
         .withRadiansMotor(STEER_GEAR_RATIO)
         .withInvert(true)
         .withBrake(false);
 
-    public static final TalonFXConfig DRIVE_CONFIG = new TalonFXConfig(DRIVE_ID, MOTOR_CANBUS, DRIVE_NAME)
+    public static final TalonFXConfig DRIVE_FRONT_RIGHT_CONFIG = new TalonFXConfig(DRIVE_FRONT_RIGHT_ID, CANBUS, 
+        DRIVE_NAME)
         .withPID(DRIVE_KP, DRIVE_KI, DRIVE_KD, DRIVE_KS, DRIVE_KV, DRIVE_KA, 0, 0, 0)
         .withMeterMotor(DRIVE_GEAR_RATIO, 4 * Math.PI * 0.254);
 
-  }
+    
+        public static final CancoderConfig CANCODER_FRONT_RIGHT_CONFIG = new CancoderConfig(CANCODER_FRONT_RIGHT_ID, CANBUS,
+        CANCODER_NAME); // cancoder
 
-  public static class SwerveModuleConfigs {
     public static final String FRONT_RIGHT_NAME = "Front Right Module";
     public static final SwerveModuleConfig FRONT_RIGHT_CONFIG = new SwerveModuleConfig(FRONT_RIGHT_NAME,
-        Constants.MotorConstants.STEER_CONFIG, Constants.MotorConstants.DRIVE_CONFIG,
-        Constants.cancoderConstants.CANCODER_CONFIG);
+        STEER_FRONT_RIGHT_CONFIG, DRIVE_FRONT_RIGHT_CONFIG,
+       CANCODER_FRONT_RIGHT_CONFIG);
 
-    public static final String FRONT_LEFT_NAME = "Front Left Module";
+
+
+
+
+
+    // FRONT LEFT
+
+
+
+
+
+    public static final TalonFXConfig STEER_FRONT_LEFT_CONFIG = new TalonFXConfig(STEER_FRONT_LEFT_ID, CANBUS,
+        STEER_NAME)
+        .withPID(STEER_KP, STEER_KI, STEER_KD, STEER_KS, STEER_KV, STEER_KA, 0, 0, 0)
+        .withRadiansMotor(STEER_GEAR_RATIO)
+        .withInvert(true)
+        .withBrake(false);
+
+    public static final TalonFXConfig DRIVE_FRONT_LEFT_CONFIG = new TalonFXConfig(DRIVE_FRONT_LEFT_ID, CANBUS,
+        DRIVE_NAME)
+        .withPID(DRIVE_KP, DRIVE_KI, DRIVE_KD, DRIVE_KS, DRIVE_KV, DRIVE_KA, 0, 0, 0)
+        .withMeterMotor(DRIVE_GEAR_RATIO, 4 * Math.PI * 0.254);
+
+    
+        public static final CancoderConfig CANCODER_FRONT_LEFT_CONFIG = new CancoderConfig(CANCODER_FRONT_LEFT_ID, CANBUS,
+        CANCODER_NAME); // cancoder
+
+    public static final String FRONT_LEFT_NAME = "Front Right Module";
     public static final SwerveModuleConfig FRONT_LEFT_CONFIG = new SwerveModuleConfig(FRONT_LEFT_NAME,
-        Constants.MotorConstants.STEER_CONFIG, Constants.MotorConstants.DRIVE_CONFIG,
-        Constants.cancoderConstants.CANCODER_CONFIG);
+        STEER_FRONT_LEFT_CONFIG, DRIVE_FRONT_LEFT_CONFIG,
+       CANCODER_FRONT_LEFT_CONFIG);
 
-    public static final String BACK_LEFT_NAME = "Back Left Module";
+
+
+
+
+
+    // BACK LEFT
+
+
+
+
+
+    public static final TalonFXConfig STEER_BACK_LEFT_CONFIG = new TalonFXConfig(STEER_BACK_LEFT_ID, CANBUS,
+        STEER_NAME)
+        .withPID(STEER_KP, STEER_KI, STEER_KD, STEER_KS, STEER_KV, STEER_KA, 0, 0, 0)
+        .withRadiansMotor(STEER_GEAR_RATIO)
+        .withInvert(true)
+        .withBrake(false);
+
+    public static final TalonFXConfig DRIVE_BACK_LEFT_CONFIG = new TalonFXConfig(DRIVE_BACK_LEFT_ID, CANBUS,
+        DRIVE_NAME)
+        .withPID(DRIVE_KP, DRIVE_KI, DRIVE_KD, DRIVE_KS, DRIVE_KV, DRIVE_KA, 0, 0, 0)
+        .withMeterMotor(DRIVE_GEAR_RATIO, 4 * Math.PI * 0.254);
+
+    
+        public static final CancoderConfig CANCODER_BACK_LEFT_CONFIG = new CancoderConfig(CANCODER_BACK_LEFT_ID, CANBUS,
+        CANCODER_NAME); // cancoder
+
+    public static final String BACK_LEFT_NAME = "Front Right Module";
     public static final SwerveModuleConfig BACK_LEFT_CONFIG = new SwerveModuleConfig(BACK_LEFT_NAME,
-        Constants.MotorConstants.STEER_CONFIG, Constants.MotorConstants.DRIVE_CONFIG,
-        Constants.cancoderConstants.CANCODER_CONFIG);
+        STEER_BACK_LEFT_CONFIG, DRIVE_BACK_LEFT_CONFIG,
+       CANCODER_BACK_LEFT_CONFIG);
 
-    public static final String BACK_RIGHT_NAME = "Back Right Module";
+
+
+
+
+
+
+    // BACK RIGHT
+
+
+
+
+    public static final TalonFXConfig STEER_BACK_RIGHT_CONFIG = new TalonFXConfig(STEER_BACK_RIGHT_ID, CANBUS,
+        STEER_NAME)
+        .withPID(STEER_KP, STEER_KI, STEER_KD, STEER_KS, STEER_KV, STEER_KA, 0, 0, 0)
+        .withRadiansMotor(STEER_GEAR_RATIO)
+        .withInvert(true)
+        .withBrake(false);
+
+    public static final TalonFXConfig DRIVE_BACK_RIGHT_CONFIG = new TalonFXConfig(DRIVE_BACK_RIGHT_ID, CANBUS,
+        DRIVE_NAME)
+        .withPID(DRIVE_KP, DRIVE_KI, DRIVE_KD, DRIVE_KS, DRIVE_KV, DRIVE_KA, 0, 0, 0)
+        .withMeterMotor(DRIVE_GEAR_RATIO, 4 * Math.PI * 0.254);
+
+    
+        public static final CancoderConfig CANCODER_BACK_RIGHT_CONFIG = new CancoderConfig(CANCODER_BACK_RIGHT_ID, CANBUS,
+        CANCODER_NAME); // cancoder
+
+    public static final String BACK_RIGHT_NAME = "Front Right Module";
     public static final SwerveModuleConfig BACK_RIGHT_CONFIG = new SwerveModuleConfig(BACK_RIGHT_NAME,
-        Constants.MotorConstants.STEER_CONFIG, Constants.MotorConstants.DRIVE_CONFIG,
-        Constants.cancoderConstants.CANCODER_CONFIG);
-  }
+        STEER_BACK_RIGHT_CONFIG, DRIVE_BACK_RIGHT_CONFIG,
+       CANCODER_BACK_RIGHT_CONFIG);
 
-  public static class cancoderConstants {
-    public static final String CANCODER_NAME = "Cancoder";
-    public static final int CANCODER_ID = 3;
-    public static final Canbus CANCODER_CANBUS = Canbus.Rio;
 
-    public static final CancoderConfig CANCODER_CONFIG = new CancoderConfig(CANCODER_ID, CANCODER_CANBUS,
-        CANCODER_NAME);
+       
+
   }
 
   public static class GyroConstants {

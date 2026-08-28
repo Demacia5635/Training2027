@@ -16,8 +16,8 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     private final TalonFXMotor steerMotor;
     public SimpleMotorSubsystem() {
         super();
-        driveMotor = new TalonFXMotor(Constants.MotorConstants.DRIVE_CONFIG);
-        steerMotor = new TalonFXMotor(Constants.MotorConstants.STEER_CONFIG);
+        driveMotor = new TalonFXMotor(Constants.ChassisConstants.STEER_FRONT_RIGHT_CONFIG);
+        steerMotor = new TalonFXMotor(Constants.ChassisConstants.DRIVE_FRONT_RIGHT_CONFIG);
         SmartDashboard.putData("this", this);
         // SmartDashboard.putData("Wanted Motor Angle command", new
         // SimpleMotorCommand(this, 5, 5, 5));
@@ -91,7 +91,6 @@ public class SimpleMotorSubsystem extends SubsystemBase {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        // TODO Auto-generated method stub
         super.initSendable(builder);
         builder.addDoubleProperty("Target Angle", ()->getSteerPositionRadians(),(targetAngle)-> setSteerPositionRadians(targetAngle));
         builder.addDoubleProperty("Target velocity", this::getDriveVel, this::setDriveVelocityRPM);

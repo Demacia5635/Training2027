@@ -7,26 +7,16 @@ package frc.robot;
 import frc.demacia.utils.controller.CommandController;
 import frc.demacia.utils.controller.CommandController.ControllerType;
 import frc.robot.commands.BasicDriveCommand;
-import frc.robot.commands.SetDriveDistanceCommand;
-import frc.robot.commands.SetSteerAngleCommand;
-import frc.robot.commands.SimpleMotorCommand;
 import frc.robot.subsystems.BasicChassis;
 import frc.robot.subsystems.SimpleMotorSubsystem;
 
 
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 
 
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  // The robot's subsystems and commands are defined1 here...
   // if something here says basic it basically means I created it and its not something that has already been made.
   private final SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
   // private CommandXboxController controller = new CommandXboxController(Constants.ControllerConstants.CONTROLLER_ID);
@@ -39,19 +29,7 @@ public class RobotContainer {
     configureBindings();
     getAutonomousCommand();
 
-    // set the default command using RunCommand
-    // set default command for both drive and steer
-  //   subsystem.setDefaultCommand(
-  //       new RunCommand(
-  //           () -> {
-  //             // check left joystick and update drive power
-  //             subsystem.setDrivePower(leftYDeadBand());
-
-  //             // check right joystick and update steer power
-  //             subsystem.setSteerPower(rightYDeadBand());
-  //           },
-  //           subsystem));
-
+    subsystem.setDefaultCommand(driveCommand);
 
   }
 
@@ -75,8 +53,6 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    controller.leftStick().onTrue(driveCommand);
-    controller.rightStick().onTrue(driveCommand);
 
     // When a is pressed move steer motor
     // controller.a().onTrue(

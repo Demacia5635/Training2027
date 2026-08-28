@@ -27,13 +27,13 @@ public class BasicChassis extends SubsystemBase {
   private Field2d field2d;
 
   public BasicChassis() {
-    modules = new BasicSwerveModule[] { new BasicSwerveModule(Constants.SwerveModuleConfigs.FRONT_LEFT_CONFIG),
+    modules = new BasicSwerveModule[] { new BasicSwerveModule(Constants.ChassisConstants.FRONT_LEFT_CONFIG),
 
-        new BasicSwerveModule(Constants.SwerveModuleConfigs.FRONT_RIGHT_CONFIG),
+        new BasicSwerveModule(Constants.ChassisConstants.FRONT_RIGHT_CONFIG),
 
-        new BasicSwerveModule(Constants.SwerveModuleConfigs.BACK_LEFT_CONFIG),
+        new BasicSwerveModule(Constants.ChassisConstants.BACK_LEFT_CONFIG),
 
-        new BasicSwerveModule(Constants.SwerveModuleConfigs.BACK_RIGHT_CONFIG) };
+        new BasicSwerveModule(Constants.ChassisConstants.BACK_RIGHT_CONFIG) };
 
 
         
