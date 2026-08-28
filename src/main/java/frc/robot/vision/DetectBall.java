@@ -18,10 +18,7 @@ import org.opencv.imgproc.Moments;
 
 // This class detects a yellow ball in an image using OpenCV
 // The file is in the GIT folder
-// need to install OpenCV 4 - and set the path to the native library in the code
-// - https://opencv.org/releases/
-// - extract to a base folder, for example D:\Projects\OpenCV\opencv
-// - set the path to the native library in the code below
+// using openCV 4.14.0 - with the dll in GIT folder
 
 public class DetectBall {
 public static void main(String[] args) {
