@@ -78,7 +78,7 @@ public class Chassis extends SubsystemBase {
     setModuleStates(states);
   }
 
-  public void zeroHeading() {
+  public void resetGyro() {
     gyro.reset();
   }
 
