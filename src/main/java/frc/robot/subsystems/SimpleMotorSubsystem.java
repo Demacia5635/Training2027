@@ -11,31 +11,40 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class SimpleMotorSubsystem extends SubsystemBase {
-  public final TalonFX motor;
-  public final TalonFX motor2;
+  private final TalonFX motorSteer;
+  private final TalonFX motorDrive;
 
   /** Creates a new SimpleMotorSubsystem. */
   public SimpleMotorSubsystem() {
     super();
-    motor = new TalonFX(Constants.OperatorConstants.STEER_ID, Constants.OperatorConstants.MotorCANbus);
-    motor2 = new TalonFX(Constants.OperatorConstants.DRIVE_ID, Constants.OperatorConstants.MotorCANbus);
+    motorSteer = new TalonFX(Constants.OperatorConstants.STEER_ID, Constants.OperatorConstants.MotorCANbus);
+    motorDrive = new TalonFX(Constants.OperatorConstants.DRIVE_ID, Constants.OperatorConstants.MotorCANbus);
   }
 
   public void setPowersteer(double Power) {
-    motor.set(Power);
+    motorSteer.set(Power);
   }
+
   public void setPowerdrive(double Power) {
-    motor2.set(Power);
+    motorDrive.set(Power);
+  }
+
+   public void setAnglesteer(double angle) {
+    motorSteer.setPosition(angle);
+  }
+
+  public void setDistancedrive(double Distance) {
+    motorDrive.setPosition(Distance);
   }
 
   public void stop() {
-    motor.set(0);
-    motor2.set(0);
+    motorSteer.set(0);
+    motorDrive.set(0);
   }
 
-  public void setDifrentPower(double Power){
-     motor.set(Power);
-    motor2.set(Power);
+  public void setDifrentPower(double Power) {
+    motorSteer.set(Power);
+    motorDrive.set(Power);
   }
 
   @Override
