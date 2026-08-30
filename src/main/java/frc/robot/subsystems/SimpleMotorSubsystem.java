@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.measure.Power;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -19,6 +21,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
     super();
     motorSteer = new TalonFX(Constants.OperatorConstants.STEER_ID, Constants.OperatorConstants.MotorCANbus);
     motorDrive = new TalonFX(Constants.OperatorConstants.DRIVE_ID, Constants.OperatorConstants.MotorCANbus);
+    SmartDashboard.putData(this);
   }
 
   public void setPowersteer(double Power) {
@@ -48,7 +51,8 @@ public class SimpleMotorSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+  public void initSendable(SendableBuilder builder) {
+      builder.addDoubleProperty("steer angle", () -> {return motorSteer.getPosition().getValueAsDouble();}, null);
+      builder.addDoubleProperty("drive distance", () -> {return motorDrive.getPosition().getValueAsDouble();}, null);
   }
 }
