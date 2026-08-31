@@ -44,18 +44,18 @@ public static void main(String[] args) {
         Mat hsv = new Mat();
         Imgproc.cvtColor(blur, hsv, Imgproc.COLOR_BGR2HSV);
         Mat mask = new Mat();
-        Scalar min = new Scalar(20, 100, 100);
+        Scalar min = new Scalar(20, 100, 70);
         Scalar max = new Scalar(30, 255, 255);
         Core.inRange(hsv, min,max, mask);
         HighGui.imshow("mask", mask);
 
         // Apply morphological operations to remove noise and fill gaps in the mask
-        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5));
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(7, 5));
         Mat filterred = new Mat();
         Point anchor = new Point(-1,-1);
         Imgproc.erode(mask, filterred, kernel, anchor , 2);
-        Imgproc.dilate(filterred, filterred, kernel, anchor, 4);
-        Imgproc.erode(filterred, filterred, kernel, anchor , 4);
+        Imgproc.dilate(filterred, filterred, kernel, anchor, 2);
+        Imgproc.erode(filterred, filterred, kernel, anchor , 3);
         HighGui.imshow("filtter", filterred);
 
         // Find contours in the filtered mask and draw them on the output image
