@@ -18,12 +18,9 @@ public class BasicSwerveModule extends SubsystemBase {
   private TalonFXMotor driveMotor;
   private TalonFXMotor steerMotor;
   private Cancoder cancoder;
-  private SwerveModuleConfig config;
   public String name;
 
-
   public BasicSwerveModule(SwerveModuleConfig config) {
-    this.config = config;
     driveMotor = new TalonFXMotor((TalonFXConfig) config.driveConfig);
     steerMotor = new TalonFXMotor((TalonFXConfig) config.steerConfig);
     cancoder = new Cancoder(config.cancoderConfig);
@@ -54,13 +51,29 @@ public class BasicSwerveModule extends SubsystemBase {
     driveMotor.setVelocity(targetVelocity);
   }
 
+  public double getSteerPosition() {
+    return steerMotor.getCurrentPosition(); // convert rotations to degrees
+  }
+
+  public double getDrivePosition() {
+    return driveMotor.getCurrentPosition();
+  }
+
+  public double getSteerVelocity() {
+    return steerMotor.getCurrentVelocity(); // convert degrees to rotations
+  }
+
+  public double getDriveVelocity() {
+    return driveMotor.getCurrentVelocity();
+  }
+
   // module state
   public void setModuleState(SwerveModuleState moduleState) {
     double targetAngle = moduleState.angle.getRadians();
-    double diffrence = targetAngle - steerMotor.getCurrentPosition();
+    double diffrence = targetAngle - getSteerPosition();
     double velocity = moduleState.speedMetersPerSecond;
     diffrence = MathUtil.angleModulus(diffrence);
-    setSteerPosition(steerMotor.getCurrentPosition() + diffrence);
+    setSteerPosition(getSteerPosition() + diffrence);
     setDriveVelocity(velocity);
   }
 
