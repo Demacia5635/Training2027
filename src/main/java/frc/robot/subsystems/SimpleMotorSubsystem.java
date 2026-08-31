@@ -13,10 +13,9 @@ public class SimpleMotorSubsystem extends SubsystemBase {
 
   private final TalonFXMotor driveMotor;
   private final TalonFXMotor steerMotor;
-  private final PositionVoltage positionVoltage = new PositionVoltage(0);
   
-  public double targetSteerPosition;
-  public double targetDrivePosition;
+  private double targetSteerPosition;
+  private double targetDriveVel;
 
   public SimpleMotorSubsystem() {
     super();
@@ -38,6 +37,12 @@ public class SimpleMotorSubsystem extends SubsystemBase {
 
   public void setDrivePosition(double targetdrivePosition) {
     driveMotor.setPositionVoltage(targetdrivePosition);
+  }
+  public double getTargetDriveVel(){
+    return targetDriveVel;
+  }
+  public double getTargetSteerPosition(){
+    return targetSteerPosition;
   }
 
   public double getDrivePower() {
@@ -66,8 +71,9 @@ public class SimpleMotorSubsystem extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty("Steer Position!!!!", this::getSteerAngle, (value) -> targetSteerPosition = value);
-    builder.addDoubleProperty("Drive Vel!!!!", this::getDrivePosition, (value) -> targetDrivePosition = value); 
+    builder.addDoubleProperty("Steer Position!!!!", () -> targetSteerPosition, (value) -> targetSteerPosition = value);
+    builder.addDoubleProperty("get of steer!!!!", this::getSteerAngle, null);
+    builder.addDoubleProperty("Drive Vel!!!!", this::getDrivePosition, (value) -> targetDriveVel = value); 
   }
 
   public void setSteerVelocity(double targetVelocity) {
@@ -86,6 +92,6 @@ public class SimpleMotorSubsystem extends SubsystemBase {
   }
 
   public double getDrivePosition() {
-    return driveMotor.getPosition().getValueAsDouble();
+    return driveMotor.getCurrentPosition();
   }
 }

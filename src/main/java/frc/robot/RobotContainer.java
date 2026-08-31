@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.GoToTargetAngleCommand;
+import frc.robot.commands.PidCommand;
 import frc.robot.commands.SimpleMotorCommand;
 import frc.robot.commands.YuvalSteer;
 import frc.robot.commands.moduleCommand;
@@ -25,11 +26,12 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    subsystem.setDefaultCommand(new moduleCommand(subsystem , subsystem.targetSteerPosition, subsystem.targetDrivePosition));
-    SmartDashboard.putData("YuvalSteer", new YuvalSteer(0, 100, subsystem));
-    SmartDashboard.putNumber("3rd cmd Target", 0.0);
+    ////subsystem.setDefaultCommand(new YuvalSteer(subsystem.getTargetSteerPosition(), subsystem.getTargetDriveVel(), subsystem));
+    // SmartDashboard.putData("YuvalSteer", new YuvalSteer(0, 100, subsystem));
+    SmartDashboard.putData("pid" , new PidCommand(subsystem));
+    // SmartDashboard.putNumber("3rd cmd Target", 0.0);
 
-    SmartDashboard.putData("ThirdCommand", new GoToTargetAngleCommand(subsystem));
+    // SmartDashboard.putData("ThirdCommand", new GoToTargetAngleCommand(subsystem));
 
     configureBindings();
     // configureDefaultCommands();
@@ -39,11 +41,11 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
     // .onTrue(new ExampleCommand(m_exampleSubsystem));
-    controller.a().onTrue(new SimpleMotorCommand(subsystem, 1, 0.5, 5.0));
+    // controller.a().onTrue(new SimpleMotorCommand(subsystem, 1, 0.5, 5.0));
   }
 
   private void configureDefaultCommands() {
-    subsystem.setDefaultCommand(new SimpleMotorCommand(subsystem, 0, 0, 0));
+    // subsystem.setDefaultCommand(new SimpleMotorCommand(subsystem, 0, 0, 0));
   }
 
   /**
@@ -52,7 +54,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SimpleMotorCommand(subsystem, 1, 0.1, 5.0);
+    return null;
   }
 
 }

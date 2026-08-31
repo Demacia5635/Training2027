@@ -29,10 +29,13 @@ public static final class driverConstants {
     public static final int driverControllerPort = 0;
     public static final int operatorControllerPort = 1;
     public static final double driverDeadband = 0.1;
+    private static final double STEER_GEAR_RATIO = 150/7;
+    private static final double DRIVER_GEAR_RATIO = 8.14;
 
     public static final TalonFXConfig DRIVE_CONFIG = new TalonFXConfig( 1, Canbus.Rio, "Drive Motor")
-    .withPID(0.05, 0.01, 0.002, 0, 0, 0, 0);
+    .withPID(1.2, 0, 0, 0, 0, 0, 0)
+    .withMeterMotor(DRIVER_GEAR_RATIO, 4 * 0.0254);
     public static final TalonFXConfig STEER_CONFIG = new TalonFXConfig( 2, Canbus.Rio, "Steer Motor")
-    .withPID(0.05, 0.01, 0.002, 0, 0, 0, 0);
+    .withPID(1.2, 0, 0, 0, 0, 0, 0);
   }
 }

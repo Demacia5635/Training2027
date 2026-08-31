@@ -4,58 +4,50 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.demacia.utils.log.LogManager;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.SimpleMotorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class YuvalSteer extends Command {
-  /** Creates a new YuvalSteer. */
-  private final double targetAngle;
-  private final double targetPosition;
-  private double error;
-  private double driveError;
+public class PidCommand extends Command {
+  private double targetPosition;
   private final SimpleMotorSubsystem subsystem;
 
-  public YuvalSteer(double targetAngle, double targetPosition, SimpleMotorSubsystem subsystem) {
-    this.targetAngle = targetAngle;
+  /** Creates a new PidCommand. */
+  public PidCommand(SimpleMotorSubsystem subsystem) {
+    // Use addRequirements() here to declare subsystem dependencies.
     this.targetPosition = targetPosition;
     this.subsystem = subsystem;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
+
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    error = targetAngle - subsystem.getSteerAngle();
-    driveError = targetPosition - subsystem.getDrivePosition();
-    LogManager.log("init");
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    error = targetAngle - subsystem.getSteerAngle();
-    subsystem.setSteerPower(Math.signum(error) * 0.2);
-    driveError = targetPosition - subsystem.getDrivePosition();
-    LogManager.log("drive error " + driveError);
-    LogManager.log("steer error" + error);
-    subsystem.setDrivePower(Math.signum(driveError) * 0.2);
+    subsystem.setDrivePosition(10);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    subsystem.stop();
-    LogManager.log("end");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
-    
-    // return Math.abs(error) < 2 && Math.abs(driveError) < 2;
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder){
+    builder.addDoubleProperty("targetPosition", () -> targetPosition, (pos) -> targetPosition = pos);
   }
 }
