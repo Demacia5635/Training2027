@@ -8,7 +8,6 @@ import frc.demacia.utils.controller.CommandController;
 import frc.demacia.utils.controller.CommandController.ControllerType;
 import frc.robot.commands.BasicDriveCommand;
 import frc.robot.subsystems.BasicChassis;
-import frc.robot.subsystems.SimpleMotorSubsystem;
 
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined1 here...
   // if something here says basic it basically means I created it and its not something that has already been made.
-  private final SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
+  // private final SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
   // private CommandXboxController controller = new CommandXboxController(Constants.ControllerConstants.CONTROLLER_ID);
   private BasicChassis chassis = new BasicChassis();
   private CommandController controller = new CommandController(Constants.ControllerConstants.CONTROLLER_ID, ControllerType.kXbox); // if controller type is ps5 change it here.
@@ -29,7 +28,7 @@ public class RobotContainer {
     configureBindings();
     getAutonomousCommand();
 
-    subsystem.setDefaultCommand(driveCommand);
+    chassis.setDefaultCommand(driveCommand);
 
   }
 

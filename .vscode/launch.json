@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "DetectBall",
+      "request": "launch",
+      "mainClass": "frc.robot.vision.DetectBall",
+      "projectName": "Training2027"
+    },
+    {
+      "type": "java",
       "name": "SysidApp",
       "request": "launch",
       "mainClass": "frc.demacia.sysid.SysidApp",
