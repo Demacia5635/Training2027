@@ -9,6 +9,13 @@
       "name": "DetectBall",
       "request": "launch",
       "mainClass": "frc.robot.vision.DetectBall",
+      "projectName": "Training2027-1"
+    },
+    {
+      "type": "java",
+      "name": "DetectBall",
+      "request": "launch",
+      "mainClass": "frc.robot.vision.DetectBall",
       "projectName": "Training2027"
     },
     {
