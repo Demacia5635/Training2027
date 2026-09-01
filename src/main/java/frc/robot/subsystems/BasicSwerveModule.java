@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -52,19 +54,29 @@ public class BasicSwerveModule extends SubsystemBase {
   }
 
   public double getSteerPosition() {
-    return steerMotor.getCurrentPosition(); // convert rotations to degrees
+    return steerMotor.getCurrentPosition(); 
   }
 
+  public Rotation2d getSteerAngle() {
+    return Rotation2d.fromRadians(steerMotor.getCurrentPosition()); 
+  }
+  
   public double getDrivePosition() {
     return driveMotor.getCurrentPosition();
   }
 
   public double getSteerVelocity() {
-    return steerMotor.getCurrentVelocity(); // convert degrees to rotations
+    return steerMotor.getCurrentVelocity(); 
   }
 
   public double getDriveVelocity() {
     return driveMotor.getCurrentVelocity();
+  }
+
+  public SwerveModulePosition getModulePosition() {
+    return new SwerveModulePosition(
+        getDrivePosition(),
+        getSteerAngle());
   }
 
   // module state
@@ -77,9 +89,7 @@ public class BasicSwerveModule extends SubsystemBase {
     setDriveVelocity(velocity);
   }
 
-  public double getModulePosition() {
-    return driveMotor.getCurrentPosition();
-  }
+ 
 
   public double getModuleState() {
     return driveMotor.getCurrentVelocity();

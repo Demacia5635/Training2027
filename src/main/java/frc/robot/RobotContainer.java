@@ -20,7 +20,7 @@ public class RobotContainer {
   // private final SimpleMotorSubsystem subsystem = new SimpleMotorSubsystem();
   // private CommandXboxController controller = new CommandXboxController(Constants.ControllerConstants.CONTROLLER_ID);
   private BasicChassis chassis = new BasicChassis();
-  private CommandController controller = new CommandController(Constants.ControllerConstants.CONTROLLER_ID, ControllerType.kXbox); // if controller type is ps5 change it here.
+  private CommandController controller = new CommandController(Constants.ControllerConstants.CONTROLLER_ID, ControllerType.kPS5); // if controller type is ps5 change it here.
   private BasicDriveCommand driveCommand = new BasicDriveCommand(chassis, controller); // the drive command
 
 

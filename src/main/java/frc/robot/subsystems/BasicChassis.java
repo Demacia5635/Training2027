@@ -4,11 +4,9 @@
 
 package frc.robot.subsystems;
 
-
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -34,16 +32,32 @@ public class BasicChassis extends SubsystemBase {
         new BasicSwerveModule(Constants.ChassisConstants.FRONT_LEFT_CONFIG),
         new BasicSwerveModule(Constants.ChassisConstants.FRONT_RIGHT_CONFIG),
         new BasicSwerveModule(Constants.ChassisConstants.BACK_LEFT_CONFIG),
-        new BasicSwerveModule(Constants.ChassisConstants.BACK_RIGHT_CONFIG)};
+        new BasicSwerveModule(Constants.ChassisConstants.BACK_RIGHT_CONFIG) };
 
     gyro = new Pigeon(Constants.GyroConstants.PIGEON_CONFIG);
-    odometry = new SwerveDriveOdometry(kinematics, gyroAngle,new SwerveModulePosition[] {});// TODO: Add swerve module position
-  
+    gyroAngle = gyro.getGyroAngle();
     field2d = new Field2d();
-    kinematics = new SwerveDriveKinematics();
-    
-    poseEstimator = new SwerveDrivePoseEstimator(kinematics, gyroAngle, new SwerveModulePosition[] {}, // TODO: Add swerve module position x2
-        Pose2d.kZero);
+
+    kinematics = new SwerveDriveKinematics(
+        Constants.ChassisConstants.FRONT_LEFT_POSITION,
+        Constants.ChassisConstants.FRONT_RIGHT_POSITION,
+        Constants.ChassisConstants.BACK_LEFT_POSITION,
+        Constants.ChassisConstants.BACK_RIGHT_POSITION);
+
+    SwerveModulePosition[] modulePosAtStart = getModulePositions();
+    odometry = new SwerveDriveOdometry(kinematics, gyroAngle, modulePosAtStart);
+    poseEstimator = new SwerveDrivePoseEstimator(kinematics, gyroAngle, modulePosAtStart,Pose2d.kZero);
+
+
+
+  }
+
+  public SwerveModulePosition[] getModulePositions() {
+    SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
+    for (int i = 0; i < modules.length; i++) {
+      positions[i] = modules[i].getModulePosition();
+    }
+    return positions;
   }
 
   public void setModuleStates(SwerveModuleState[] states) {
@@ -61,9 +75,8 @@ public class BasicChassis extends SubsystemBase {
 
   // reset robot direction function which gets pose as a parameter
   public void resetPose(Pose2d pose) {
-    poseEstimator.resetPose(pose); 
+    poseEstimator.resetPosition(gyroAngle, getModulePositions(), pose);;
   }
-
 
   public void stopAll() {
     for (int i = 0; i < modules.length; i++) {
@@ -74,6 +87,13 @@ public class BasicChassis extends SubsystemBase {
   @Override
   public void periodic() {
     gyroAngle = gyro.getGyroAngle();
+
+
+    SwerveModulePosition[] positions = getModulePositions();
+    poseEstimator.update(gyroAngle, positions);
+    odometry.update(gyroAngle, positions);
+
+    field2d.setRobotPose(poseEstimator.getEstimatedPosition());
 
   }
 }
