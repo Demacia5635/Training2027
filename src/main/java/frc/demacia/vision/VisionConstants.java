@@ -62,7 +62,6 @@ public class VisionConstants {
   private static final double HUB_TAG_HEIGHT = inchToMeter(44.25); // Hub scoring location tags
   private static final double DEPOT_TAG_HEIGHT = inchToMeter(21.75); // Depot perimeter tags
 
-  // Scoring position offsets TODO: Update these based on 2026 Hub/Tower/Outpost
   // positions
   public static final Translation2d HUB_TAG_TO_RIGHT_SCORING = new Translation2d(-0.55, -0.160);
   public static final Translation2d HUB_TAG_TO_LEFT_SCORING = new Translation2d(-0.55, 0.160);

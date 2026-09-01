@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.demacia.utils.controller.CommandController;
+import frc.robot.Constants;
 import frc.robot.subsystems.BasicChassis;
 
 public class BasicDriveCommand extends Command {
@@ -26,9 +27,9 @@ public class BasicDriveCommand extends Command {
 
   @Override
   public void execute() {
-    double vx = -controller.getLeftY(); // if needed, add max speed. (for all values)
-    double vy = -controller.getLeftX();
-    double velRotation = controller.getRightTrigger() - controller.getLeftTrigger();
+    double vx = -controller.getLeftY() * Constants.ChassisConstants.MAX_SPEED_METERS_PER_SEC;
+    double vy = -controller.getLeftX() * Constants.ChassisConstants.MAX_SPEED_METERS_PER_SEC;
+    double velRotation = controller.getRightTrigger() - controller.getLeftTrigger() * Constants.ChassisConstants.MAX_SPEED_RPM;
 
     speeds = new ChassisSpeeds(vx, vy, velRotation);
 
