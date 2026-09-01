@@ -17,7 +17,7 @@ public class PidCommand extends Command {
   /** Creates a new PidCommand. */
   public PidCommand(SimpleMotorSubsystem subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.targetPosition = targetPosition;
+  
     this.subsystem = subsystem;
     addRequirements(subsystem);
 
@@ -32,7 +32,7 @@ public class PidCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    subsystem.setDrivePosition(10);
+    subsystem.setDrivePosition(0);
   }
 
   // Called once the command ends or is interrupted.
@@ -46,8 +46,8 @@ public class PidCommand extends Command {
     return false;
   }
 
-  @Override
-  public void initSendable(SendableBuilder builder){
-    builder.addDoubleProperty("targetPosition", () -> targetPosition, (pos) -> targetPosition = pos);
-  }
+  // @Override
+  // public void initSendable(SendableBuilder builder){
+  //   builder.addDoubleProperty("targetPosition", () -> targetPosition, (pos) -> targetPosition = pos);
+  // }
 }

@@ -54,8 +54,8 @@ public class YuvalSteer extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
     
-    // return Math.abs(error) < 2 && Math.abs(driveError) < 2;
+    
+   return Math.abs(error) < 1 && Math.abs(driveError) < 1;
   }
 }

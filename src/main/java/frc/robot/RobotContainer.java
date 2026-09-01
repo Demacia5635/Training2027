@@ -27,7 +27,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     ////subsystem.setDefaultCommand(new YuvalSteer(subsystem.getTargetSteerPosition(), subsystem.getTargetDriveVel(), subsystem));
-    // SmartDashboard.putData("YuvalSteer", new YuvalSteer(0, 100, subsystem));
+    SmartDashboard.putData("YuvalSteer", new YuvalSteer(90, 0, subsystem));
     SmartDashboard.putData("pid" , new PidCommand(subsystem));
     // SmartDashboard.putNumber("3rd cmd Target", 0.0);
 

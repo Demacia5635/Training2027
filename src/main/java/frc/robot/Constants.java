@@ -33,9 +33,9 @@ public static final class driverConstants {
     private static final double DRIVER_GEAR_RATIO = 8.14;
 
     public static final TalonFXConfig DRIVE_CONFIG = new TalonFXConfig( 1, Canbus.Rio, "Drive Motor")
-    .withPID(1.2, 0, 0, 0, 0, 0, 0)
+    .withPID(10, 0, 0, 0, 0, 0, 0)
     .withMeterMotor(DRIVER_GEAR_RATIO, 4 * 0.0254);
     public static final TalonFXConfig STEER_CONFIG = new TalonFXConfig( 2, Canbus.Rio, "Steer Motor")
-    .withPID(1.2, 0, 0, 0, 0, 0, 0);
+    .withPID(4, 0, 0, 0, 0, 0, 0);
   }
 }
