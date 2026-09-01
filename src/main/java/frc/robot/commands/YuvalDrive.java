@@ -30,7 +30,7 @@ public class YuvalDrive extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+   System.out.println("initialized");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -47,6 +47,10 @@ public class YuvalDrive extends Command {
     }
 
     simpleMotorSubsystem.driveForward(Distance);
+    System.out.println("Steer Error: " + steerError + ", Drive Error: " + driveError);
+    System.out.println("Steer Position: " + simpleMotorSubsystem.getSteerMotorPosition() );
+      
+    System.out.println("wanted Angle: " + wantedAngle  );
   }
 
   // Called once the command ends or is interrupted.
@@ -61,8 +65,8 @@ public class YuvalDrive extends Command {
   public boolean isFinished() {
     // Check if the current angle is within 1 degree of the desired angle
     // Stop the steering motor
-    return Math.abs(simpleMotorSubsystem.getSteerMotorPosition() - wantedAngle) < 2.0
-        && Math.abs(simpleMotorSubsystem.getDriveMotorPosition() - Distance) < 2.0;
+    return Math.abs(simpleMotorSubsystem.getSteerMotorPosition() - wantedAngle) < 4.0
+        && Math.abs(simpleMotorSubsystem.getDriveMotorPosition() - Distance) < 4.0;
 
   }
 }

@@ -96,6 +96,7 @@ public class SimpleMotorSubsystem extends SubsystemBase {
         builder.addDoubleProperty("steer pos", () -> getSteerMotorPosition(), null);
         builder.addDoubleProperty("drive power",()-> getDrivePower(), null);
         builder.addDoubleProperty("steer power",()-> getSteerPower(), null);
+        builder.addDoubleProperty("drive pos", () -> getDriveMotorPosition(), null);
 
     }
 }
