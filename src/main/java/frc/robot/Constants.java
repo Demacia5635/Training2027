@@ -25,10 +25,10 @@ public final class Constants {
         public static final int CONTROLLER_PORT = 0;
     }
 
-    public static final double STEER_MOTOR_OFFSET_FRONT_LEFT = -1;
-    public static final double STEER_MOTOR_OFFSET_FRONT_RIGHT = -1;
-    public static final double STEER_MOTOR_OFFSET_BACK_LEFT = -1;
-    public static final double STEER_MOTOR_OFFSET_BACK_RIGHT = -1;
+    public static final double STEER_MOTOR_OFFSET_FRONT_LEFT = 1.5217120831752096896735813514194;
+    public static final double STEER_MOTOR_OFFSET_FRONT_RIGHT = 1.8837303710189759237145855990482;
+    public static final double STEER_MOTOR_OFFSET_BACK_LEFT = -1.7674223277977745984402216157124;
+    public static final double STEER_MOTOR_OFFSET_BACK_RIGHT =  1.012428498101768307786402232556;
 
     public static final String STEER_MOTOR_NAME_FRONT_LEFT = "steerMotorFrontLeft";
     public static final String DRIVE_MOTOR_NAME_FRONT_LEFT = "driveMotorFrontLeft";
@@ -46,23 +46,23 @@ public final class Constants {
     public static final String DRIVE_MOTOR_NAME_BACK_RIGHT = "driveMotorBackRight";
     public static final String CANCODER_NAME_BACK_RIGHT = "cancoderBackRight";
 
-    public static final int STEER_MOTOR_ID_FRONT_LEFT = 2;// this is not the real ID
-    public static final int DRIVE_MOTOR_ID_FRONT_LEFT = 1;// this is not the real ID
-    public static final int CANCODER_ID_FRONT_LEFT = 3;// this is not the real ID
+    public static final int STEER_MOTOR_ID_FRONT_LEFT = 2;
+    public static final int DRIVE_MOTOR_ID_FRONT_LEFT = 1;
+    public static final int CANCODER_ID_FRONT_LEFT = 3;
 
-    public static final int STEER_MOTOR_ID_FRONT_RIGHT = 2;// this is not the real ID
-    public static final int DRIVE_MOTOR_ID_FRONT_RIGHT = 1;// this is not the real ID
-    public static final int CANCODER_ID_FRONT_RIGHT = 3;// this is not the real ID
+    public static final int STEER_MOTOR_ID_FRONT_RIGHT = 5;
+    public static final int DRIVE_MOTOR_ID_FRONT_RIGHT = 4;
+    public static final int CANCODER_ID_FRONT_RIGHT = 6;
 
-    public static final int STEER_MOTOR_ID_BACK_LEFT = 2;// this is not the real ID
-    public static final int DRIVE_MOTOR_ID_BACK_LEFT = 1;// this is not the real ID
-    public static final int CANCODER_ID_BACK_LEFT = 3;// this is not the real ID
+    public static final int STEER_MOTOR_ID_BACK_LEFT = 8;
+    public static final int DRIVE_MOTOR_ID_BACK_LEFT = 7;
+    public static final int CANCODER_ID_BACK_LEFT = 9;
 
-    public static final int STEER_MOTOR_ID_BACK_RIGHT = 2;// this is not the real ID
-    public static final int DRIVE_MOTOR_ID_BACK_RIGHT = 1;// this is not the real ID
-    public static final int CANCODER_ID_BACK_RIGHT = 3;// this is not the real ID
+    public static final int STEER_MOTOR_ID_BACK_RIGHT = 11;
+    public static final int DRIVE_MOTOR_ID_BACK_RIGHT = 10;
+    public static final int CANCODER_ID_BACK_RIGHT = 12;
 
-    public static final int GYRO_ID = 4;// this is not the real ID
+    public static final int GYRO_ID = 14;
 
     public static final edu.wpi.first.math.geometry.Translation2d FRONT_LEFT_POSITION = new edu.wpi.first.math.geometry.Translation2d(
             0.3, 0.3);
@@ -73,19 +73,19 @@ public final class Constants {
     public static final edu.wpi.first.math.geometry.Translation2d BACK_RIGHT_POSITION = new edu.wpi.first.math.geometry.Translation2d(
             -0.3, -0.3);
 
-    public static final Canbus CANBUS = Canbus.Rio;
-    public static final double SCOPE = 4 * 0.0254 * Math.PI;
+    public static final Canbus CANBUS = Canbus.CANIvore;
+    public static final double PERIMETER = 4 * 0.0254 * Math.PI;
     public static final double GEAR_RATIO_DRIVE = 8.14;
     public static final double GEAR_RATIO_STEER = 150.0 / 7.0;
 
-    public static final double KP_Drive = 0;
+    public static final double KP_Drive = 1.0;
     public static final double KI_Drive = 0;
     public static final double KD_Drive = 0;
-    public static final double KP_STEER = 0;
+    public static final double KP_STEER = 4;
     public static final double KI_STEER = 0;
     public static final double KD_STEER = 0;
-    public static final double KS_DRIVE = 0;
-    public static final double KV_DRIVE = 0;
+    public static final double KS_DRIVE = 0.17123;
+    public static final double KV_DRIVE = 2.20388;
     public static final double KA_DRIVE = 0;
     public static final double KG_DRIVE = 0;
     public static final double KS_STEER = 0;
@@ -99,44 +99,48 @@ public final class Constants {
     public static final TalonFXConfig CONFIG_STEER_FRONT_LEFT = new TalonFXConfig(STEER_MOTOR_ID_FRONT_LEFT, CANBUS,
             STEER_MOTOR_NAME_FRONT_LEFT)
             .withPID(KP_STEER, KI_STEER, KD_STEER, KS_STEER, KV_STEER, KA_STEER, KG_STEER)
-            .withRadiansMotor(GEAR_RATIO_STEER);
+            .withRadiansMotor(GEAR_RATIO_STEER)
+            .withInvert(true);
     public static final TalonFXConfig CONFIG_DRIVE_FRONT_LEFT = new TalonFXConfig(DRIVE_MOTOR_ID_FRONT_LEFT, CANBUS,
             DRIVE_MOTOR_NAME_FRONT_LEFT)
             .withPID(KP_Drive, KI_Drive, KD_Drive, KS_DRIVE, KV_DRIVE, KA_DRIVE, KG_DRIVE)
-            .withMeterMotor(GEAR_RATIO_DRIVE, SCOPE);
+            .withMeterMotor(GEAR_RATIO_DRIVE, PERIMETER);
     public static CancoderConfig CONFIG_CANCODER_FRONT_LEFT = new CancoderConfig(CANCODER_ID_FRONT_LEFT, CANBUS,
             CANCODER_NAME_FRONT_LEFT);
 
     public static final TalonFXConfig CONFIG_STEER_FRONT_RIGHT = new TalonFXConfig(STEER_MOTOR_ID_FRONT_RIGHT, CANBUS,
             STEER_MOTOR_NAME_FRONT_RIGHT)
             .withPID(KP_STEER, KI_STEER, KD_STEER, KS_STEER, KV_STEER, KA_STEER, KG_STEER)
-            .withRadiansMotor(GEAR_RATIO_STEER);
+            .withRadiansMotor(GEAR_RATIO_STEER)
+            .withInvert(true);
     public static final TalonFXConfig CONFIG_DRIVE_FRONT_RIGHT = new TalonFXConfig(DRIVE_MOTOR_ID_FRONT_RIGHT, CANBUS,
             DRIVE_MOTOR_NAME_FRONT_RIGHT)
             .withPID(KP_Drive, KI_Drive, KD_Drive, KS_DRIVE, KV_DRIVE, KA_DRIVE, KG_DRIVE)
-            .withMeterMotor(GEAR_RATIO_DRIVE, SCOPE);
+            .withMeterMotor(GEAR_RATIO_DRIVE, PERIMETER);
     public static CancoderConfig CONFIG_CANCODER_FRONT_RIGHT = new CancoderConfig(CANCODER_ID_FRONT_RIGHT, CANBUS,
             CANCODER_NAME_FRONT_RIGHT);
 
     public static final TalonFXConfig CONFIG_STEER_BACK_LEFT = new TalonFXConfig(STEER_MOTOR_ID_BACK_LEFT, CANBUS,
             STEER_MOTOR_NAME_BACK_LEFT)
             .withPID(KP_STEER, KI_STEER, KD_STEER, KS_STEER, KV_STEER, KA_STEER, KG_STEER)
-            .withRadiansMotor(GEAR_RATIO_STEER);
+            .withRadiansMotor(GEAR_RATIO_STEER)
+            .withInvert(true);
     public static final TalonFXConfig CONFIG_DRIVE_BACK_LEFT = new TalonFXConfig(DRIVE_MOTOR_ID_BACK_LEFT, CANBUS,
             DRIVE_MOTOR_NAME_BACK_LEFT)
             .withPID(KP_Drive, KI_Drive, KD_Drive, KS_DRIVE, KV_DRIVE, KA_DRIVE, KG_DRIVE)
-            .withMeterMotor(GEAR_RATIO_DRIVE, SCOPE);
+            .withMeterMotor(GEAR_RATIO_DRIVE, PERIMETER);
     public static CancoderConfig CONFIG_CANCODER_BACK_LEFT = new CancoderConfig(CANCODER_ID_BACK_LEFT, CANBUS,
             CANCODER_NAME_BACK_LEFT);
 
     public static final TalonFXConfig CONFIG_STEER_BACK_RIGHT = new TalonFXConfig(STEER_MOTOR_ID_BACK_RIGHT, CANBUS,
             STEER_MOTOR_NAME_BACK_RIGHT)
             .withPID(KP_STEER, KI_STEER, KD_STEER, KS_STEER, KV_STEER, KA_STEER, KG_STEER)
-            .withRadiansMotor(GEAR_RATIO_STEER);
+            .withRadiansMotor(GEAR_RATIO_STEER)
+            .withInvert(true);
     public static final TalonFXConfig CONFIG_DRIVE_BACK_RIGHT = new TalonFXConfig(DRIVE_MOTOR_ID_BACK_RIGHT, CANBUS,
             DRIVE_MOTOR_NAME_BACK_RIGHT)
             .withPID(KP_Drive, KI_Drive, KD_Drive, KS_DRIVE, KV_DRIVE, KA_DRIVE, KG_DRIVE)
-            .withMeterMotor(GEAR_RATIO_DRIVE, SCOPE);
+            .withMeterMotor(GEAR_RATIO_DRIVE, PERIMETER);
     public static CancoderConfig CONFIG_CANCODER_BACK_RIGHT = new CancoderConfig(CANCODER_ID_BACK_RIGHT, CANBUS,
             CANCODER_NAME_BACK_RIGHT);
 

@@ -39,11 +39,13 @@ public class SwerveModule {
 
     public void setVelocityDrive(double velocity) {
         driveMotor.setVelocity(velocity);
+        System.out.println("drive velocity" + velocity);
         // this.targetVelocityDrive = velocity;
     }
 
     public void setSteerPosition(double position) {
         steerMotor.setPositionVoltage(position);
+        System.out.println("steer position" + position);
         // this.targetAngleSteer = position;
     }
 
@@ -86,5 +88,6 @@ public class SwerveModule {
     public double getSteerAngleDeg() {
         return Math.toDegrees(getSteerAngle());
     }
+    
 
 }

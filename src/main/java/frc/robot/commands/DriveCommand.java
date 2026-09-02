@@ -10,28 +10,35 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class DriveCommand extends Command {
   private final Chassis chassisDriveAndSteer;
-  private final CommandController xboxController;
+  private final CommandController Controller;
 
-  public DriveCommand(Chassis chassisDriveAndSteer, CommandController xboxController) {
-    this.chassisDriveAndSteer = chassisDriveAndSteer;
-    this.xboxController = xboxController;
-    addRequirements(chassisDriveAndSteer);
-   
+  public DriveCommand(Chassis chassis, CommandController Controller) {
+    this.chassisDriveAndSteer = chassis;
+    this.Controller = Controller;
+    addRequirements(chassis);
 
   }
-    
+
   @Override
   public void execute() {
-    double forwardSpeedMetersPerSecond = -xboxController.getLeftY() * Constants.MAX_DRIVE_SPEED_METERS_PER_SECOND;
-    double lateralSpeedMetersPerSecond = -xboxController.getLeftX() * Constants.MAX_DRIVE_SPEED_METERS_PER_SECOND;
-    double rotationalSpeedRadiansPerSecond = -xboxController.getRightX()
-        * Constants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND;
-    ChassisSpeeds desiredChassisSpeeds = new ChassisSpeeds(
-        forwardSpeedMetersPerSecond,
-        lateralSpeedMetersPerSecond,
-        rotationalSpeedRadiansPerSecond);
+    double vx = -Controller.getLeftY() * Constants.MAX_DRIVE_SPEED_METERS_PER_SECOND;
+    double vy = -Controller.getLeftX() * Constants.MAX_DRIVE_SPEED_METERS_PER_SECOND;
+    double omga = -Controller.getRightX() * Constants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND;
 
-    chassisDriveAndSteer.setVelocities(desiredChassisSpeeds);
+    ChassisSpeeds Speeds = new ChassisSpeeds(
+        vx, // vx
+        vy, // vy
+        omga// omga
+    );
+
+    chassisDriveAndSteer.setVelocities(Speeds);
+    // System.out.println("vx" + vx);
+    // System.out.println("vy" + vy);
+    // System.out.println("omega" + omga);
+    // System.out.println("y" + Controller.getLeftY());
+    // System.out.println("x" + Controller.getLeftX());
+    // System.out.println("righx" + Controller.getRightX());
+   // System.out.println("chassis speed" + Speeds);
   }
 
   @Override

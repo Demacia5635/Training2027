@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,6 +32,7 @@ public class Chassis extends SubsystemBase {
                 new SwerveModule(Constants.CONFIG_STEER_BACK_RIGHT, Constants.CONFIG_DRIVE_BACK_RIGHT,
                         Constants.CONFIG_CANCODER_BACK_RIGHT, Constants.STEER_MOTOR_OFFSET_BACK_RIGHT)
         };
+        System.out.println("moules" + modules);
         gyro = new Pigeon2(Constants.GYRO_ID);
 
         field = new Field2d();
@@ -47,6 +49,7 @@ public class Chassis extends SubsystemBase {
     public void setVelocities(ChassisSpeeds speeds) {
         speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getGyroAngle());
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
+       // System.out.println("states" +  states);
         setModuleStates(states);
     }
 
@@ -75,4 +78,10 @@ public class Chassis extends SubsystemBase {
             modules[i].setSteerPosition(states[i].angle.getRadians());
         }
     }
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        
+        builder.addDoubleProperty("Front Left Steer Position", ()->modules[0].getSteerAngleDeg(), null);
+    }
+
 }
