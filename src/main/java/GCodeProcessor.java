@@ -80,6 +80,10 @@ public class GCodeProcessor {
     // Tool change execution word: M6 or M06
     private static final Pattern M06_PATTERN =
             Pattern.compile("(?i)\\bM0?6\\b");
+    // Tool change execution word: M6 or M06
+    private static final Pattern Z_WORD_PATTERN =
+            Pattern.compile("(?i)\\bZ(\\d{1,2})\\b");
+
 
     public static void main(String[] args) throws IOException {
         String inputPath;
@@ -106,6 +110,7 @@ public class GCodeProcessor {
 
         Integer pendingTool = null; // tool most recently named by a T word
         Integer activeTool = null;  // tool currently loaded; null until first M06
+        double lastZ = 0.0; // last Z value seen, for G92 calculation
 
         for (String rawLine : inputLines) {
             String line = rawLine;
@@ -125,6 +130,10 @@ public class GCodeProcessor {
             if (tMatch.find()) {
                 pendingTool = Integer.parseInt(tMatch.group(1));
             }
+            Matcher zMatch = Z_WORD_PATTERN.matcher(line);
+            if (zMatch.find()) {
+                lastZ = Double.parseDouble(zMatch.group(1));
+            }
 
             // --- 2. Split "G80 ... Zxx" into "G80" + "G00 Zxx" ---
             Matcher g80 = G80_PATTERN.matcher(line);
@@ -142,7 +151,7 @@ public class GCodeProcessor {
             if (M06_PATTERN.matcher(line).find()) {
                 boolean isFirstToolChange = (activeTool == null);
                 if (!isFirstToolChange) {
-                    addG92ForToolChange(output, activeTool, pendingTool);
+                    addG92ForToolChange(output, activeTool, pendingTool, lastZ);
                 }
                 output.add("M00 (Toole Change - " + TOOLS.get(pendingTool).description() + ")");
                 if (pendingTool != null) {
@@ -157,16 +166,11 @@ public class GCodeProcessor {
     }
 
     /** Inserts G92 Z<diff>, where diff = offset(newTool) - offset(oldTool). */
-    private static void addG92ForToolChange(List<String> output, Integer oldTool, Integer newTool) {
-        if (newTool == null) {
-            System.err.println("Warning: M06 found with no preceding T word; "
-                    + "skipping G92 insert.");
-            return;
-        }
+    private static void addG92ForToolChange(List<String> output, Integer oldTool, Integer newTool, double lastZ) {
         var oldT = TOOLS.get(oldTool);
         var newT = TOOLS.get(newTool);
         if(oldT.offset() != newT.offset()) {
-            output.add("G92 Z" + formatNumber(newT.offset()));
+            output.add("G92 Z" + formatNumber(newT.offset() + (lastZ - oldT.offset())));
         }
     }
 
