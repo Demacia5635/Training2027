@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -10,41 +11,26 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 /**
  * GCodeProcessor
  * ---------------
  * Reads a G-code (.nc / .tap / .txt) file and applies four transformations:
  *
- *   1. Removes G28 and everything after it through the end of that line.
- *      Anything on the same line BEFORE G28 is kept. If G28 is the first
- *      thing on the line, the whole line is dropped.
+ *   1. Removes G28 
  *   2. Where a line contains "G80 ... Z<value>", splits it into two lines:
  *        G80
  *        G00 Z<value>
- *      (cancels the canned cycle, then makes the Z retract an explicit rapid move)
- *   3. On the FIRST tool change (M06) in the program, no G92 is inserted
- *      (that tool is treated as the reference / already-touched-off tool).
- *      On every SUBSEQUENT tool change, inserts G92 Z<diff>, where diff is
- *      (offset of new tool) - (offset of previous tool) from TOOL_OFFSETS.
- *   4. After every tool-change (including the first), inserts an M00
- *      (program stop) so the operator can confirm before continuing.
+ *   3. After each tool change add M00 with tool name
+ *   4. After every tool change from drill to mill - add g92
  *
- * ASSUMPTIONS (edit the marked sections below if your files differ):
- *   - A "tool change" is recognized by an M06 (or M6) word. The active tool
- *     number is whatever T<number> was most recently seen, whether it's on
- *     the same line as M06 (e.g. "T3 M06") or on an earlier line
- *     (e.g. "T3" ... later ... "M06").
- *   - The per-tool offset table (TOOL_OFFSETS) holds each tool's ABSOLUTE
- *     length offset; the program computes the DIFFERENCE between
- *     consecutive tools automatically. Edit the table values, not the
- *     diff logic.
- *   - The offset is applied only to Z. Edit applyToolChangeLines() if you
- *     also need X/Y.
- *   - Insertion order after a tool change is: [original M06 line], G92
- *     (if applicable), M00.
  */
 public class GCodeProcessor {
+
+    public static final double DRILL_OFFSET = 30.0; // Z offset for drill tools
+    public static final double MILL_OFFSET = 50.0; // Z offset for drill tools
 
     record Tool(int number, double offset, String description) {}
 
@@ -56,12 +42,12 @@ public class GCodeProcessor {
     // are all measured from the same reference.
     private static final Map<Integer, Tool> TOOLS = new HashMap<>();
     static {
-        TOOLS.put(1, new Tool(1, 30, "Drill 4.2mm"));
-        TOOLS.put(2, new Tool(2, 30, "Drill 5.0mm"));
-        TOOLS.put(3, new Tool(3, 30, "Drill 6.0mm"));
-        TOOLS.put(4, new Tool(4, 30, "Drill 8.0mm"));
-        TOOLS.put(5, new Tool(5, 50, "MILL 4.0mm 2F"));
-        TOOLS.put(6, new Tool(6, 50, "MILL 6mm 2F"));
+        TOOLS.put(1, new Tool(1, DRILL_OFFSET, "Drill 4.2mm"));
+        TOOLS.put(2, new Tool(2, DRILL_OFFSET, "Drill 5.0mm"));
+        TOOLS.put(3, new Tool(3, DRILL_OFFSET, "Drill 6.0mm"));
+        TOOLS.put(4, new Tool(4, DRILL_OFFSET, "Drill 8.0mm"));
+        TOOLS.put(5, new Tool(5, MILL_OFFSET, "MILL 4.0mm 2F"));
+        TOOLS.put(6, new Tool(6, MILL_OFFSET, "MILL 6mm 2F"));
     }
     // =======================================================================
 
@@ -86,22 +72,32 @@ public class GCodeProcessor {
 
 
     public static void main(String[] args) throws IOException {
-        String inputPath;
-        String outputPath = null;  
-        if(args.length == 0) {
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter input file path: ");
-            inputPath = "C:\\Users\\udiki\\Downloads\\"  + scanner.nextLine();
-            scanner.close();            
-        } else {
-            inputPath = args[0];
-        } 
-        if(args.length >= 2) {
-            outputPath = args[1];
-        } else {
-            outputPath = inputPath.replaceAll("\\.txt$", "_processed.txt");
+        File inputFile = getInputPath();
+        if(inputFile == null) {
+            System.out.println("No input file selected. Exiting.");
+            return;
         }
+        String inputPath = inputFile.getAbsolutePath();
+        String outputPath = inputPath.replaceAll("\\.txt$", "_processed.txt");
         process(inputPath,outputPath);
+    }
+
+    static File getInputPath() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("txt files", "txt"));
+
+        // Show the standard "Open" dialog window
+        int response = fileChooser.showOpenDialog(null);
+
+        // Check if the user selected a file and clicked "Open"
+        if (response == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+            return selectedFile;
+        } else {
+            System.out.println("File selection canceled.");
+            return null;
+        }
     }
 
     public static void process(String inputPath, String outputPath) throws IOException {
@@ -161,8 +157,9 @@ public class GCodeProcessor {
         }
 
         Files.write(Paths.get(outputPath), output);
-        System.out.println("Processed " + inputLines.size() + " lines -> "
-                + output.size() + " lines. Wrote: " + outputPath);
+        String msg = "Processed " + inputLines.size() + " lines -> "
+                + output.size() + " lines. Wrote: " + outputPath;
+        JOptionPane.showMessageDialog(null, msg, "GCode Process", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /** Inserts G92 Z<diff>, where diff = offset(newTool) - offset(oldTool). */
