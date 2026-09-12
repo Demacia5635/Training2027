@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
@@ -126,6 +125,7 @@ public class GCodeProcessor {
             if (tMatch.find()) {
                 pendingTool = Integer.parseInt(tMatch.group(1));
             }
+            // --- Track the most recent Z value ---
             Matcher zMatch = Z_WORD_PATTERN.matcher(line);
             if (zMatch.find()) {
                 lastZ = Double.parseDouble(zMatch.group(1));
