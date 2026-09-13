@@ -153,17 +153,9 @@ public class GCodeProcessor1 {
         */
     }
 
-    /** Inserts G92 Z<diff>, where diff = offset(newTool) - offset(oldTool). */
-    private static void addG92ForToolChange(List<String> output, Integer oldTool, Integer newTool, double lastZ) {
-        var oldT = TOOLS.get(oldTool);
-        var newT = TOOLS.get(newTool);
-        if(oldT.offset() != newT.offset()) {
-            output.add("G92 Z" + formatNumber(newT.offset() + (lastZ - oldT.offset())));
-        }
-    }
 
     /** Formats a double as a clean decimal string, e.g. 0.1500 -> "0.15". */
-    private static String formatNumber(double value) {
+    public static String formatNumber(double value) {
         BigDecimal bd = BigDecimal.valueOf(value)
                 .setScale(4, RoundingMode.HALF_UP)
                 .stripTrailingZeros();

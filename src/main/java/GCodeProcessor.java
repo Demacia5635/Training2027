@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +26,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *   3. After each tool change add M00 with tool name
  *   4. After every tool change from drill to mill - add g92
  * 
- * TODO - For G03/G02 arcs - add Y for Xxx.xx Zxx.xx if missing, to avoid "G03/G02 with no Y" errors on some machines.
+ * optional - For G03/G02 arcs - add Y for Xxx.xx Zxx.xx if missing, to avoid "G03/G02 with no Y" errors on some machines.
  * Also - add X/Y for full circle arcs (G02/G03 with no X/Y) to avoid "G02/G03 with no X/Y" errors on some machines.
  * Remember last X and Y values
  *
@@ -92,7 +91,7 @@ public class GCodeProcessor {
         process(inputPath,outputPath);
     }
 
-    private static void test1() {
+    public static void test1() {
         String line = "N6 G90 G00 X103.389 Y-91.214";
         Matcher ym = Y_WORD_PATTERN.matcher(line);
         System.out.println(" find = " + ym.find());
@@ -131,8 +130,8 @@ public class GCodeProcessor {
         List<String> inputLines = Files.readAllLines(Paths.get(inputPath));
         List<String> output = new ArrayList<>();
 
-        Integer pendingTool = null; // tool most recently named by a T word
-        Integer activeTool = null;  // tool currently loaded; null until first M06
+        Tool firstTool = null;
+        Tool nextTool = null;
         double lastZ = 0.0; // last Z value seen, for G92 calculation
         double lastX = 0.0; // last X value seen, for G92 calculation
         double lastY = 0.0; // last Y value seen, for G92 calculation
@@ -153,7 +152,10 @@ public class GCodeProcessor {
             // --- Track the most recently selected tool number ---
             Matcher tMatch = T_WORD_PATTERN.matcher(line);
             if (tMatch.find()) {
-                pendingTool = Integer.parseInt(tMatch.group(1));
+                nextTool = TOOLS.get(Integer.parseInt(tMatch.group(1)));
+                if(firstTool == null) {
+                    firstTool = nextTool;
+                }
             }
             // --- Track the most recent X/Y/Z value ---
             Matcher zMatch = Z_WORD_PATTERN.matcher(line);
@@ -190,21 +192,12 @@ public class GCodeProcessor {
             // --- 3 & 4. On a tool-change execution (M06), insert G92 (if not
             //     the first change) then M00 ---
             if (M06_PATTERN.matcher(line).find()) {
-                var newT = TOOLS.get(pendingTool);
-                var oldT = activeTool == null ? newT : TOOLS.get(activeTool);
-                double offset = 0;
-                if(oldT.offset() != newT.offset()) {
-                    output.add("G92 Z" + formatNumber(newT.offset() + (lastZ - oldT.offset())));
-                    offset = newT.offset() - oldT.offset();
-                }
-                Tool tool = TOOLS.get(pendingTool);
-                output.add("M00 (Toole Change - " + tool.description() + 
-                        "         Spindel " + tool.spindel() + 
-                        "         Feed " + tool.feed() + 
+                double offset = nextTool.offset() - firstTool.offset();
+                output.add("G92 Z" + formatNumber(lastZ + offset));
+                output.add("M00 (Toole Change - " + nextTool.description() + 
+                        "         Spindel " + nextTool.spindel() + 
+                        "         Feed " + nextTool.feed() + 
                         "         Z Offset " + offset + "mm)");
-                if (pendingTool != null) {
-                    activeTool = pendingTool;
-                }
             }
         }
 
@@ -213,15 +206,6 @@ public class GCodeProcessor {
                 + output.size() + " lines. Wrote: " + outputPath + 
                 " lastX/Y/Z:"+ lastX + "/" + lastY + "/" + lastZ;
         JOptionPane.showMessageDialog(null, msg, "GCode Process", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    /** Inserts G92 Z<diff>, where diff = offset(newTool) - offset(oldTool). */
-    private static void addG92ForToolChange(List<String> output, Integer oldTool, Integer newTool, double lastZ) {
-        var oldT = TOOLS.get(oldTool);
-        var newT = TOOLS.get(newTool);
-        if(oldT.offset() != newT.offset()) {
-            output.add("G92 Z" + formatNumber(newT.offset() + (lastZ - oldT.offset())));
-        }
     }
 
     /** Formats a double as a clean decimal string, e.g. 0.1500 -> "0.15". */
