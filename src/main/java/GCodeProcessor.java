@@ -95,21 +95,6 @@ public class GCodeProcessor {
         process(inputPath,outputPath);
     }
 
-    public static void test1() {
-        String line = "N6 G90 G00 X103.389 Y-91.214";
-        Matcher ym = Y_WORD_PATTERN.matcher(line);
-        System.out.println(" find = " + ym.find());
-        System.out.println("ym = " + ym);
-        System.out.println("end = " + ym.end());
-        System.out.println("count = " + ym.groupCount());
-        System.out.println("region start = " + ym.regionStart());
-        System.out.println("regionEnd = " + ym.regionEnd());
-        double y = Double.parseDouble(ym.group(1));
-        System.out.println("y = " + y);
-        System.out.println("formated = " + formatNumber(y));
-        System.exit(0);
-    }
-
     static File getInputPath() {
         JFileChooser fileChooser = new JFileChooser();
         Path downloadsPath = Paths.get(System.getProperty("user.home"), "Downloads");
