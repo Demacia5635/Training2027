@@ -73,10 +73,6 @@ public class GCodeProcessor {
     // X/Y/Z word, e.g. "Z25.0" or "Z-3.5"
     private static final Pattern Z_WORD_PATTERN =
             Pattern.compile("(?i)\\bZ(-?\\d+(\\.\\d+)?)\\b");
-    private static final Pattern X_WORD_PATTERN =
-            Pattern.compile("(?i)\\bX(-?\\d+(\\.\\d+)?)\\b");
-    private static final Pattern Y_WORD_PATTERN =
-            Pattern.compile("(?i)\\bY(-?\\d+(\\.\\d+)?)\\b");
     private static final Pattern N_WORD_PATTERN =
             Pattern.compile("(?i)\\bN(-?\\d+(\\.\\d+)?)\\b");
 
@@ -84,7 +80,6 @@ public class GCodeProcessor {
 
 
     public static void main(String[] args) throws IOException {
-//        test1();
         File inputFile = getInputPath();
         if(inputFile == null) {
             System.out.println("No input file selected. Exiting.");
@@ -122,8 +117,6 @@ public class GCodeProcessor {
         Tool firstTool = null;
         Tool nextTool = null;
         double lastZ = 0.0; // last Z value seen, for G92 calculation
-        double lastX = 0.0; // last X value seen, for G92 calculation
-        double lastY = 0.0; // last Y value seen, for G92 calculation
         int lastN = -1;
 
         for (String rawLine : inputLines) {
@@ -148,14 +141,6 @@ public class GCodeProcessor {
             Matcher zMatch = Z_WORD_PATTERN.matcher(line);
             if (zMatch.find()) {
                 lastZ = Double.parseDouble(zMatch.group(1));
-            }
-            Matcher xMatch = X_WORD_PATTERN.matcher(line);
-            if (xMatch.find()) {
-                lastX = Double.parseDouble(xMatch.group(1));
-            }
-            Matcher yMatch = Y_WORD_PATTERN.matcher(line);
-            if (yMatch.find()) {
-                lastY = Double.parseDouble(yMatch.group(1));
             }
             Matcher nMatch = N_WORD_PATTERN.matcher(line);
             if (nMatch.find()) {
@@ -203,8 +188,7 @@ public class GCodeProcessor {
 
         Files.write(Paths.get(outputPath), output);
         String msg = "Processed " + inputLines.size() + " lines -> "
-                + output.size() + " lines. Wrote: " + outputPath + 
-                " lastX/Y/Z:"+ lastX + "/" + lastY + "/" + lastZ;
+                + output.size() + " lines. Wrote: " + outputPath;
         JOptionPane.showMessageDialog(null, msg, "GCode Process", JOptionPane.INFORMATION_MESSAGE);
     }
 
