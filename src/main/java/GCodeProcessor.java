@@ -181,9 +181,13 @@ public class GCodeProcessor {
             //     the first change) then M00 ---
             if (M06_PATTERN.matcher(line).find()) {
                 double offset = 0.0;
+                boolean isFirstToolChange = false;
                 if(firstTool == null) {
                     firstTool = nextTool;
                     output.add(str("G92.1 (reset G92 offsets)"));
+                    output.add(str("(  Make SURE that the tool tip is set to the correct height for the first move!)"));
+                    output.add(str("(  IF INCORRECT - Restart the program after setting the tool tip height)"));
+                    isFirstToolChange = true;
                 } else {
                     offset = nextTool.offset() - firstTool.offset();
                     if(offset != 0.0) {
@@ -191,13 +195,23 @@ public class GCodeProcessor {
                     }
                 }
                 String offsetStr = (offset < 0 ? " " + offset + "mm below current" : 
-                                    offset > 0 ? " " + offset + "mm above current" : 
-                                    " same as current");
+                                    offset > 0 ? " " + offset + "mm above current" : " same as current");
+                if(!isFirstToolChange) {                                      
+                    output.add(str("(     Toole Change "));
+                }
+                output.add(str("(    Tool - " + nextTool.description() + ")"));
+                output.add(str("( Spindel - " + nextTool.spindel() + ")"));
+                output.add(str("(    Feed - " + nextTool.feed() + ")"));
+                output.add(str("(Tool Tip -" + offsetStr + ")"));  
+                output.add(str("M00"));
+                /* 
                 output.add(str("M00 (Toole Change - " + nextTool.description() + 
                         "         Spindel " + nextTool.spindel() + 
                         "         Feed " + nextTool.feed() + 
                         "         Tool Tip set to" + offsetStr + ")"));
-            }
+                        */
+                }
+            
         }
 
         Files.write(Paths.get(outputPath), output);
