@@ -59,7 +59,7 @@ public class GCodeProcessor {
     private static final Pattern G28_PATTERN =
             Pattern.compile("(?i)\\bG28\\b");
 
-    // G80 line that also carries a Z word, e.g. "G80 Z25.0"
+    // "G80 Z" line 
     private static final Pattern G80_PATTERN =
             Pattern.compile("(?i)\\bG80\\sZ");
    
@@ -77,6 +77,10 @@ public class GCodeProcessor {
             Pattern.compile("(?i)\\bX(-?\\d+(\\.\\d+)?)\\b");
     private static final Pattern Y_WORD_PATTERN =
             Pattern.compile("(?i)\\bY(-?\\d+(\\.\\d+)?)\\b");
+    private static final Pattern N_WORD_PATTERN =
+            Pattern.compile("(?i)\\bN(-?\\d+(\\.\\d+)?)\\b");
+
+    static int lineNumber = -1; // track line numbers for debugging
 
 
     public static void main(String[] args) throws IOException {
@@ -135,6 +139,7 @@ public class GCodeProcessor {
         double lastZ = 0.0; // last Z value seen, for G92 calculation
         double lastX = 0.0; // last X value seen, for G92 calculation
         double lastY = 0.0; // last Y value seen, for G92 calculation
+        int lastN = -1;
 
         for (String rawLine : inputLines) {
             String line = rawLine;
@@ -153,9 +158,6 @@ public class GCodeProcessor {
             Matcher tMatch = T_WORD_PATTERN.matcher(line);
             if (tMatch.find()) {
                 nextTool = TOOLS.get(Integer.parseInt(tMatch.group(1)));
-                if(firstTool == null) {
-                    firstTool = nextTool;
-                }
             }
             // --- Track the most recent X/Y/Z value ---
             Matcher zMatch = Z_WORD_PATTERN.matcher(line);
@@ -168,36 +170,48 @@ public class GCodeProcessor {
             }
             Matcher yMatch = Y_WORD_PATTERN.matcher(line);
             if (yMatch.find()) {
-                try {
-                    lastY = Double.parseDouble(yMatch.group(1));
-                } catch (NumberFormatException e) {
-                    System.err.println("Error parsing Y value: " + line + 
-                        "\n match = " + yMatch.group(1) + 
-                        "\n " + yMatch.toString());
-                }
                 lastY = Double.parseDouble(yMatch.group(1));
+            }
+            Matcher nMatch = N_WORD_PATTERN.matcher(line);
+            if (nMatch.find()) {
+                lastN = Integer.parseInt(nMatch.group(1));
+                if(lineNumber == -1) {
+                    lineNumber = lastN;
+                }
+                line = line.substring(nMatch.end()).trim(); // remove N word from line
             }
 
             // --- 2. Split "G80 ... Zxx" into "G80" + "G00 Zxx" ---
             Matcher g80 = G80_PATTERN.matcher(line);
             if (g80.find()) {
-                output.add(line.substring(0, g80.start() + 3)); // G80
-                output.add("G00 " + line.substring(g80.start() + 3)); // G00
+                output.add(str(line.substring(0, g80.start() + 3))); // G80
+                output.add(str("G00 " + line.substring(g80.start() + 3))); // G00
                 continue; // skip the rest of the loop; we've already added the split lines
             }
 
             // --- default: keep the line as-is ---
-            output.add(line);
+            output.add(str(line));
 
             // --- 3 & 4. On a tool-change execution (M06), insert G92 (if not
             //     the first change) then M00 ---
             if (M06_PATTERN.matcher(line).find()) {
-                double offset = nextTool.offset() - firstTool.offset();
-                output.add("G92 Z" + formatNumber(lastZ + offset));
-                output.add("M00 (Toole Change - " + nextTool.description() + 
+                double offset = 0.0;
+                if(firstTool == null) {
+                    firstTool = nextTool;
+                    output.add(str("G92.1 (reset G92 offsets)"));
+                } else {
+                    offset = nextTool.offset() - firstTool.offset();
+                    if(offset != 0.0) {
+                        output.add(str("G92 Z" + formatNumber(lastZ + offset)));
+                    }
+                }
+                String offsetStr = (offset < 0 ? " " + offset + "mm below current" : 
+                                    offset > 0 ? " " + offset + "mm above current" : 
+                                    " same as current");
+                output.add(str("M00 (Toole Change - " + nextTool.description() + 
                         "         Spindel " + nextTool.spindel() + 
                         "         Feed " + nextTool.feed() + 
-                        "         Z Offset " + offset + "mm)");
+                        "         Tool Tip set to" + offsetStr + ")"));
             }
         }
 
@@ -206,6 +220,13 @@ public class GCodeProcessor {
                 + output.size() + " lines. Wrote: " + outputPath + 
                 " lastX/Y/Z:"+ lastX + "/" + lastY + "/" + lastZ;
         JOptionPane.showMessageDialog(null, msg, "GCode Process", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private static String str(String line) {
+        if(lineNumber > 0) {
+            return "N" + lineNumber++ + " " + line;
+        }
+        return line;
     }
 
     /** Formats a double as a clean decimal string, e.g. 0.1500 -> "0.15". */
