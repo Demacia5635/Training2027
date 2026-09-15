@@ -1,0 +1,8 @@
+# GCodeProcessor tool table - edit as needed
+# number,offset,description,spindel,feed
+1,0.0,Drill 4.2mm,220,1500
+2,0.0,Drill 5.0mm,180,1500
+3,0.0,Drill 6.0mm,140,1500
+4,0.0,Drill 8.0mm,120,1500
+5,20.0,MILL 4.0mm 2F,350,1500
+6,20.0,MILL 6mm 2F,300,1000

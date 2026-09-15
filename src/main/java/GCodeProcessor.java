@@ -26,38 +26,29 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * G00 Z<value>
  * 3. After each tool change add M00 with tool name
  * 4. After every tool change from drill to mill - add g92
- * 
- * optional - For G03/G02 arcs - add Y for Xxx.xx Zxx.xx if missing, to avoid
- * "G03/G02 with no Y" errors on some machines.
- * Also - add X/Y for full circle arcs (G02/G03 with no X/Y) to avoid "G02/G03
- * with no X/Y" errors on some machines.
- * Remember last X and Y values
- *
  */
 public class GCodeProcessor {
 
     public static final double DRILL_OFFSET = 0.0; // Z offset for drill tools
-    public static final double MILL_OFFSET = 20.0; // Z offset for drill tools
+    public static final double MILL_OFFSET = 20.0; // Z offset for mill tools
 
     record Tool(int number, double offset, String description, double spindel, double feed) {
     }
 
-    // ===================== CONFIGURATION: EDIT THESE =====================
+    // ===================== CONFIGURATION =====================
     // Per-tool Z offset (absolute value from your tool table), in whatever
     // units your G-code file uses (mm/inch). Keys are tool numbers as they
-    // appear after "T" in the file (T1..T6). The program only ever uses the
+    // appear after "T" in the file. The program only ever uses the
     // DIFFERENCE between two tools' values, so what matters is that these
     // are all measured from the same reference.
-    private static final Map<Integer, Tool> TOOLS = new HashMap<>();
-    static {
-        TOOLS.put(1, new Tool(1, DRILL_OFFSET, "Drill 4.2mm", 220, 1500));
-        TOOLS.put(2, new Tool(2, DRILL_OFFSET, "Drill 5.0mm", 180, 1500));
-        TOOLS.put(3, new Tool(3, DRILL_OFFSET, "Drill 6.0mm", 140, 1500));
-        TOOLS.put(4, new Tool(4, DRILL_OFFSET, "Drill 8.0mm", 120, 1500));
-        TOOLS.put(5, new Tool(5, MILL_OFFSET, "MILL 4.0mm 2F", 350, 1500));
-        TOOLS.put(6, new Tool(6, MILL_OFFSET, "MILL 6mm 2F", 300, 1000));
-    }
-    // =======================================================================
+    //
+    // Tool data lives in an external parameters file (see TOOLS_FILE_NAME)
+    // next to where this program is run from, so it can be edited without
+    // recompiling. If the file doesn't exist yet, a default one is created
+    // automatically on first run.
+    private static final String TOOLS_FILE_NAME = "tools.csv";
+    private static Map<Integer, Tool> TOOLS;
+    // ===========================================================
 
     // G28 anywhere in the line (word boundary, case-insensitive)
     private static final Pattern G28_PATTERN = Pattern.compile("(?i)\\bG28\\b");
@@ -70,23 +61,129 @@ public class GCodeProcessor {
 
     // Tool change execution word: M6 or M06
     private static final Pattern M06_PATTERN = Pattern.compile("(?i)\\bM0?6\\b");
-    // X/Y/Z word, e.g. "Z25.0" or "Z-3.5"
-    private static final Pattern Z_WORD_PATTERN = Pattern.compile("(?i)\\bZ(-?\\d+(\\.\\d+)?)\\b");
+    // X/Y/Z word, e.g. "Z25.0", "Z-3.5", or "Z.5" (no leading digit before the decimal point)
+    private static final Pattern Z_WORD_PATTERN = Pattern.compile("(?i)\\bZ(-?(?:\\d*\\.\\d+|\\d+))\\b");
     private static final Pattern N_WORD_PATTERN = Pattern.compile("(?i)\\bN(-?\\d+(\\.\\d+)?)\\b");
 
     static int lineNumber = -1; // track line numbers for debugging
 
-    public static void main(String[] args) throws IOException {
-        File inputFile = getInputPath();
-        if (inputFile == null) {
-            System.out.println("No input file selected. Exiting.");
+    // ================== SETUP CHANGE CONFIGURATION ==================
+    // In the source file, a "Z999" move is used as a marker meaning
+    // "pause here for a setup change" rather than a real position.
+    private static final double SETUP_CHANGE_Z_MARKER = 999.0;
+    // Clearance added above the last real Z position to compute a safe
+    // retract height for the setup-change stop.
+    private static final double SETUP_CHANGE_CLEARANCE = 80.0;
+    // The computed retract height is rounded up to the nearest multiple
+    // of this value, to give a clean, round number.
+    private static final double SETUP_CHANGE_ROUNDING = 5.0;
+    // ==================================================================
+
+    /**
+     * Entry point. Loads the tool table, then repeatedly prompts the user
+     * to select an input G-code file and processes it, until the file
+     * chooser is dismissed without a selection. Errors loading the tool
+     * table or processing a given file are reported via a dialog rather
+     * than crashing the program.
+     *
+     * @param args unused
+     */
+    public static void main(String[] args) {
+        try {
+            TOOLS = loadTools();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Failed to load tool table (" + TOOLS_FILE_NAME + "):\n" + e.getMessage(),
+                    "GCode Process - Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        String inputPath = inputFile.getAbsolutePath();
-        String outputPath = inputPath.replaceAll("\\.txt$", "_processed.txt");
-        process(inputPath, outputPath);
+
+        File inputFile;
+        while ((inputFile = getInputPath()) != null) {
+            String inputPath = inputFile.getAbsolutePath();
+            String outputPath = inputPath.replaceAll("\\.txt$", "_processed.txt");
+            try {
+                process(inputPath, outputPath);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,
+                        "Error processing file:\n" + e.getMessage(),
+                        "GCode Process - Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        System.out.println("No input file selected. Exiting.");
     }
 
+    /**
+     * Loads the tool table from {@link #TOOLS_FILE_NAME} (in the current
+     * working directory). If the file doesn't exist yet, a default one is
+     * written out first so the program works out of the box and the table
+     * can then be edited by hand (e.g. in Notepad or Excel) without needing
+     * to recompile.
+     *
+     * File format: one tool per line, comma-separated:
+     * number,offset,description,spindel,feed
+     * Blank lines and lines starting with '#' are ignored.
+     *
+     * @return the tool table, keyed by tool number
+     * @throws IOException if the file can't be read or written, or a line
+     *                      is malformed
+     */
+    private static Map<Integer, Tool> loadTools() throws IOException {
+        Path toolsPath = Paths.get(TOOLS_FILE_NAME).toAbsolutePath();
+        if (!Files.exists(toolsPath)) {
+            writeDefaultToolsFile(toolsPath);
+        }
+
+        Map<Integer, Tool> tools = new HashMap<>();
+        for (String rawLine : Files.readAllLines(toolsPath)) {
+            String line = rawLine.trim();
+            if (line.isEmpty() || line.startsWith("#")) {
+                continue; // blank line or comment
+            }
+            String[] parts = line.split(",", -1);
+            if (parts.length != 5) {
+                throw new IOException("Invalid line in " + toolsPath
+                        + " (expected number,offset,description,spindel,feed): \"" + rawLine + "\"");
+            }
+            try {
+                int number = Integer.parseInt(parts[0].trim());
+                double offset = Double.parseDouble(parts[1].trim());
+                String description = parts[2].trim();
+                double spindel = Double.parseDouble(parts[3].trim());
+                double feed = Double.parseDouble(parts[4].trim());
+                tools.put(number, new Tool(number, offset, description, spindel, feed));
+            } catch (NumberFormatException e) {
+                throw new IOException("Invalid number in " + toolsPath + ": \"" + rawLine + "\"", e);
+            }
+        }
+        return tools;
+    }
+
+    /**
+     * Writes the built-in default tool table to disk, e.g. on first run.
+     *
+     * @param toolsPath path to write the default tool table file to
+     * @throws IOException if the file can't be written
+     */
+    private static void writeDefaultToolsFile(Path toolsPath) throws IOException {
+        List<String> defaultLines = List.of(
+                "# GCodeProcessor tool table - edit as needed",
+                "# number,offset,description,spindel,feed",
+                "1," + DRILL_OFFSET + ",Drill 4.2mm,220,1500",
+                "2," + DRILL_OFFSET + ",Drill 5.0mm,180,1500",
+                "3," + DRILL_OFFSET + ",Drill 6.0mm,140,1500",
+                "4," + DRILL_OFFSET + ",Drill 8.0mm,120,1500",
+                "5," + MILL_OFFSET + ",MILL 4.0mm 2F,350,1500",
+                "6," + MILL_OFFSET + ",MILL 6mm 2F,300,1000");
+        Files.write(toolsPath, defaultLines);
+    }
+
+    /**
+     * Opens a file chooser (starting in the user's Downloads folder) so the
+     * user can pick a G-code file to process.
+     *
+     * @return the selected file, or {@code null} if the user canceled
+     */
     static File getInputPath() {
         JFileChooser fileChooser = new JFileChooser();
         Path downloadsPath = Paths.get(System.getProperty("user.home"), "Downloads");
@@ -107,7 +204,22 @@ public class GCodeProcessor {
         }
     }
 
+    /**
+     * Reads the G-code file at {@code inputPath}, applies the
+     * transformations described in the class Javadoc (removing G28,
+     * splitting "G80 Z" lines, annotating tool changes with G92/M00,
+     * inserting setup-change stops, etc.), and writes the result to
+     * {@code outputPath}. Shows a summary dialog when done.
+     *
+     * @param inputPath  path to the source G-code file
+     * @param outputPath path to write the processed G-code file to
+     * @throws IOException           if the input can't be read or the output can't be written
+     * @throws IllegalStateException if an M06 tool change is encountered with no known
+     *                                current tool (missing or unrecognized T-word)
+     */
     public static void process(String inputPath, String outputPath) throws IOException {
+        lineNumber = -1; // reset line-number tracking for each file processed
+
         List<String> inputLines = Files.readAllLines(Paths.get(inputPath));
         List<String> output = new ArrayList<>();
 
@@ -157,9 +269,10 @@ public class GCodeProcessor {
             Matcher zMatch = Z_WORD_PATTERN.matcher(line);
             if (zMatch.find()) {
                 double nextZ = Double.parseDouble(zMatch.group(1));
-                if (nextZ == 999) { // a setup change
+                if (nextZ == SETUP_CHANGE_Z_MARKER) { // a setup change
                     setupNum++;
-                    nextZ = Math.ceil((lastZ + 80)/5)*5;
+                    nextZ = Math.ceil((lastZ + SETUP_CHANGE_CLEARANCE) / SETUP_CHANGE_ROUNDING)
+                            * SETUP_CHANGE_ROUNDING;
                     output.add(str("G00 Z" + formatNumber(nextZ)));
                     output.add(str("M00 (Setup Change - Setup " + setupNum + ")"));
                     lastZ = nextZ;
@@ -171,6 +284,12 @@ public class GCodeProcessor {
             output.add(str(line));
             // Tool change execution (M6) - add M00 with tool description and G92 if needed
             if (M06_PATTERN.matcher(line).find()) {
+                if (nextTool == null) {
+                    throw new IllegalStateException(
+                            "Unknown or missing tool at line: \"" + rawLine.trim()
+                                    + "\". Check that a valid T-word (defined in " + TOOLS_FILE_NAME
+                                    + ") precedes this M06.");
+                }
                 double offset = 0.0;
                 if (firstTool == null) {
                     firstTool = nextTool;
@@ -185,7 +304,7 @@ public class GCodeProcessor {
                 }
                 String offsetStr = (offset < 0 ? " " + offset + "mm BELOW current"
                         : offset > 0 ? " " + offset + "mm ABOVE current" : " SAME as current");
-                output.add(str("M00 (Toole Change - " + nextTool.description() +
+                output.add(str("M00 (Tool Change - " + nextTool.description() +
                         "      Spindel " + nextTool.spindel() +
                         "      Feed " + nextTool.feed() +
                         "      Height " + offsetStr + ")"));
@@ -198,6 +317,14 @@ public class GCodeProcessor {
         JOptionPane.showMessageDialog(null, msg, "GCode Process", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Prefixes {@code line} with the next sequential N line number, if line
+     * numbering is active for this file (i.e. the source file itself used
+     * N-numbers). Otherwise returns the line unchanged.
+     *
+     * @param line the G-code line (without an N-word) to emit
+     * @return the line, prefixed with "N&lt;number&gt; " if numbering is active
+     */
     private static String str(String line) {
         if (lineNumber > 0) {
             return "N" + lineNumber++ + " " + line;
@@ -205,7 +332,12 @@ public class GCodeProcessor {
         return line;
     }
 
-    /** Formats a double as a clean decimal string, e.g. 0.1500 -> "0.15". */
+    /**
+     * Formats a double as a clean decimal string, e.g. 0.1500 -> "0.15".
+     *
+     * @param value the number to format
+     * @return the formatted decimal string, always containing a decimal point
+     */
     private static String formatNumber(double value) {
         BigDecimal bd = BigDecimal.valueOf(value)
                 .setScale(4, RoundingMode.HALF_UP)
